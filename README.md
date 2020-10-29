@@ -6,3 +6,4 @@ This repository contains the latest QSP platform for TNBC developed by the Popel
 - MATLAB R2019a or later
 - SimBiology Toolbox 
 - Statistics and Machine Learning Toolbox
+- Bioinformatics Toolbox
