@@ -49,8 +49,10 @@ p = addparameter(model,'n_Treg_CTLA4',params.n_Treg_CTLA4.Value,'ValueUnits',par
 p = addparameter(model,'k_CTLA4_ADCC',params.k_CTLA4_ADCC.Value,'ValueUnits',params.k_CTLA4_ADCC.Units,'ConstantValue',false);
     set(p,'Notes',[params.k_CTLA4_ADCC.Notes]);
 % Define Hill function for ADCC in tumor and peripheral compartments
-addparameter(model,'H_Treg_T',0.0,'ValueUnits','dimensionless','ConstantValue',false);
-addparameter(model,'H_Treg_P',0.0,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_Treg_T',0.0,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of Treg ADCC in tumor');
+p = addparameter(model,'H_Treg_P',0.0,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of Treg ADCC in peripheral compartment');
 
 % Species for states of CTLA4 on Treg
 x = addspecies(model.Compartment(3),'Treg_CTLA4',0,'InitialAmountUnits','molecule');

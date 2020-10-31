@@ -42,7 +42,8 @@ param = addparameter(model,['k_' species_name '_therapy'],0,'ValueUnits','1/day'
 
 % Initial Tumour Diameter
 try % only add once
-    addparameter(model,'initial_tumour_diameter',params.initial_tumour_diameter.Value,'ValueUnits',params.initial_tumour_diameter.Units);
+    p = addparameter(model,'initial_tumour_diameter',params.initial_tumour_diameter.Value,'ValueUnits',params.initial_tumour_diameter.Units);
+        set(p,'Notes','Pre-treatment tumor diameter');
 catch
 end
 

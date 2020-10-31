@@ -94,6 +94,4 @@ reaction = addreaction(model,'null -> V_T.c');
 % Update Hill Functions for APCs
 addrule(model,'H_APC = n_sites_APC*V_LN.mAPC/(n_sites_APC*V_LN.mAPC+V_LN.nT0*n_T0_clones+cell)','repeatedAssignment');
 addrule(model,'H_mAPC = n_sites_APC*V_LN.mAPC/(n_sites_APC*V_LN.mAPC+V_LN.nT1*n_T1_clones+cell)','repeatedAssignment');
-
-addparameter(model,'H_APCh',1,'ValueUnits','dimensionless','ConstantValue',false);
 addrule(model,'H_APCh = n_sites_APC*V_LN.mAPC/(n_sites_APC*V_LN.mAPC+V_LN.nT0*n_T1_clones+cell)','repeatedAssignment');

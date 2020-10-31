@@ -165,7 +165,8 @@ try % only add once
 catch
 end
 % Antigen Default Hill Function
-addparameter(model,['H_' antigen],1,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,['H_' antigen],1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes',['Hill function of tumor antigen' antigen]);
 
 % Add Reactions
 % Q_in = addparameter(model,'Q_in',params.Q_in.Value,'ValueUnits',params.Q_in.Units);
@@ -360,11 +361,10 @@ rule = get(Tcell_rule,'Rule');
 set(Tcell_rule,'Rule',[rule '+V_T.' species_name]);
 
 % Update Total T Cells in LN (Rule 4)
-if (~isTreg)
-    Tcell_rule = model_rules(4);
-    rule = get(Tcell_rule,'Rule');
-    set(Tcell_rule,'Rule',[rule '+V_LN.' species_name]);
-end
+Tcell_rule = model_rules(4);
+rule = get(Tcell_rule,'Rule');
+set(Tcell_rule,'Rule',[rule '+V_LN.' species_name]);
+
 
 % Update Cancer Killing by T Cells (Rule 5)
 if (exist('cancer_types','var') && ~isTreg)

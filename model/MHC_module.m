@@ -18,7 +18,7 @@ function model = MHC_module(model,ID,MHC_T)
 M_e = addspecies(model.Compartment(6),'M',MHC_T.Value,'InitialAmountUnits',MHC_T.Units);
     set(M_e,'Notes','Amount of MHC per area on the endosomal surface');
 M_s = addspecies(model.Compartment(7),'M',1e-6,'InitialAmountUnits',MHC_T.Units);
-    set(M_e,'Notes','Amount of MHC per area on the cell surface');
+    set(M_s,'Notes','Amount of MHC per area on the cell surface');
 
 % % Add Reactions
 reaction = addreaction(model,'A_e.M -> A_s.M');

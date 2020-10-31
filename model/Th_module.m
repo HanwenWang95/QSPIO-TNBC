@@ -71,9 +71,11 @@ k_IFNg_deg = addparameter(model,'k_IFNg_deg',params.k_IFNg_deg.Value,'ValueUnits
 IFNg_50_ind = addparameter(model,'IFNg_50_ind',params.IFNg_50_ind.Value,'ValueUnits',params.IFNg_50_ind.Units);
     set(IFNg_50_ind,'Notes',['Half-Maximal IFNg level for PD-L1 induction' params.IFNg_50_ind.Notes]);
 
-addparameter(model,'H_TGF_reg',1,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_TGF_reg',1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of TGFb for Th transdifferentiation to Treg');
 addrule(model,'H_TGF_reg = V_T.TGF/(V_T.TGF+TGF_50_reg)','repeatedAssignment');
-addparameter(model,'H_TGF_CTL',1,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_TGF_CTL',1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of TGFb for Teff inhibition and chemoresistance development');
 addrule(model,'H_TGF_CTL = V_T.TGF/(V_T.TGF+TGF_50_ctl)','repeatedAssignment');
 
 % Add Reactions
@@ -169,9 +171,9 @@ model_rules = get(model,'Rules');
 % set(volume_rule,'Rule',[rule '+vol_Tcell*V_T.' species_name]);
 
 % Update Total T Cells in tumor (Rule 3)
-% Tcell_rule = model_rules(3);
-% rule = get(Tcell_rule,'Rule');
-% set(Tcell_rule,'Rule',[rule '+V_T.' species_name]);
+Tcell_rule = model_rules(3);
+rule = get(Tcell_rule,'Rule');
+set(Tcell_rule,'Rule',[rule '+V_T.' species_name]);
 
 % Update Total T Cells in LN (Rule 4)
 Tcell_rule = model_rules(4);

@@ -82,40 +82,59 @@ addrule(model,'V_T = ((C_x+C_total)*vol_cell+(T1_exh+Th_exh+T_total+V_T.Th)*vol_
 %addrule(model,'V_T = (C_x+C_total)*vol_cell/Ve_T','repeatedAssignment');
 
 % Set Total Number of Cancer Cells (Rule 2)
-addparameter(model,'C_total',0,'ValueUnits','cell','ConstantValue',false);
+p = addparameter(model,'C_total',0,'ValueUnits','cell','ConstantValue',false);
+    set(p,'Notes','Total number of cancer cells');
 addrule(model,'C_total = 0*cell','repeatedAssignment');
 
 % Set Total Number of T Cells in Tumour (Rule 3)
-addparameter(model,'T_total',0,'ValueUnits','cell','ConstantValue',false);
+p = addparameter(model,'T_total',0,'ValueUnits','cell','ConstantValue',false);
+    set(p,'Notes','Total number of activated T cells in tumor');
 addrule(model,'T_total = 0*cell','repeatedAssignment');
 
 % Set Total Number of T Cells in LN (Rule 4)
-addparameter(model,'T_total_LN',0,'ValueUnits','cell','ConstantValue',false);
+p = addparameter(model,'T_total_LN',0,'ValueUnits','cell','ConstantValue',false);
+    set(p,'Notes','Total number of activated T cells in TDLNs');
 addrule(model,'T_total_LN = 0*cell','repeatedAssignment');
 
 % Set Total Rate of Cancer Death by T Cells (Rule 5)
-addparameter(model,'R_Tcell','ValueUnits','cell/day','ConstantValue',false);
+p = addparameter(model,'R_Tcell','ValueUnits','cell/day','ConstantValue',false);
+    set(p,'Notes','Rate of cancer cell death');
 addrule(model,'R_Tcell = 0*cell/day','repeatedAssignment');
 
 % Set Default Number of Tregs
-addparameter(model,'Tregs_',0,'ValueUnits','cell','ConstantValue',false);
+p = addparameter(model,'Tregs_',0,'ValueUnits','cell','ConstantValue',false);
+    set(p,'Notes','Total number of activated T cells in TDLNs');
 
 % Set Default Hill Function for APCs
-addparameter(model,'H_APC',0.5,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_APC',0.5,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of mAPC for self-antigen-specific Treg activation');
 
 % Set Default Hill Function for mAPCs
-addparameter(model,'H_mAPC',1,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_mAPC',1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of mAPC for CD8 T cell activation');
+
+% Set Default Hill Function for mAPCs
+p = addparameter(model,'H_APCh',1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of mAPC for neoantigen-specific helper T cell activation');
 
 % Set Default Hill Function for PD1 Checkpoint
-addparameter(model,'H_PD1_C1',0.90,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_PD1_C1',0.90,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of PDL1 on tumor cells for T cell exhaustion');
+
 %addparameter(model,'H_PD1_C2',0.90,'ValueUnits','dimensionless','ConstantValue',false);
-addparameter(model,'H_PD1_APC',0.90,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_PD1_APC',0.90,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of PDL1 on APC for T cell exhaustion');
 
 % Set Default Hill Function for CTLA4 Checkpoint
-addparameter(model,'H_CD28_C1',0.1,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_CD28_C1',0.1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of CD28 on tumor cells');
+
 %addparameter(model,'H_CD28_C2',0.1,'ValueUnits','dimensionless','ConstantValue',false);
-addparameter(model,'H_CD28_APC',0.1,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_CD28_APC',0.1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of CD28 on APCs for T cell activation');
 
 % Set Default Hill Function for MDSC and ENT
-addparameter(model,'H_MDSC_C1',1,'ValueUnits','dimensionless','ConstantValue',false);
-addparameter(model,'H_ENT_C1',1,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_MDSC_C1',1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of MDSC on T cell inhibition');
+p = addparameter(model,'H_ENT_C1',1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of entinostat on MDSC inhibition');

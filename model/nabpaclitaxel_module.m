@@ -32,17 +32,17 @@ comp_V3 = addcompartment(model,'V_3',75.4,'CapacityUnits','liter','ConstantCapac
 
 % Model Parameters
 Vmcl = addparameter(model,'Vmcl',params.Vmcl.Value,'ValueUnits',params.Vmcl.Units);
-    set(Vmcl,'Notes',['IFNg secretion rate by T helper cell' params.Vmcl.Notes]);
+    set(Vmcl,'Notes','Maximum elimination rate of nab-paclitaxel from the central compartment V1');
 Kcl = addparameter(model,'Kcl',params.Kcl.Value,'ValueUnits',params.Kcl.Units);
-    set(Kcl,'Notes',['IFNg secretion rate by T helper cell' params.Kcl.Notes]);
+    set(Kcl,'Notes','Nab-paclitaxel concentration in the central compartment V1 at 50% Vmcl');
 Q2 = addparameter(model,'Q2',params.Q2.Value,'ValueUnits',params.Q2.Units);
-    set(Q2,'Notes',['IFNg secretion rate by T helper cell' params.Q2.Notes]);
+    set(Q2,'Notes','Intercompartmental clearance between the central compartment V1 and the second peripheral compartment V3');
 Vmt = addparameter(model,'Vmt',params.Vmt.Value,'ValueUnits',params.Vmt.Units);
-    set(Vmt,'Notes',['IFNg secretion rate by T helper cell' params.Vmt.Notes]);
+    set(Vmt,'Notes','Maximum intercompartmental distribution rate between the central compartment V1 and the first peripheral compartment V2');
 Kt = addparameter(model,'Kt',params.Kt.Value,'ValueUnits',params.Kt.Units);
-    set(Vmcl,'Notes',['IFNg secretion rate by T helper cell' params.Kt.Notes]);
+    set(Kt,'Notes','Nab-paclitaxel concentration in the central compartment V1 at 50% Vmt');
 BSA = addparameter(model,'BSA',params.BSA.Value,'ValueUnits',params.BSA.Units);
-    set(BSA,'Notes',['IFNg secretion rate by T helper cell' params.BSA.Notes]);
+    set(BSA,'Notes','Body surface area');
 
 % PD Parameters
 % p = addparameter(model,'E',0,'ValueUnits','dimensionless','ConstantValue',false);
