@@ -54,10 +54,13 @@ S = addspecies(comp_T,'Th_exh',0,'InitialAmountUnits','cell');
     set(S,'Notes','Exhausted CD4 effector T cells');
 R = addreaction(model,'V_T.C_x -> null');
     set(R,'ReactionRate','k_cell_clear*V_T.C_x');
+    set(R,'Notes','Clearance of dead cancer cells from tumor');
 R = addreaction(model,'V_T.T1_exh -> null');
     set(R,'ReactionRate','k_cell_clear*V_T.T1_exh');
+    set(R,'Notes','Clearance of exhausted CD8 T cells from tumor');
 R = addreaction(model,'V_T.Th_exh -> null');
     set(R,'ReactionRate','k_cell_clear*V_T.Th_exh');
+    set(R,'Notes','Clearance of exhausted CD4 T cells from tumor');
 
 % Define Cell and Time
 p = addparameter(model,'cell',1.0,'ValueUnits','cell');

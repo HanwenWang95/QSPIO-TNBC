@@ -80,10 +80,13 @@ s = addspecies(comp_V3,'NabP',0,'InitialAmountUnits','nanogram/milliliter');
 % Model Reaction
 r = addreaction(model,'V_1.NabP <-> V_2.NabP');
     set(r,'ReactionRate','Vmt/(V_1.NabP+Kt)*V_1.NabP - Vmt/(V_2.NabP+Kt)*V_2.NabP');
+    set(r,'Notes','Intercompartmental distribution of nab-paclitaxel between V1 and V2 compartment');
 r = addreaction(model,'V_1.NabP <-> V_3.NabP');
     set(r,'ReactionRate','Q2*V_1.NabP - Q2*V_3.NabP');
+    set(r,'Notes','Intercompartmental clearance of nab-paclitaxel between V1 and V3 compartment');
 r = addreaction(model,'V_1.NabP -> null');
     set(r,'ReactionRate','Vmcl/(V_1.NabP+Kcl)*V_1.NabP');
+    set(r,'Notes','Clearance of nab-paclitaxel from V1 compartment');
 
 % r = addreaction(model,'null -> M_0.Neu');
 %     set(r,'ReactionRate','k*M_0.Neu*(1-E)*(Neu_base/M_4.Neu)^gamma');

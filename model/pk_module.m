@@ -75,13 +75,13 @@ if (nargin==4 && dose_type == 'o')
     %     set(reaction,'ReactionRate','k_dose1');
     reaction = addreaction(model,'V_C.Dose2 -> V_C.A_GI');
         set(reaction,'ReactionRate','k_dose2*V_C.Dose2');
-
+        set(reaction,'Notes',['first-order absorption of ' species_name ' into buccal compartment']);
     reaction = addreaction(model,'V_C.A_Buccal -> V_C.A');
         set(reaction,'ReactionRate','k_a1*V_C.A_Buccal');
-        set(reaction,'Notes',[species_name ' Buccal absorption']);
+        set(reaction,'Notes',['Buccal absorption of ' species_name 'into central comparment']);
     reaction = addreaction(model,'V_C.A_GI -> V_C.A');
         set(reaction,'ReactionRate','k_a2*V_C.A_GI');
-        set(reaction,'Notes',[species_name ' Gastro-intestinal absorption']);
+        set(reaction,'Notes',['Gastro-intestinal absorption of ' species_name 'into central comparment']);
     reaction = addreaction(model,'V_C.A -> null');
         set(reaction,'ReactionRate','k_cln*V_C.A/(V_C.A + Kc)');
         set(reaction,'Notes',[species_name ' Non-linear clearance from central compartment']);
