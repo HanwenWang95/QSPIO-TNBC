@@ -61,9 +61,9 @@ R = addreaction(model,'V_T.Th_exh -> null');
 
 % Define Cell and Time
 p = addparameter(model,'cell',1.0,'ValueUnits','cell');
-    set(p,'ReactionRate','unit parameter for calculation');
+    set(p,'Notes','unit parameter for calculation');
 p = addparameter(model,'day',1.0,'ValueUnits','day');
-    set(p,'ReactionRate','unit parameter for calculation');
+    set(p,'Notes','unit parameter for calculation');
 
 % Set Tumour Volume (Rule 1)
 vol_cell = addparameter(model,'vol_cell',params.vol_cell.Value,'ValueUnits',params.vol_cell.Units);
