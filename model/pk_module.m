@@ -69,7 +69,7 @@ if (nargin==4 && dose_type == 'o')
         set(Dose2,'Notes',['Fraction of an oral drug dose for GI absorption']);
     % k_dose1 = addparameter(model,'k_dose1',Bio*dose_ENT/MW_ENT/5000/0.1797,'ValueUnits','molarity/hour');
     k_dose2 = addparameter(model,'k_dose2',0.0138,'ValueUnits','1/hour');
-        set(k_a1,'Notes',['Rate of GI absorption of ' species_name ' into buccal compartment']);
+        set(k_dose2,'Notes',['Rate of GI absorption of ' species_name ' into buccal compartment']);
 
     % reaction = addreaction(model,'V_C.Dose1 -> V_C.ENT_Buccal');
     %     set(reaction,'ReactionRate','k_dose1');
