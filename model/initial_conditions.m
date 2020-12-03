@@ -91,7 +91,7 @@ elseif ((~Debug)&&(isempty(Variant)))
     end
 elseif ((~Debug)&&(~isempty(Variant)))
     try
-    simData = sbiosimulate(model,Variant);
+        simData = sbiosimulate(model,Variant);
     catch
         % disp('There was an error while finding the initial conditions');
         model_out = copyobj(model);
@@ -130,16 +130,12 @@ else
 
     % Set New ICs for Species
     for i = 1:length(model.Species)
-        % It makes sure not to initialize the checkpoints because of
-        % initial assignments
-        % if (isempty(strfind(simData.DataInfo{i}.Compartment,'syn' )))&&(isempty(strfind(simData.DataNames{i},'OX40')))
-            try
-                model.Species(i).InitialAmount = simData.Data(idx,i);
-            catch
-                model.Species(i).InitialAmount = 0;
-                % disp(['Initial Amount of Species ' num2str(i) ' is Inf or NaN'])
-            end
-        % end
+        try
+            model.Species(i).InitialAmount = simData.Data(idx,i);
+        catch
+            model.Species(i).InitialAmount = 0;
+            % disp(['Initial Amount of Species ' num2str(i) ' is Inf or NaN'])
+        end
     end
     % Set New ICs for varying Parameters
     for i = 1:length(model.Parameters)

@@ -146,9 +146,9 @@ switch (name)
         q_P.Units = 'liter/second';
         q_P.Notes = '(Stroh 2017, PMID: 27981577)';
         % Central to Tumour
-        q_T.Value = 8.52e-6;
-        q_T.Units = '1/second';
-        q_T.Notes = '(Finley 2012)';
+        q_T.Value = 8.52e-5;
+        q_T.Units = 'milliliter/second';
+        q_T.Notes = '(Wang 2019, PMID: 31218069)';
         % Central to LN
         q_LN.Value = 3.25e-6;
         q_LN.Units = 'milliliter/second';

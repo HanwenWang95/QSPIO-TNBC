@@ -141,7 +141,7 @@ reaction = addreaction(model,'null -> V_LN.IL2');
 reaction = addreaction(model,'null -> V_T.TGF');
     set(reaction,'ReactionRate','k_TGF_deg*(TGFbase - V_T.TGF)*V_T');
     set(reaction,'Notes','TGFb secretion by triple-negative breast cancer cells');
-% TGFb Secretion and Consumption by Activated Treg Cells
+% TGFb Secretion by Activated Treg Cells
 reaction = addreaction(model,'null -> V_T.TGF');
    set(reaction,'ReactionRate','k_TGF_Tsec*V_T.T0');
    set(reaction,'Notes','TGF secretion from activated T cells in tumor');

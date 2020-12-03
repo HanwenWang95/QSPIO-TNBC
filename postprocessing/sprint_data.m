@@ -110,11 +110,11 @@ for i = 1:n_PSA.(name)
     T0p.(name)(i,:) = temp25;
     Thp.(name)(i,:) = temp26;
 
-    A_syn = 37.8; % micrometer^2
-    PDL1_tum.(name)(i,:) = temp27.*A_syn;
-    PDL1_APC.(name)(i,:) = temp28.*A_syn;
-    PDL2_tum.(name)(i,:) = temp29.*A_syn;
-    PDL2_APC.(name)(i,:) = temp30.*A_syn;
+    A_cell = 907.92; A_APC = 900; % micrometer^2
+    PDL1_tum.(name)(i,:) = temp27.*A_cell;
+    PDL1_APC.(name)(i,:) = temp28.*A_APC;
+    PDL2_tum.(name)(i,:) = temp29.*A_cell;
+    PDL2_APC.(name)(i,:) = temp30.*A_APC;
 
     param_Obs = 'Teff_density';
     k = find(strcmp(simDataPSApost(index.(name)(i)).simData.DataNames, param_Obs));

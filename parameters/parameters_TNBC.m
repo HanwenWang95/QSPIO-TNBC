@@ -186,8 +186,8 @@ params.k_IL2_sec.Notes = '(Han 2012, PMID: 22160692; Thurley 2015, PMID: 2592370
 params.IL2_50.Value = 0.32;
 params.IL2_50.Units = 'nanomolarity';
 params.IL2_50.Notes = '(Marchingo 2014, PMID: 25430770)';
-% IL2 Concentration for Half-Maximal Treg ∂Proliferation
-params.IL2_50_Treg.Value = 0.32;
+% IL2 Concentration for Half-Maximal Treg Proliferation
+params.IL2_50_Treg.Value = 0.32; % 0.0032
 params.IL2_50_Treg.Units = 'nanomolarity';
 params.IL2_50_Treg.Notes = '(Wang and Smith 1987, PMID: 3116143)';
 % Baseline Number of Activated T Cell Generations
@@ -529,19 +529,19 @@ params.T8_PD1.Notes = '(Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837
 params.T8_PDL1.Value = 9.3e3*20;
 params.T8_PDL1.Units = 'molecule';
 params.T8_PDL1.Notes = '(Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483)';
-% Baseline PDL1 Expression on Cancer Cells
-params.C_PDL1.Value = 5e4*20/6; % 1.6e6*0.67
+% Average Baseline PDL1 Expression on Tumor/Immune cells in tumor
+params.C_PDL1.Value = 5.4e4*20/6;
 params.C_PDL1.Units = 'molecule';
 params.C_PDL1.Notes = '(Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483; Gatalica 2014, PMID: 25392179)';
-% PDL2 Expression on Cancer Cells
+% PDL2 Expression on Tumor/Immune cells in tumor
 params.C_PDL2.Value = 2.0e3*20;
 params.C_PDL2.Units = 'molecule';
 params.C_PDL2.Notes = '(Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483)';
-% Baseline PDL1 Expression on APCs
+% Average Baseline PDL1 Expression on mAPCs
 params.APC_PDL1.Value = 8.0e4*20/6;
 params.APC_PDL1.Units = 'molecule';
 params.APC_PDL1.Notes = '(Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483; Gatalica 2014, PMID: 25392179)';
-% PDL2 Expression on APCs
+% PDL2 Expression on mAPCs
 params.APC_PDL2.Value = 2.0e3*20;
 params.APC_PDL2.Units = 'molecule';
 params.APC_PDL2.Notes = '(Cheng 2014, PMID: 23417675)';
@@ -553,11 +553,11 @@ params.PD1_50.Notes = '(estimated)';
 params.n_PD1.Value = 2;
 params.n_PD1.Units = 'dimensionless';
 params.n_PD1.Notes = '(estimated)';
-% PDL2/PDL1 ratio on cancer
+% PDL2/PDL1 ratio in tumor
 params.r_PDL2C.Value = 0.07;
 params.r_PDL2C.Units = 'dimensionless';
 params.r_PDL2C.Notes = '(Cheng 2014, PMID: 23417675)';
-% PDL2/PDL1 ratio on APC
+% PDL2/PDL1 ratio on mAPCs
 params.r_PDL2APC.Value = 0.07;
 params.r_PDL2APC.Units = 'dimensionless';
 params.r_PDL2APC.Notes = '(Cheng 2014, PMID: 23417675)';
@@ -635,11 +635,11 @@ params.C_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
 params.C_CD86.Value = 43000*20;
 params.C_CD86.Units = 'molecule';
 params.C_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
-% CD80 Expression on APCs
+% CD80 Expression on mAPCs
 params.APC_CD80.Value = 2000*20;
 params.APC_CD80.Units = 'molecule';
 params.APC_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
-% CD86 Expression on APCs
+% CD86 Expression on mAPCs
 params.APC_CD86.Value = 43000*20;
 params.APC_CD86.Units = 'molecule';
 params.APC_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
@@ -707,7 +707,7 @@ params.IC50_ENT_C.Units = 'molarity';
 params.IC50_ENT_C.Notes = '(Bouchain 2002, PMID: 12593661; Lee 2001, PMID: 11221885)';
 % half-life of IL-10: 1.1 - 2.6 day Mueller 2009, PMID: 18818669
 
-% rate of MCP-1 degradtion
+% rate of CCL2 degradtion
 params.k_deg_CCL2.Value = 0.06;
 params.k_deg_CCL2.Units = '1/hour';
 params.k_deg_CCL2.Notes = '(Tanimoto 2007, PMID: 18089573)';
@@ -719,7 +719,7 @@ params.k_deg_NO.Notes = '(Hakim 1996, PMID: 8953625)';
 params.k_deg_ArgI.Value = 0.173;
 params.k_deg_ArgI.Units = '1/day';
 params.k_deg_ArgI.Notes = '(Schimke 1964, PMID: 14257612)';
-% rate of MCP-1 secretion
+% rate of CCL2 secretion
 params.k_sec_CCL2.Value = 14.2e-11; % normal: 1.065e-11; TNBC: (14.2 +/- 6)*10^-11
 params.k_sec_CCL2.Units = 'nanomole/cell/day';
 params.k_sec_CCL2.Notes = '(Huang 2007, PMID: 17257744; Dutta, PMID: 29594759)';
@@ -735,7 +735,7 @@ params.k_sec_ArgI.Notes = '(Serafini 2008, PMID: 18593947)';
 params.IC50_ENT_NO.Value = .56e-9; % <1 nM
 params.IC50_ENT_NO.Units = 'molarity';
 params.IC50_ENT_NO.Notes = '(Choo 2010, PMID: 20421217)';
-% half-maximal ENT concentration for MCP-1 inhibition
+% half-maximal ENT concentration for CCL2 inhibition
 params.IC50_ENT_CCL2.Value = 1.2e-9; % <2 nM
 params.IC50_ENT_CCL2.Units = 'molarity';
 params.IC50_ENT_CCL2.Notes = '(Choo 2013, PMID: 24241152)';

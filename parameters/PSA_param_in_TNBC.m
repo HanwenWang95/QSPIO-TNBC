@@ -137,8 +137,8 @@ params.MDSC_max.ScreenName = 'Steady-state MDSC density in tumor';
 % params.T_PD1_total.ScreenName = 'PD1 expression on T cells ';
 
 %params.names = [params.names; 'T_PDL1_total'];
-%params.T_PDL1_total.UpperBound = 9.3e3*20; % *1.2
-%params.T_PDL1_total.LowerBound = 1;
+%params.T_PDL1_total.UpperBound = 9.3e3*20; 
+%params.T_PDL1_total.LowerBound = 9.3e3;
 %params.T_PDL1_total.Sampling   = 'loguniform';
 %params.T_PDL1_total.ScreenName = 'PD1 expression on T cells ';
 
@@ -146,7 +146,7 @@ params.names = [params.names; 'C1_PDL1_base'];
 params.C1_PDL1_base.UpperBound = 5.4e4*20/6;
 params.C1_PDL1_base.LowerBound = 9e3;
 params.C1_PDL1_base.Sampling   = 'loguniform';
-params.C1_PDL1_base.ScreenName = 'Baseline number of PDL1 on tumor cells';
+params.C1_PDL1_base.ScreenName = 'Baseline number of PDL1 per cell in the tumor';
 
 % params.names = [params.names; 'r_PDL2C1'];
 % params.r_PDL2C1.UpperBound = 0.07;
@@ -158,7 +158,7 @@ params.names = [params.names; 'APC_PDL1_base'];
 params.APC_PDL1_base.UpperBound = 8e4*20/6;
 params.APC_PDL1_base.LowerBound = 1.3e4;
 params.APC_PDL1_base.Sampling   = 'loguniform';
-params.APC_PDL1_base.ScreenName = 'Baseline number of PDL1 on mAPCs';
+params.APC_PDL1_base.ScreenName = 'Baseline number of PDL1 per mAPC';
 
 % params.names = [params.names; 'r_PDL2APC'];
 % params.r_PDL2APC.UpperBound = 0.07;
