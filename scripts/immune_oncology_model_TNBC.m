@@ -53,10 +53,8 @@ set(config, 'MaximumWallClock', 60)
 model = cancer_module(model,'C1',params_out,4.7e6); % 4.7e6
 model = cancer_module(model,'C2',params_out,0);
 % T cell Modules
-params_CD4    = Tcell_parameters(params_out,true);
-model = Tcell_module(model,'0',params_CD4);
-params_CD8    = Tcell_parameters(params_out,false);
-model = Tcell_module(model,'1',params_CD8,{'C1','C2'});
+model = Treg_module(model,params_out);
+model = Teff_module(model,'1',params_out,{'C1','C2'});
 % APC Module
 model = APC_module(model,params_out);
 % Antigen Modules
@@ -65,13 +63,10 @@ model = antigen_module(model,'0',params_out,antigenCP);
 antigen   = create_antigen({'C1','C2'},[5.4e-13 5.4e-13],'antigenID',1);
 model = antigen_module(model,'1',params_out,antigen);
 % Checkpoint Modules
-params_checkpoint_T_C   = checkpoint_parameters(params_out,'T','C1');
-model = checkpoint_module(model,params_checkpoint_T_C,  'T','C1');
-params_checkpoint_T_APC = checkpoint_parameters(params_out,'T','APC');
-model = checkpoint_module(model,params_checkpoint_T_APC,'T','APC');
+model = checkpoint_module(model,params_out,'T','C1');
+model = checkpoint_module(model,params_out,'T','APC');
 % ADCC Module (use in ipilimumab therapy)
-params_ADCC = Treg_ADCC_parameters(params_out);
-model = Treg_ADCC_module(model,params_ADCC);
+model = Treg_ADCC_module(model,params_out);
 
 % QSPIO-TNBC Modules
 model = MDSC_module(model,params_out,{'C1','C2'});

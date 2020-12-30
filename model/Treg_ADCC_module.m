@@ -42,9 +42,9 @@ p = addparameter(model,'Treg_CTLA4_tot',params.Treg_CTLA4_tot.Value,'ValueUnits'
     set(p,'Notes',['Total number of CTLA4 on Treg cells ' params.Treg_CTLA4_tot.Notes]);
 % CTLA4-related Hill parameters
 p = addparameter(model,'Treg_CTLA4_50',params.Treg_CTLA4_50.Value,'ValueUnits',params.Treg_CTLA4_50.Units);
-    set(p,'Notes',['CTLA4 occupancy for half-maximal Treg inactivation by macrophages' params.Treg_CTLA4_50.Notes]);
+    set(p,'Notes',['CTLA4 occupancy for half-maximal Treg inactivation by macrophages ' params.Treg_CTLA4_50.Notes]);
 p = addparameter(model,'n_Treg_CTLA4',params.n_Treg_CTLA4.Value,'ValueUnits',params.n_Treg_CTLA4.Units);
-    set(p,'Notes',['CTLA4 occupancy Hill coefficient for Treg inactivation by macrophages' params.n_Treg_CTLA4.Notes]);
+    set(p,'Notes',['CTLA4 occupancy Hill coefficient for Treg inactivation by macrophages ' params.n_Treg_CTLA4.Notes]);
 % Treg ADCC rates
 p = addparameter(model,'k_CTLA4_ADCC',params.k_CTLA4_ADCC.Value,'ValueUnits',params.k_CTLA4_ADCC.Units,'ConstantValue',false);
     set(p,'Notes',[params.k_CTLA4_ADCC.Notes]);

@@ -84,7 +84,7 @@ k_on = addparameter(model,'k_on',params.k_on.Value,'ValueUnits',params.k_on.Unit
     set(k_on,'Notes',['Rate of antigen-MHC binding ' params.k_on.Notes]);
 for i = 1:N_MHC
     k_d = addparameter(model,['k_' antigen_name '_d' num2str(i)],antigen.kd(i).Value,'ValueUnits',antigen.kd(i).Units);
-        set(k_d,'Notes','Antigen-MHC kd');
+        set(k_d,'Notes',['Antigen-MHC kd ' antigen.kd(i).Notes]);
 end
 p_50 = addparameter(model,[epitope_name '_50'],params.p_50.Value,'ValueUnits',params.p_50.Units);
     set(p_50,'Notes',params.p_50.Notes);

@@ -88,7 +88,7 @@ for i = 1:n_PSA
     % Calculate MDSC density
     MDSC_density = MDSC_total./V_T;
 
-    % Add calculated clonality to postprocess structure
+    % Add calculated densities and ratios to postprocess structure
     %simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'CD8FoxP3ratio_C'}];
     %simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , CD8FoxP3ratio_C];
     simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'CD8FoxP3ratio_T'}];

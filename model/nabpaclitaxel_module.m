@@ -13,11 +13,11 @@ function model = nabpaclitaxel_module(model, params)
 
 % Setup Compartments
 comp_V1 = addcompartment(model,'V_1',15.8,'CapacityUnits','liter','ConstantCapacity',false);
-    set(comp_V1,'Notes',['Central compartment (V1) ']);
+    set(comp_V1,'Notes',['Central compartment (V1) for nab-paclitaxel PK']);
 comp_V2 = addcompartment(model,'V_2',1650,'CapacityUnits','liter','ConstantCapacity',false);
-    set (comp_V2,'Notes',['Peripheral compartment (V2) ']);
+    set (comp_V2,'Notes',['Peripheral compartment (V2) for nab-paclitaxel PK']);
 comp_V3 = addcompartment(model,'V_3',75.4,'CapacityUnits','liter','ConstantCapacity',false);
-    set (comp_V3,'Notes',['Peripheral compartment (V3) ']);
+    set (comp_V3,'Notes',['Peripheral compartment (V3) for nab-paclitaxel PK']);
 
 % comp_M0 = addcompartment(model,'M_0',1,'CapacityUnits','liter','ConstantCapacity',false);
 %     set(comp_M0,'Notes',['Maturation compartment (M0) ']);

@@ -21,9 +21,11 @@ function model = checkpoint_module(model,params,Tname,Cname)
 if Cname(1)=='C'
     compDrug = model.Compartment(3);
     gamma = 'gamma_T';
+    Param_name = 'C';
 elseif Cname(1)=='A'
     compDrug = model.Compartment(4);
     gamma = 'gamma_LN';
+    Param_name = 'APC';
 end
 
 % Add the synapse compartment
@@ -47,8 +49,9 @@ p = addparameter(model,'A_cell' ,params.A_cell.Value ,'ValueUnits',params.A_cell
     set(p,'Notes',['Surface area of the Cancer cell ' params.A_cell.Notes]);
 p = addparameter(model,'A_APC' ,params.A_APC.Value ,'ValueUnits',params.A_APC.Units);
     set(p,'Notes',['Surface area of the APC ' params.A_APC.Notes]);
+p = addparameter(model,'d_syn' ,params.d_syn.Value ,'ValueUnits',params.d_syn.Units);
+    set(p,'Notes',['The synapse gap distance (kd2D = kd3D*d_syn) ' params.d_syn.Notes]);
 end
-
 
 % Determine if first call
 first_call = true;
@@ -117,12 +120,12 @@ koff = addparameter(model,'koff_CTLA4_ipi',params.koff_CTLA4_ipi.Value,'ValueUni
     set(koff,'Notes',['koff of CTLA4-ipilimumab binding ' params.koff_CTLA4_ipi.Notes]);
 
 % Bivalent anibody parameters
-p = addparameter(model,'Chi_PD1_nivo' ,params.Chi_PD1_nivo.Value ,'ValueUnits',params.Chi_PD1_nivo.Units);
-    set(p,'Notes',['Antibody cross-arm binding efficiency ' params.Chi_PD1_nivo.Notes]);
-p = addparameter(model,'Chi_PDL1_atezo' ,params.Chi_PDL1_atezo.Value ,'ValueUnits',params.Chi_PDL1_atezo.Units);
-    set(p,'Notes',['Antibody cross-arm binding efficiency ' params.Chi_PDL1_atezo.Notes]);
-p = addparameter(model,'Chi_CTLA4_ipi' ,params.Chi_CTLA4_ipi.Value ,'ValueUnits',params.Chi_CTLA4_ipi.Units);
-    set(p,'Notes',['Antibody cross-arm binding efficiency ' params.Chi_CTLA4_ipi.Notes]);
+p = addparameter(model,'Chi_PD1_nivo' ,params.Chi_PD1_nivo.Value,'ValueUnits',params.Chi_PD1_nivo.Units);
+    set(p,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_PD1_nivo.Notes]);
+p = addparameter(model,'Chi_PDL1_atezo' ,params.Chi_PDL1_atezo.Value,'ValueUnits',params.Chi_PDL1_atezo.Units);
+    set(p,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_PDL1_atezo.Notes]);
+p = addparameter(model,'Chi_CTLA4_ipi' ,params.Chi_CTLA4_ipi.Value,'ValueUnits',params.Chi_CTLA4_ipi.Units);
+    set(p,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_CTLA4_ipi.Notes]);
 
 % PD1-related Hill parameters
 p = addparameter(model,'PD1_50',params.PD1_50.Value,'ValueUnits',params.PD1_50.Units);
@@ -140,35 +143,35 @@ end
 % Check if T cell has defined before
 first_Tcell_call = true;
 try
-    p = addparameter(model,[Tname,'_PD1_total'],params.([Tname,'_PD1']).Value,'ValueUnits',params.([Tname,'_PD1']).Units,'ConstantValue',false);
+    p = addparameter(model,[Tname,'_PD1_total'],params.T8_PD1.Value,'ValueUnits',params.T8_PD1.Units,'ConstantValue',false);
 catch
     first_Tcell_call = false;
 end
 if first_Tcell_call
-        set(p,'Notes',['concentration of PD1 on ',Tname,' cells ' params.([Tname,'_PD1']).Notes]);
-    p = addparameter(model,[Tname,'_CD28_total'],params.([Tname,'_CD28']).Value,'ValueUnits',params.([Tname,'_CD28']).Units,'ConstantValue',false);
-        set(p,'Notes',['concentration of CD28 on ',Tname,' cells ' params.([Tname,'_CD28']).Notes]);
-    p = addparameter(model,[Tname,'_CTLA4_syn'],params.([Tname,'_CTLA4']).Value,'ValueUnits',params.([Tname,'_CTLA4']).Units,'ConstantValue',false);
-        set(p,'Notes',['concentration of CTLA4 on ',Tname,' cells ' params.([Tname,'_CTLA4']).Notes]);
-    p = addparameter(model,[Tname,'_PDL1_total'],params.([Tname,'_PDL1']).Value,'ValueUnits',params.([Tname,'_PDL1']).Units,'ConstantValue',false);
-        set(p,'Notes',['concentration of PDL1 on ',Tname,' cells ' params.([Tname,'_PDL1']).Notes]);
+        set(p,'Notes',['concentration of PD1 on ',Tname,' cells ' params.T8_PD1.Notes]);
+    p = addparameter(model,[Tname,'_CD28_total'],params.T8_CD28.Value,'ValueUnits',params.T8_CD28.Units,'ConstantValue',false);
+        set(p,'Notes',['concentration of CD28 on ',Tname,' cells ' params.T8_CD28.Notes]);
+    p = addparameter(model,[Tname,'_CTLA4_syn'],params.T8_CTLA4.Value,'ValueUnits',params.T8_CTLA4.Units,'ConstantValue',false);
+        set(p,'Notes',['concentration of CTLA4 on ',Tname,' cells ' params.T8_CTLA4.Notes]);
+    p = addparameter(model,[Tname,'_PDL1_total'],params.T8_PDL1.Value,'ValueUnits',params.T8_PDL1.Units,'ConstantValue',false);
+        set(p,'Notes',['concentration of PDL1 on ',Tname,' cells ' params.T8_PDL1.Notes]);
 end
 % Check if Cancer or APC has defined before
 first_Ccell_call = true;
 try
-    p = addparameter(model,[Cname,'_PDL1_base'],params.([Cname,'_PDL1']).Value,'ValueUnits',params.([Cname,'_PDL1']).Units,'ConstantValue',false);
+    p = addparameter(model,[Cname,'_PDL1_base'],params.([Param_name,'_PDL1']).Value,'ValueUnits',params.([Param_name,'_PDL1']).Units,'ConstantValue',false);
 catch
     first_Ccell_call = false;
 end
 if first_Ccell_call
-        set(p,'Notes',['baseline number of PDL1 molecules per ',Cname,' cell ' params.([Cname,'_PDL1']).Notes]);
-    p = addparameter(model,['r_PDL2',Cname],params.(['r_PDL2',Cname]).Value,'ValueUnits',params.(['r_PDL2',Cname]).Units,'ConstantValue',false);
-        set(p,'Notes',['PDL2/PDL1 molecule ratio on ', Cname,'cell ', params.(['r_PDL2',Cname]).Notes]);
+        set(p,'Notes',['baseline number of PDL1 molecules per ',Cname,' cell ' params.([Param_name,'_PDL1']).Notes]);
+    p = addparameter(model,['r_PDL2',Cname],params.(['r_PDL2',Param_name]).Value,'ValueUnits',params.(['r_PDL2',Param_name]).Units,'ConstantValue',false);
+        set(p,'Notes',['PDL2/PDL1 molecule ratio on ', Cname,'cell ', params.(['r_PDL2',Param_name]).Notes]);
 
-    p = addparameter(model,[Cname,'_CD80_total'],params.([Cname,'_CD80']).Value,'ValueUnits',params.([Cname,'_CD80']).Units,'ConstantValue',false);
-        set(p,'Notes',['number of CD80 molecules per ',Cname,' cell ' params.([Cname,'_CD80']).Notes]);
-    p = addparameter(model,[Cname,'_CD86_total'],params.([Cname,'_CD86']).Value,'ValueUnits',params.([Cname,'_CD86']).Units,'ConstantValue',false);
-        set(p,'Notes',['number of CD86 molecules per ',Cname,' cell ' params.([Cname,'_CD86']).Notes]);
+    p = addparameter(model,[Cname,'_CD80_total'],params.([Param_name,'_CD80']).Value,'ValueUnits',params.([Param_name,'_CD80']).Units,'ConstantValue',false);
+        set(p,'Notes',['number of CD80 molecules per ',Cname,' cell ' params.([Param_name,'_CD80']).Notes]);
+    p = addparameter(model,[Cname,'_CD86_total'],params.([Param_name,'_CD86']).Value,'ValueUnits',params.([Param_name,'_CD86']).Units,'ConstantValue',false);
+        set(p,'Notes',['number of CD86 molecules per ',Cname,' cell ' params.([Param_name,'_CD86']).Notes]);
 end
 
 % Add Species

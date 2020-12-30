@@ -59,12 +59,12 @@ set(ArgI,'Notes','Concentration of Arg I in the tumor compartment');
 
 % Add Parameters
 k_rec_MDSC = addparameter(model,'k_rec_MDSC',params.k_rec_MDSC.Value,'ValueUnits',params.k_rec_MDSC.Units);
-set(k_rec_MDSC,'Notes',['Rate of MDSC recruitment into the tumor' params.k_rec_MDSC.Notes]);
+set(k_rec_MDSC,'Notes',['Rate of MDSC recruitment into the tumor ' params.k_rec_MDSC.Notes]);
 kd_MDSC = addparameter(model,'kd_MDSC',params.kd_MDSC.Value,'ValueUnits',params.kd_MDSC.Units);
 set(kd_MDSC,'Notes',['Rate of MDSC death ' params.kd_MDSC.Notes]);
 
 IC50_ENT_C = addparameter(model,'IC50_ENT_C',params.IC50_ENT_C.Value,'ValueUnits',params.IC50_ENT_C.Units);
-set(IC50_ENT_C,'Notes',['ENT concentration for half-maximal tumor cell death' params.IC50_ENT_C.Notes]);
+set(IC50_ENT_C,'Notes',['ENT concentration for half-maximal tumor cell death ' params.IC50_ENT_C.Notes]);
 % CCL2 Parameters
 p = addparameter(model,'k_deg_CCL2',params.k_deg_CCL2.Value,'ValueUnits',params.k_deg_CCL2.Units);
 set(p,'Notes',['rate of CCL2 degradation ' params.k_deg_CCL2.Notes]);

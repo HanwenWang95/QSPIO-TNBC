@@ -38,7 +38,7 @@ k_C_death = addparameter(model,'k_C_death',params.k_C_death.Value,'ValueUnits',p
     set(k_C_death,'Notes',['Cancer cell death rate from innate immune cells ' params.k_C_death.Notes]);
 % Therapy
 param = addparameter(model,['k_' species_name '_therapy'],0,'ValueUnits','1/day','ConstantValue',false);
-    set(param,'Notes',['Rate of ' species_name ' killing by therapy']);
+    set(param,'Notes',['Rate of ' species_name ' killing by therapy (see Rules)']);
 
 % Initial Tumour Diameter
 try % only add once
@@ -52,7 +52,7 @@ end
 % Growth
 reaction = addreaction(model,'null -> V_T.C');
     set(reaction,'ReactionRate','k_C_growth*V_T.C*log(max(C_max/(C_total+cell), 1))');
-    set(reaction,'Notes','Cancer cell growth (Logistic model based on Komarova and reviewed in Marusic)');
+    set(reaction,'Notes','Cancer cell growth');
 % Death
 reaction = addreaction(model,'V_T.C -> V_T.C_x');
     set(reaction,'ReactionRate','k_C_death*V_T.C');

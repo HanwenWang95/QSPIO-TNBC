@@ -35,11 +35,11 @@ c = addspecies(model.Compartment(3),'c',0,'InitialAmountUnits','molarity');
 
 % Add Parameters
 k_APC_mat = addparameter(model,'k_APC_mat',params.k_APC_mat.Value,'ValueUnits',params.k_APC_mat.Units);
-    set(k_APC_mat,'Notes',['Maximum rate of APC maturation' params.k_APC_mat.Notes]);
+    set(k_APC_mat,'Notes',['Maximum rate of APC maturation ' params.k_APC_mat.Notes]);
 k_APC_mig = addparameter(model,'k_APC_mig',params.k_APC_mig.Value,'ValueUnits',params.k_APC_mig.Units);
-    set(k_APC_mig,'Notes',['Rate of APC migration' params.k_APC_mig.Notes]);
+    set(k_APC_mig,'Notes',['Rate of APC migration ' params.k_APC_mig.Notes]);
 k_APC_death = addparameter(model,'k_APC_death',params.k_APC_death.Value,'ValueUnits',params.k_APC_death.Units);
-    set(k_APC_death,'Notes',['Rate of APC death' params.k_APC_death.Notes]);
+    set(k_APC_death,'Notes',['Rate of APC death ' params.k_APC_death.Notes]);
 k_mAPC_death = addparameter(model,'k_mAPC_death',params.k_mAPC_death.Value,'ValueUnits',params.k_mAPC_death.Units);
     set(k_mAPC_death,'Notes',['Rate of mAPC death' params.k_mAPC_death.Notes]);
 APC0_T = addparameter(model,'APC0_T',params.APC0_T.Value,'ValueUnits',params.APC0_T.Units);
@@ -47,11 +47,11 @@ APC0_T = addparameter(model,'APC0_T',params.APC0_T.Value,'ValueUnits',params.APC
 APC0_LN = addparameter(model,'APC0_LN',params.APC0_LN.Value,'ValueUnits',params.APC0_LN.Units);
     set(APC0_LN,'Notes','Steady state density of all APC subtypes in the LN (Catron 2004, PMID: 15357945)- divided by 10 to only take CD103+ based on (Lavin 2017, PMID: 28475900)');
 k_c = addparameter(model,'k_c',params.k_c.Value,'ValueUnits',params.k_c.Units);
-    set(k_c,'Notes',['Cytokine rate constant' params.k_c.Notes]);
+    set(k_c,'Notes',['Cytokine rate constant ' params.k_c.Notes]);
 c0 = addparameter(model,'c0',params.c0.Value,'ValueUnits',params.c0.Units);
-    set(c0,'Notes',['Baseline cytokine concentration' params.c0.Notes]);
+    set(c0,'Notes',['Baseline cytokine concentration ' params.c0.Notes]);
 c50 = addparameter(model,'c50',params.c50.Value,'ValueUnits',params.c50.Units);
-    set(c50,'Notes',['Cytokine concentration for half-maximal APC maturation' params.c50.Notes]);
+    set(c50,'Notes',['Cytokine concentration for half-maximal APC maturation ' params.c50.Notes]);
 DAMPs = addparameter(model,'DAMPs',params.DAMPs.Value,'ValueUnits',params.DAMPs.Units);
     set(DAMPs,'Notes',['Concentration of cytokines released per dying cancer cell ' params.DAMPs.Notes]);
 n_sites = addparameter(model,'n_sites_APC',params.n_sites_APC.Value,'ValueUnits',params.n_sites_APC.Units);

@@ -27,7 +27,7 @@ k_TCR_off = addparameter(model,'k_TCR_off',params.k_TCR_off.Value,'ValueUnits',p
 TCR_tot = addparameter(model,'TCR_tot',params.TCR_tot.Value,'ValueUnits',params.TCR_tot.Units);
     set(TCR_tot,'Notes',['Total number of TCR molecules per naive T cell ' params.TCR_tot.Notes]);
 pTCR_MHC_tot = addparameter(model,'pTCR_MHC_tot',0,'ValueUnits',params.TCR_tot.Units,'ConstantValue',false);
-    set(pTCR_MHC_tot,'Notes',['Total number of MHC-' epitope_name '-TCR complexes of all different activation levels']);
+    set(pTCR_MHC_tot,'Notes',['Total number of MHC-' epitope_name '-TCR complexes of all different activation levels (see Rules)']);
 
 % This only works with 1 MHC at the moment
 P_T = ['A_s.' Mp '/n_' Tcell_name '_clones'];

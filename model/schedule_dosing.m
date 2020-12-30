@@ -135,12 +135,12 @@ doseObj_atezo.Active = true;
 
 % Ipilimumab
 MW_ipil = 1.486349E8; % milligrams per mole
-doseObj_ipil = sbiodose('ipi','Amount',patient_weight*dose_ipil/MW_ipil,'AmountUnits','mole','TargetName','V_C.ipi');
-doseObj_ipil.StartTime = schedule_ipil(1);
-doseObj_ipil.Interval = schedule_ipil(2);
-doseObj_ipil.TimeUnits = 'day';
-doseObj_ipil.RepeatCount = schedule_ipil(3);
-doseObj_ipil.Active = true;
+doseObj_ipi = sbiodose('ipi','Amount',patient_weight*dose_ipil/MW_ipil,'AmountUnits','mole','TargetName','V_C.ipi');
+doseObj_ipi.StartTime = schedule_ipil(1);
+doseObj_ipi.Interval = schedule_ipil(2);
+doseObj_ipi.TimeUnits = 'day';
+doseObj_ipi.RepeatCount = schedule_ipil(3);
+doseObj_ipi.Active = true;
 
 % Dose Schedule Array
 dose_schedule(N) = sbiodose('empty'); % preallocate array
@@ -151,7 +151,7 @@ for i = 1:N
         case 'atezolizumab'
             dose_schedule(i) = doseObj_atezo;
         case 'ipilimumab'
-            dose_schedule(i) = doseObj_ipil;
+            dose_schedule(i) = doseObj_ipi;
         case 'nabPaclitaxel'
             dose_schedule(i) = doseObj_nabp_1;
         case 'entinostat'

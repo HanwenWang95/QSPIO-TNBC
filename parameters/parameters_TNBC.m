@@ -101,21 +101,21 @@ params.n_clones_slf.Value = 63;
 params.n_clones_slf.Units = 'dimensionless';
 params.n_clones_slf.Notes = '(estimated)';
 % Maximum Rate of CD8+ T Cell Activation by mAPCs
-params.k_nTCD8.Value = 23;
-params.k_nTCD8.Units = '1/day';
-params.k_nTCD8.Notes = '(De Boer and Perelson 1995, PMID: 7475092; Robertson-Tessi 2012, PMID: 22051568)';
+params.k_nCD8_act.Value = 23;
+params.k_nCD8_act.Units = '1/day';
+params.k_nCD8_act.Notes = '(De Boer and Perelson 1995, PMID: 7475092; Robertson-Tessi 2012, PMID: 22051568)';
 % Maximum Rate of CD4+ Treg Activation by APCs
-params.k_nTCD4.Value = 5;
-params.k_nTCD4.Units = '1/day';
-params.k_nTCD4.Notes = '(De Boer and Perelson 1995, PMID: 7475092; Robertson-Tessi 2012, PMID: 22051568)';
+params.k_nCD4_act.Value = 5;
+params.k_nCD4_act.Units = '1/day';
+params.k_nCD4_act.Notes = '(De Boer and Perelson 1995, PMID: 7475092; Robertson-Tessi 2012, PMID: 22051568)';
 % Rate of CD8+ T Cell Proliferation
-params.k_pro_CD8.Value = 1.0;
-params.k_pro_CD8.Units = '1/day';
-params.k_pro_CD8.Notes = '(Marchingo 2014, PMID: 25430770)';
+params.k_CD8_pro.Value = 1.0;
+params.k_CD8_pro.Units = '1/day';
+params.k_CD8_pro.Notes = '(Marchingo 2014, PMID: 25430770)';
 % Rate of CD4+ T Cell Proliferation
-params.k_pro_CD4.Value = 1.0;
-params.k_pro_CD4.Units = '1/day';
-params.k_pro_CD4.Notes = '(Marchingo 2014, PMID: 25430770)';
+params.k_CD4_pro.Value = 1.0;
+params.k_CD4_pro.Units = '1/day';
+params.k_CD4_pro.Notes = '(Marchingo 2014, PMID: 25430770)';
 % Rate of CD8 T Cell Decay
 params.k_CD8_death.Value = 0.01;
 params.k_CD8_death.Units = '1/day';
@@ -124,22 +124,6 @@ params.k_CD8_death.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
 params.k_CD4_death.Value = 0.01;
 params.k_CD4_death.Units = '1/day';
 params.k_CD4_death.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
-% Activated CD8 T Cell Transport P->C
-params.q_CD8_P_out.Value = 24;
-params.q_CD8_P_out.Units = '1/day';
-params.q_CD8_P_out.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
-% Activated CD4 T Cell Transport P->C
-params.q_CD4_P_out.Value = 24;
-params.q_CD4_P_out.Units = '1/day';
-params.q_CD4_P_out.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
-% Activated CD8 T Cell Transport LN->C
-params.q_CD8_LN_out.Value = 24.0;
-params.q_CD8_LN_out.Units = '1/day';
-params.q_CD8_LN_out.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
-% Activated CD4 T Cell Transport LN->C
-params.q_CD4_LN_out.Value = 24.0;
-params.q_CD4_LN_out.Units = '1/day';
-params.q_CD4_LN_out.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
 % Activated CD8 Rate of Transmigration
 params.k_CD8_mig.Value = 5.8e-12;
 params.k_CD8_mig.Units = '1/minute/cell';
@@ -148,6 +132,10 @@ params.k_CD8_mig.Notes = '(Zhu 1996, PMID: 8706023)';
 params.k_CD4_mig.Value = 5.8e-12;
 params.k_CD4_mig.Units = '1/minute/cell';
 params.k_CD4_mig.Notes = '(Zhu 1996, PMID: 8706023)';
+% T cell Adhesion Density
+params.rho_adh.Value = 5e8; % 5e8-1e9
+params.rho_adh.Units = 'cell/centimeter^3';
+params.rho_adh.Notes = '(Zhu 1996, PMID: 8706023)';
 % Peripheral Vascular Volume Fractions
 params.gamma_P.Value = 0.014;
 params.gamma_P.Units = 'dimensionless';
@@ -156,6 +144,46 @@ params.gamma_P.Notes = '(Finley 2012, PMID: 22547351)';
 params.gamma_T.Value = 0.02;
 params.gamma_T.Units = 'dimensionless';
 params.gamma_T.Notes = '(Finley 2012, PMID: 22547351; Stamatelos 2014, PMID: 24342178)';
+% Activated CD8+ T Cell Transport C->P
+params.q_CD8_P_in.Value = [];
+params.q_CD8_P_in.Units = '1/minute';
+params.q_CD8_P_in.Notes = ['calculated based on T cell transmigration rate ' params.k_CD8_mig.Notes ' and T cell adhesion density ' params.rho_adh.Notes];
+params.q_CD8_P_in.Factors = ["k_CD8_mig", "rho_adh", "gamma_P", "V_P"];
+params.q_CD8_P_in.Equation = 'p(1)*p(2)*p(3)*p(4)';
+% Activated CD4+ T Cell Transport C->P
+params.q_CD4_P_in.Value = [];
+params.q_CD4_P_in.Units = '1/minute';
+params.q_CD4_P_in.Notes = ['calculated based on T cell transmigration rate ' params.k_CD4_mig.Notes ' and T cell adhesion density ' params.rho_adh.Notes];
+params.q_CD4_P_in.Factors = ["k_CD4_mig", "rho_adh", "gamma_P", "V_P"];
+params.q_CD4_P_in.Equation = 'p(1)*p(2)*p(3)*p(4)';
+% Activated CD8+ T Cell Transport C->T
+params.q_CD8_T_in.Value = [];
+params.q_CD8_T_in.Units = '1/(centimeter^3*minute)';
+params.q_CD8_T_in.Notes = ['calculated based on T cell transmigration rate ' params.k_CD8_mig.Notes ' and T cell adhesion density ' params.rho_adh.Notes];
+params.q_CD8_T_in.Factors = ["k_CD8_mig", "rho_adh", "gamma_T"];
+params.q_CD8_T_in.Equation = 'p(1)*p(2)*p(3)';
+% Activated CD4+ T Cell Transport C->T
+params.q_CD4_T_in.Value = [];
+params.q_CD4_T_in.Units = '1/(centimeter^3*minute)';
+params.q_CD4_T_in.Notes = ['calculated based on T cell transmigration rate ' params.k_CD4_mig.Notes ' and T cell adhesion density ' params.rho_adh.Notes];
+params.q_CD4_T_in.Factors = ["k_CD4_mig", "rho_adh", "gamma_T"];
+params.q_CD4_T_in.Equation = 'p(1)*p(2)*p(3)';
+% Activated CD8+ T Cell Transport P->C
+params.q_CD8_P_out.Value = 24;
+params.q_CD8_P_out.Units = '1/day';
+params.q_CD8_P_out.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
+% Activated CD4+ T Cell Transport P->C
+params.q_CD4_P_out.Value = 24;
+params.q_CD4_P_out.Units = '1/day';
+params.q_CD4_P_out.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
+% Activated CD8+ T Cell Transport LN->C
+params.q_CD8_LN_out.Value = 24.0;
+params.q_CD8_LN_out.Units = '1/day';
+params.q_CD8_LN_out.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
+% Activated CD4+ T Cell Transport LN->C
+params.q_CD4_LN_out.Value = 24.0;
+params.q_CD4_LN_out.Units = '1/day';
+params.q_CD4_LN_out.Notes = '(De Boer and Perelson 1995, PMID: 7475092)';
 % Death Rate Due to T Cells
 params.k_C_Tcell.Value = 0.9;
 params.k_C_Tcell.Units = '1/day';
@@ -208,70 +236,63 @@ params.N_IL2_CD4.Units = 'dimensionless';
 params.N_IL2_CD4.Notes = '(Marchingo 2014, PMID: 25430770)';
 
 %% Naive T Cell Parameters
-% Thymic output of naive CD4 T Cells into the blood
-params.Q_CD4_thym.Value = 7e7; % median age at diagnosis of TNBC: 59
-params.Q_CD4_thym.Units = 'cell/day';
-params.Q_CD4_thym.Notes = '(Bains 2009, PMID: 19179300; Yeh 2017, PMID: 28912973)';
-% Thymic output of naive CD8 T Cells into the blood
-params.Q_CD8_thym.Value = 3.5e7;
-params.Q_CD8_thym.Units = 'cell/day';
-params.Q_CD8_thym.Notes = '(Bains 2009, PMID: 19179300; Ye 2002, PMID: 11994448)';
-% Rate of naive T cell proliferation
-params.k_nT_pro_CD4.Value = 3.2e8;
-params.k_nT_pro_CD4.Units = 'cell/day';
-params.k_nT_pro_CD4.Notes = '(Braber 2012, PMID: 22365666)';
-% Rate of naive T cell proliferation
-params.k_nT_pro_CD8.Value = 3.2e8;
-params.k_nT_pro_CD8.Units = 'cell/day';
-params.k_nT_pro_CD8.Notes = '(Braber 2012, PMID: 22365666)';
-% Naive CD8 Transport P->C
-params.q_nCD8_P_out.Value = 5.1;
-params.q_nCD8_P_out.Units = '1/day';
-params.q_nCD8_P_out.Notes = '(estimated based on steady-state naive T cell density in healthy individuals)';
-% Naive CD4 Transport P->C
-params.q_nCD4_P_out.Value = 5.1;
-params.q_nCD4_P_out.Units = '1/day';
-params.q_nCD4_P_out.Notes = '(estimated based on steady-state naive T cell density in healthy individuals)';
-% Naive T Cell Lymph Node Exit Rate
-params.q_nCD8_LN_out.Value = 1.8;
-params.q_nCD8_LN_out.Units = '1/day';
-params.q_nCD8_LN_out.Notes = '(Mandl 2012, PMID: 23071319)';
-% Naive T Cell Lymph Node Exit Rate
-params.q_nCD4_LN_out.Value = 2.88;
-params.q_nCD4_LN_out.Units = '1/day';
-params.q_nCD4_LN_out.Notes = '(Mandl 2012, PMID: 23071319)';
-% Naive T Cell Lymph Node Entry Rate
-params.q_CD8_LN_in.Value = 0.076;
-params.q_CD8_LN_in.Units = '1/day';
-params.q_CD8_LN_in.Notes = '(calculated based on the steady-state naive T cell level in healthy individuals)';
-% Naive T Cell Lymph Node Entry Rate
-params.q_CD4_LN_in.Value = 0.1;
-params.q_CD4_LN_in.Units = '1/day';
-params.q_CD4_LN_in.Notes = '(calculated based on the steady-state naive T cell level in healthy individuals)';
 % Naive CD8+ T Cell Density in Blood
-params.rho_nTCD8.Value = 5.05e5; % 505.0, 410.5–825.4 cells/uL
-params.rho_nTCD8.Units = 'cell/milliliter';
-params.rho_nTCD8.Notes = '(Autissier 2010, PMID: 20099249)';
+params.rho_nCD8.Value = 5.05e5; % 505.0, 410.5–825.4 cells/uL
+params.rho_nCD8.Units = 'cell/milliliter';
+params.rho_nCD8.Notes = '(Autissier 2010, PMID: 20099249)';
 % Naive CD4+ T Cell Density in Blood
-params.rho_nTCD4.Value = 8.6e5; % 860.7, 520.8–1173.2 cells/uL
-params.rho_nTCD4.Units = 'cell/milliliter';
-params.rho_nTCD4.Notes = '(Autissier 2010, PMID: 20099249)';
+params.rho_nCD4.Value = 8.6e5; % 860.7, 520.8–1173.2 cells/uL
+params.rho_nCD4.Units = 'cell/milliliter';
+params.rho_nCD4.Notes = '(Autissier 2010, PMID: 20099249)';
+% Number of Naive CD8+ T Cell in Blood
+params.nCD8_C.Value = [];
+params.nCD8_C.Units = 'cell';
+params.nCD8_C.Notes = '';
+params.nCD8_C.Factors = ["rho_nCD8", "V_C"];
+params.nCD8_C.Equation = 'p(1)*p(2)';
+% Number of Naive CD4+ T Cell in Blood
+params.nCD4_C.Value = [];
+params.nCD4_C.Units = 'cell';
+params.nCD4_C.Notes = '';
+params.nCD4_C.Factors = ["rho_nCD4", "V_C"];
+params.nCD4_C.Equation = 'p(1)*p(2)';
+% Number of Naive CD8+ T Cell in Peripheral
+params.nCD8_P.Value = [];
+params.nCD8_P.Units = 'cell';
+params.nCD8_P.Notes = ' estimated assuming a 50x T cell number in peripheral compartment (Braber 2012, PMID: 22365666)';
+params.nCD8_P.Factors = ["nCD8_C"];
+params.nCD8_P.Equation = 'p(1)*50';
+% Number of Naive CD4+ T Cell in Peripheral
+params.nCD4_P.Value = [];
+params.nCD4_P.Units = 'cell';
+params.nCD4_P.Notes = ' estimated assuming a 50x T cell number in peripheral compartment (Braber 2012, PMID: 22365666)';
+params.nCD4_P.Factors = ["nCD4_C"];
+params.nCD4_P.Equation = 'p(1)*50';
+% Number of Naive CD8+ T Cell in Lymph Nodes
+params.nCD8_LN.Value = [];
+params.nCD8_LN.Units = 'cell';
+params.nCD8_LN.Notes = ' calculated based on the steady-state naive T cell level in healthy individuals (Autissier 2010, PMID: 20099249)';
+params.nCD8_LN.Factors = ["nCD8_C"];
+params.nCD8_LN.Equation = 'p(1)*0.05';
+% Number of Naive CD4+ T Cell in Lymph Nodes
+params.nCD4_LN.Value = [];
+params.nCD4_LN.Units = 'cell';
+params.nCD4_LN.Notes = ' calculated based on the steady-state naive T cell level in healthy individuals (Autissier 2010, PMID: 20099249)';
+params.nCD4_LN.Factors = ["nCD4_C"];
+params.nCD4_LN.Equation = 'p(1)*0.042';
+
 % Naive CD8+ T Cell Diversity
-params.nT_div_CD8.Value = 1.11e6;
-params.nT_div_CD8.Units = 'dimensionless';
-params.nT_div_CD8.Notes = '(Robins 2009, PMID: 19706884)';
+params.nCD8_div.Value = 1.11e6;
+params.nCD8_div.Units = 'dimensionless';
+params.nCD8_div.Notes = '(Robins 2009, PMID: 19706884)';
 % Naive CD4+ T Cell Diversity
-params.nT_div_CD4.Value = 1.16e6;
-params.nT_div_CD4.Units = 'dimensionless';
-params.nT_div_CD4.Notes = '(Robins 2009, PMID: 19706884)';
+params.nCD4_div.Value = 1.16e6;
+params.nCD4_div.Units = 'dimensionless';
+params.nCD4_div.Notes = '(Robins 2009, PMID: 19706884)';
 % Naive T Rate of Transmigration
 params.k_nT_mig.Value = 4.2e-13;
 params.k_nT_mig.Units = '1/minute/cell';
 params.k_nT_mig.Notes = '(Zhu 1996, PMID: 8706023)';
-% T cell Adhesion Density
-params.rho_adh.Value = 5e8; % 5e8-1e9
-params.rho_adh.Units = 'cell/centimeter^3';
-params.rho_adh.Notes = '(Zhu 1996, PMID: 8706023)';
 % Naive T cell density for half-maximal peripheral proliferation
 params.K_nT_pro.Value = 1e9;
 params.K_nT_pro.Units = 'cell';
@@ -280,6 +301,71 @@ params.K_nT_pro.Notes = '(Braber 2012, PMID: 22365666)';
 params.k_nT_death.Value = 0.002;
 params.k_nT_death.Units = '1/day';
 params.k_nT_death.Notes = '(Braber 2012, PMID: 22365666)';
+% Thymic output of naive CD4+ T Cells into the blood
+params.Q_nCD4_thym.Value = 7e7; % median age at diagnosis of TNBC: 59
+params.Q_nCD4_thym.Units = 'cell/day';
+params.Q_nCD4_thym.Notes = '(Bains 2009, PMID: 19179300; Yeh 2017, PMID: 28912973)';
+% Thymic output of naive CD8+ T Cells into the blood
+params.Q_nCD8_thym.Value = 3.5e7;
+params.Q_nCD8_thym.Units = 'cell/day';
+params.Q_nCD8_thym.Notes = '(Bains 2009, PMID: 19179300; Ye 2002, PMID: 11994448)';
+% Rate of naive CD4+ T Cell proliferation
+params.k_nCD4_pro.Value = 3.2e8;
+params.k_nCD4_pro.Units = 'cell/day';
+params.k_nCD4_pro.Notes = '(Braber 2012, PMID: 22365666)';
+% Rate of naive CD8+ T Cell proliferation
+params.k_nCD8_pro.Value = 3.2e8;
+params.k_nCD8_pro.Units = 'cell/day';
+params.k_nCD8_pro.Notes = '(Braber 2012, PMID: 22365666)';
+% Naive CD8+ T Cell Transport C->P
+params.q_nCD8_P_in.Value = [];
+params.q_nCD8_P_in.Units = '1/minute';
+params.q_nCD8_P_in.Notes = ['calculated based on T cell transmigration rate ' params.k_nT_mig.Notes ' and T cell adhesion density ' params.rho_adh.Notes];
+params.q_nCD8_P_in.Factors = ["k_nT_mig", "rho_adh", "gamma_P", "V_P"];
+params.q_nCD8_P_in.Equation = 'p(1)*p(2)*p(3)*p(4)';
+% Naive CD4+ T Cell Transport C->P
+params.q_nCD4_P_in.Value = [];
+params.q_nCD4_P_in.Units = '1/minute';
+params.q_nCD4_P_in.Notes = ['calculated based on T cell transmigration rate ' params.k_nT_mig.Notes ' and T cell adhesion density ' params.rho_adh.Notes];
+params.q_nCD4_P_in.Factors = ["k_nT_mig", "rho_adh", "gamma_P", "V_P"];
+params.q_nCD4_P_in.Equation = 'p(1)*p(2)*p(3)*p(4)';
+% Naive CD8+ T Cell Transport C->T
+params.q_nCD8_T_in.Value = [];
+params.q_nCD8_T_in.Units = '1/(centimeter^3*minute)';
+params.q_nCD8_T_in.Notes = ['calculated based on T cell transmigration rate ' params.k_nT_mig.Notes ' and T cell adhesion density ' params.rho_adh.Notes];
+params.q_nCD8_T_in.Factors = ["k_nT_mig", "rho_adh", "gamma_T"];
+params.q_nCD8_T_in.Equation = 'p(1)*p(2)*p(3)';
+% Naive CD4+ T Cell Transport C->T
+params.q_nCD4_T_in.Value = [];
+params.q_nCD4_T_in.Units = '1/(centimeter^3*minute)';
+params.q_nCD4_T_in.Notes = ['calculated based on T cell transmigration rate ' params.k_nT_mig.Notes ' and T cell adhesion density ' params.rho_adh.Notes];
+params.q_nCD4_T_in.Factors = ["k_nT_mig", "rho_adh", "gamma_T"];
+params.q_nCD4_T_in.Equation = 'p(1)*p(2)*p(3)';
+% Naive CD8+ T Cell Transport P->C
+params.q_nCD8_P_out.Value = 5.1;
+params.q_nCD8_P_out.Units = '1/day';
+params.q_nCD8_P_out.Notes = ' calculated based on steady-state naive T cell density in healthy individuals (Autissier 2010, PMID: 20099249)';
+% Naive CD4+ T Cell Transport P->C
+params.q_nCD4_P_out.Value = 5.1;
+params.q_nCD4_P_out.Units = '1/day';
+params.q_nCD4_P_out.Notes = ' calculated based on steady-state naive T cell density in healthy individuals (Autissier 2010, PMID: 20099249)';
+% Naive CD8+ T Cell Lymph Node Exit Rate
+params.q_nCD8_LN_out.Value = 1.8;
+params.q_nCD8_LN_out.Units = '1/day';
+params.q_nCD8_LN_out.Notes = '(Mandl 2012, PMID: 23071319)';
+% Naive CD4+ T Cell Lymph Node Exit Rate
+params.q_nCD4_LN_out.Value = 2.88;
+params.q_nCD4_LN_out.Units = '1/day';
+params.q_nCD4_LN_out.Notes = '(Mandl 2012, PMID: 23071319)';
+% Naive CD8+ T Cell Lymph Node Entry Rate
+params.q_nCD8_LN_in.Value = 0.076;
+params.q_nCD8_LN_in.Units = '1/day';
+params.q_nCD8_LN_in.Notes = ' calculated based on the steady-state naive T cell level in healthy individuals (Autissier 2010, PMID: 20099249)';
+% Naive CD4+ T Cell Lymph Node Entry Rate
+params.q_nCD4_LN_in.Value = 0.1;
+params.q_nCD4_LN_in.Units = '1/day';
+params.q_nCD4_LN_in.Notes = ' calculated based on the steady-state naive T cell level in healthy individuals (Autissier 2010, PMID: 20099249)';
+
 
 %% APC Module Parameters
 % Rate of APC Maturation
@@ -421,7 +507,7 @@ params.k_on.Notes = '(Agrawal and Linderman 1996, PMID: 8944895)';
 params.N_p_50.Value = 1e-3;
 params.N_p_50.Units = 'molecule';
 params.N_p_50.Notes = '(Kimachi 1997, PMID: 9464819)';
-% MHC-Epitope-TCR Concentration for Half-Maximal T Cell Activation
+% TCR-pMHC Concentration for Half-Maximal T Cell Activation
 params.p_50.Value = [];
 params.p_50.Units = 'molecule/micrometer^2';
 params.p_50.Notes = ['calculated based on the number of molecules for half-maximal T cell activation '...
@@ -468,7 +554,7 @@ params.N_TCR.Notes = '(Lever 2014, PMID: 25145757)';
 params.A_syn.Value = 37.8;
 params.A_syn.Units = 'micrometer^2';
 params.A_syn.Notes = '(Jansson 2005, PMID: 16034096)';
-% The synapse gap distance (kd 2D = kd3D*d_syn)
+% The synapse gap distance (kd2D = kd3D*d_syn)
 params.d_syn.Value = 3.0;
 params.d_syn.Units = 'nanometer';
 params.d_syn.Notes = '(Jansson 2005, PMID: 16034096)';
@@ -486,17 +572,29 @@ params.kd_PD1_PDL1.Value = 8.2;
 params.kd_PD1_PDL1.Units = 'micromolarity';
 params.kd_PD1_PDL1.Notes = '(Cheng 2013, PMID: 23417675)';
 % PD1-PDL1 kon
-params.kon_PD1_PDL1.Value = 0.175;
-params.kon_PD1_PDL1.Units = '1/(micromolarity*second)';
-params.kon_PD1_PDL1.Notes = '(Cheng 2013, PMID: 23417675)';
+params.kon_PD1_PDL1_3D.Value = 0.175;
+params.kon_PD1_PDL1_3D.Units = '1/(micromolarity*second)';
+params.kon_PD1_PDL1_3D.Notes = '(Cheng 2013, PMID: 23417675)';
+% PD1-PDL1 kon for 2D
+params.kon_PD1_PDL1.Value = [];
+params.kon_PD1_PDL1.Units = '';
+params.kon_PD1_PDL1.Notes = ['kon for PD1-PDL1 ' params.kon_PD1_PDL1_3D.Notes];
+params.kon_PD1_PDL1.Factors = ["kon_PD1_PDL1_3D","d_syn"];
+params.kon_PD1_PDL1.Equation = 'p(1)/p(2)';
 % PD1-PDL2 kd
 params.kd_PD1_PDL2.Value = 2.3;
 params.kd_PD1_PDL2.Units = 'micromolarity';
 params.kd_PD1_PDL2.Notes = '(Cheng 2013, PMID: 23417675)';
 % PD1-PDL2 kon
-params.kon_PD1_PDL2.Value = 0.23;
-params.kon_PD1_PDL2.Units = '1/(micromolarity*second)';
+params.kon_PD1_PDL2_3D.Value = 0.23;
+params.kon_PD1_PDL2_3D.Units = '1/(micromolarity*second)';
+params.kon_PD1_PDL2_3D.Notes = '(Cheng 2013, PMID: 23417675)';
+% PD1-PDL2 kon for 2D
+params.kon_PD1_PDL2.Value = [];
+params.kon_PD1_PDL2.Units = '';
 params.kon_PD1_PDL2.Notes = '(Cheng 2013, PMID: 23417675)';
+params.kon_PD1_PDL2.Factors = ["kon_PD1_PDL2_3D","d_syn"];
+params.kon_PD1_PDL2.Equation = 'p(1)/p(2)';
 % PD1-nivolumab kd
 params.kd_PD1_nivo.Value = 2.60;
 params.kd_PD1_nivo.Units = 'nanomolarity';
@@ -506,9 +604,15 @@ params.kon_PD1_nivo.Value = 1.3e6;
 params.kon_PD1_nivo.Units = '1/(molarity*second)';
 params.kon_PD1_nivo.Notes = '(Wang 2014, PMID: 24872026)';
 % PD1-nivolumab Chi (antibody cross-arm binding strength)
-params.Chi_PD1_nivo.Value = 10;
-params.Chi_PD1_nivo.Units = 'dimensionless';
+params.Chi_PD1_nivo_3D.Value = 10;
+params.Chi_PD1_nivo_3D.Units = 'dimensionless';
+params.Chi_PD1_nivo_3D.Notes = '(estimated based on Wang 2014, PMID: 24872026)';
+% PD1-nivolumab Chi for 2D
+params.Chi_PD1_nivo.Value = [];
+params.Chi_PD1_nivo.Units = '';
 params.Chi_PD1_nivo.Notes = '(estimated based on Wang 2014, PMID: 24872026)';
+params.Chi_PD1_nivo.Factors = ["Chi_PD1_nivo_3D","d_syn","N_avg"];
+params.Chi_PD1_nivo.Equation = 'p(1)/(p(2)*p(3))';
 % PDL1-atezolizumab kd
 params.kd_PDL1_atezo.Value = 0.4;
 params.kd_PDL1_atezo.Units = 'nanomolarity';
@@ -518,9 +622,41 @@ params.kon_PDL1_atezo.Value = 4.3e5;
 params.kon_PDL1_atezo.Units = '1/(molarity*second)';
 params.kon_PDL1_atezo.Notes = '(Wang 2014, PMID: 24872026)';
 % PDL1-atezolizumab Chi (antibody cross-arm binding strength)
-params.Chi_PDL1_atezo.Value = 100;
-params.Chi_PDL1_atezo.Units = 'dimensionless';
-params.Chi_PDL1_atezo.Notes = '(estimated)';
+params.Chi_PDL1_atezo_3D.Value = 100;
+params.Chi_PDL1_atezo_3D.Units = 'dimensionless';
+params.Chi_PDL1_atezo_3D.Notes = '(estimated)';
+% PDL1-atezolizumab Chi for 2D
+params.Chi_PDL1_atezo.Value = [];
+params.Chi_PDL1_atezo.Units = '';
+params.Chi_PDL1_atezo.Notes = '(Wang 2014, PMID: 24872026)';
+params.Chi_PDL1_atezo.Factors = ["Chi_PDL1_atezo_3D","d_syn","N_avg"];
+params.Chi_PDL1_atezo.Equation = 'p(1)/(p(2)*p(3))';
+
+% PD1-PDL1 koff
+params.koff_PD1_PDL1.Value = [];
+params.koff_PD1_PDL1.Units = '1/second';
+params.koff_PD1_PDL1.Notes = ['calculated based on the measured kd and kon ' params.kd_PD1_PDL1.Notes];
+params.koff_PD1_PDL1.Factors = ["kon_PD1_PDL1_3D","kd_PD1_PDL1"];
+params.koff_PD1_PDL1.Equation = 'p(1)*p(2)';
+% PD1-PDL2 koff
+params.koff_PD1_PDL2.Value = [];
+params.koff_PD1_PDL2.Units = '1/second';
+params.koff_PD1_PDL2.Notes = ['calculated based on the measured kd and kon ' params.kd_PD1_PDL2.Notes];
+params.koff_PD1_PDL2.Factors = ["kon_PD1_PDL2_3D","kd_PD1_PDL2"];
+params.koff_PD1_PDL2.Equation = 'p(1)*p(2)';
+% PD1-nivolumab koff
+params.koff_PD1_nivo.Value = [];
+params.koff_PD1_nivo.Units = '1/second';
+params.koff_PD1_nivo.Notes = ['calculated based on the measured kd and kon ' params.kd_PD1_nivo.Notes];
+params.koff_PD1_nivo.Factors = ["kon_PD1_nivo","kd_PD1_nivo"];
+params.koff_PD1_nivo.Equation = 'p(1)*p(2)';
+% PDL1-atezolizumab koff
+params.koff_PDL1_atezo.Value = [];
+params.koff_PDL1_atezo.Units = '1/second';
+params.koff_PDL1_atezo.Notes = ['calculated based on the measured kd and kon ' params.kd_PDL1_atezo.Notes];
+params.koff_PDL1_atezo.Factors = ["kon_PDL1_atezo","kd_PDL1_atezo"];
+params.koff_PDL1_atezo.Equation = 'p(1)*p(2)';
+
 % PD1 Expression on T Cells
 params.T8_PD1.Value = 3.1e3*20;
 params.T8_PD1.Units = 'molecule';
@@ -572,41 +708,71 @@ params.kd_CD28_CD80.Value = 4.0;
 params.kd_CD28_CD80.Units = 'micromolarity';
 params.kd_CD28_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
 % CD28-CD80 kon
-params.kon_CD28_CD80.Value = 0.4;
-params.kon_CD28_CD80.Units = '1/(micromolarity*second)';
+params.kon_CD28_CD80_3D.Value = 0.4;
+params.kon_CD28_CD80_3D.Units = '1/(micromolarity*second)';
+params.kon_CD28_CD80_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+% CD28-CD80 kon for 2D
+params.kon_CD28_CD80.Value = [];
+params.kon_CD28_CD80.Units = '';
 params.kon_CD28_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CD28_CD80.Factors = ["kon_CD28_CD80_3D","d_syn"];
+params.kon_CD28_CD80.Equation = 'p(1)/p(2)';
 % CD28-CD86 kd
 params.kd_CD28_CD86.Value = 20.0;
 params.kd_CD28_CD86.Units = 'micromolarity';
 params.kd_CD28_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
 % CD28-CD86 kon
-params.kon_CD28_CD86.Value = 1.4;
-params.kon_CD28_CD86.Units = '1/(micromolarity*second)';
+params.kon_CD28_CD86_3D.Value = 1.4;
+params.kon_CD28_CD86_3D.Units = '1/(micromolarity*second)';
+params.kon_CD28_CD86_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+% CD28-CD86 kon for 2D
+params.kon_CD28_CD86.Value = [];
+params.kon_CD28_CD86.Units = '';
 params.kon_CD28_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CD28_CD86.Factors = ["kon_CD28_CD86_3D","d_syn"];
+params.kon_CD28_CD86.Equation = 'p(1)/p(2)';
 % CTLA4-CD80 kd
 params.kd_CTLA4_CD80.Value = 0.2;
 params.kd_CTLA4_CD80.Units = 'micromolarity';
 params.kd_CTLA4_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
 % CTLA4-CD80 kon
-params.kon_CTLA4_CD80.Value = 2.2;
-params.kon_CTLA4_CD80.Units = '1/(micromolarity*second)';
+params.kon_CTLA4_CD80_3D.Value = 2.2;
+params.kon_CTLA4_CD80_3D.Units = '1/(micromolarity*second)';
+params.kon_CTLA4_CD80_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+% CTLA4-CD80 kon for 2D
+params.kon_CTLA4_CD80.Value = [];
+params.kon_CTLA4_CD80.Units = '';
 params.kon_CTLA4_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CTLA4_CD80.Factors = ["kon_CTLA4_CD80_3D","d_syn"];
+params.kon_CTLA4_CD80.Equation = 'p(1)/p(2)';
 % CTLA4-CD86 kd
 params.kd_CTLA4_CD86.Value = 2.6;
 params.kd_CTLA4_CD86.Units = 'micromolarity';
 params.kd_CTLA4_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
 % CTLA4-CD86 kon
-params.kon_CTLA4_CD86.Value = 2.0;
-params.kon_CTLA4_CD86.Units = '1/(micromolarity*second)';
+params.kon_CTLA4_CD86_3D.Value = 2.0;
+params.kon_CTLA4_CD86_3D.Units = '1/(micromolarity*second)';
+params.kon_CTLA4_CD86_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+% CTLA4-CD86 kon for 2D
+params.kon_CTLA4_CD86.Value = [];
+params.kon_CTLA4_CD86.Units = '';
 params.kon_CTLA4_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CTLA4_CD86.Factors = ["kon_CTLA4_CD86_3D","d_syn"];
+params.kon_CTLA4_CD86.Equation = 'p(1)/p(2)';
 % CD80-PDL1 kd
 params.kd_CD80_PDL1.Value = 1.9;
 params.kd_CD80_PDL1.Units = 'micromolarity';
 params.kd_CD80_PDL1.Notes = '(Jansson 2005, PMID: 16034096)';
 % CD80-PDL1 kon
-params.kon_CD80_PDL1.Value = 3.16;
-params.kon_CD80_PDL1.Units = '1/(micromolarity*second)';
+params.kon_CD80_PDL1_3D.Value = 3.16;
+params.kon_CD80_PDL1_3D.Units = '1/(micromolarity*second)';
+params.kon_CD80_PDL1_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+% CD80-PDL1 kon for 2D
+params.kon_CD80_PDL1.Value = [];
+params.kon_CD80_PDL1.Units = '';
 params.kon_CD80_PDL1.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CD80_PDL1.Factors = ["kon_CD80_PDL1_3D","d_syn"];
+params.kon_CD80_PDL1.Equation = 'p(1)/p(2)';
 % CTLA4-ipilimumab kd
 params.kd_CTLA4_ipi.Value = 18.2;
 params.kd_CTLA4_ipi.Units = 'nanomolarity';
@@ -616,9 +782,53 @@ params.kon_CTLA4_ipi.Value = 3.83e5;
 params.kon_CTLA4_ipi.Units = '1/(molarity*second)';
 params.kon_CTLA4_ipi.Notes = '(Wang 2014, PMID: 24872026)';
 % CTLA4-ipilimumab Chi (antibody cross-arm binding strength)
-params.Chi_CTLA4_ipi.Value = 10;
-params.Chi_CTLA4_ipi.Units = 'dimensionless';
-params.Chi_CTLA4_ipi.Notes = '(Estimated)';
+params.Chi_CTLA4_ipi_3D.Value = 10;
+params.Chi_CTLA4_ipi_3D.Units = 'dimensionless';
+params.Chi_CTLA4_ipi_3D.Notes = '(estimated)';
+% CTLA4-ipilimumab Chi for 2D
+params.Chi_CTLA4_ipi.Value = [];
+params.Chi_CTLA4_ipi.Units = '';
+params.Chi_CTLA4_ipi.Notes = '(estimated)';
+params.Chi_CTLA4_ipi.Factors = ["Chi_CTLA4_ipi_3D","d_syn","N_avg"];
+params.Chi_CTLA4_ipi.Equation = 'p(1)/(p(2)*p(3))';
+
+% CD28-CD80 koff
+params.koff_CD28_CD80.Value = [];
+params.koff_CD28_CD80.Units = '1/second';
+params.koff_CD28_CD80.Notes = ['calculated based on the measured kd and kon ' params.kd_CD28_CD80.Notes];
+params.koff_CD28_CD80.Factors = ["kon_CD28_CD80_3D","kd_CD28_CD80"];
+params.koff_CD28_CD80.Equation = 'p(1)*p(2)';
+% CD28-CD86 koff
+params.koff_CD28_CD86.Value = [];
+params.koff_CD28_CD86.Units = '1/second';
+params.koff_CD28_CD86.Notes = ['calculated based on the measured kd and kon ' params.kd_CD28_CD86.Notes];
+params.koff_CD28_CD86.Factors = ["kon_CD28_CD86_3D","kd_CD28_CD86"];
+params.koff_CD28_CD86.Equation = 'p(1)*p(2)';
+% CTLA4-CD80 koff
+params.koff_CTLA4_CD80.Value = [];
+params.koff_CTLA4_CD80.Units = '1/second';
+params.koff_CTLA4_CD80.Notes = ['calculated based on the measured kd and kon ' params.kd_CTLA4_CD80.Notes];
+params.koff_CTLA4_CD80.Factors = ["kon_CTLA4_CD80_3D","kd_CTLA4_CD80"];
+params.koff_CTLA4_CD80.Equation = 'p(1)*p(2)';
+% CTLA4-CD86 koff
+params.koff_CTLA4_CD86.Value = [];
+params.koff_CTLA4_CD86.Units = '1/second';
+params.koff_CTLA4_CD86.Notes = ['calculated based on the measured kd and kon ' params.kd_CTLA4_CD86.Notes];
+params.koff_CTLA4_CD86.Factors = ["kon_CTLA4_CD86_3D","kd_CTLA4_CD86"];
+params.koff_CTLA4_CD86.Equation = 'p(1)*p(2)';
+% CD80-PDL1 koff
+params.koff_CD80_PDL1.Value = [];
+params.koff_CD80_PDL1.Units = '1/second';
+params.koff_CD80_PDL1.Notes = ['calculated based on the measured kd and kon ' params.kd_CD80_PDL1.Notes];
+params.koff_CD80_PDL1.Factors = ["kon_CD80_PDL1_3D","kd_CD80_PDL1"];
+params.koff_CD80_PDL1.Equation = 'p(1)*p(2)';
+% CTLA4-ipilimumab koff
+params.koff_CTLA4_ipi.Value = [];
+params.koff_CTLA4_ipi.Units = '1/second';
+params.koff_CTLA4_ipi.Notes = ['calculated based on the measured kd and kon ' params.kd_CTLA4_ipi.Notes];
+params.koff_CTLA4_ipi.Factors = ["kon_CTLA4_ipi","kd_CTLA4_ipi"];
+params.koff_CTLA4_ipi.Equation = 'p(1)*p(2)';
+
 % CD28 Expression on T Cells
 params.T8_CD28.Value = 9200*20;
 params.T8_CD28.Units = 'molecule';
@@ -787,7 +997,7 @@ params.k_TGF_deg.Notes = '(Robertson-Tessi 2012, PMID: 22051568)';
 params.TGF_50_reg.Value = 1.4e-10;
 params.TGF_50_reg.Units = 'molarity';
 params.TGF_50_reg.Notes = '(Robertson-Tessi 2012, PMID: 22051568)';
-% Half-Maximal TGFb level for CD8 T cell inhibition
+% Half-Maximal TGFb level for CD8+ T cell inhibition
 params.TGF_50_ctl.Value = 2.8e-10;
 params.TGF_50_ctl.Units = 'molarity';
 params.TGF_50_ctl.Notes = '(Robertson-Tessi 2012, PMID: 22051568)';
@@ -867,7 +1077,7 @@ params.k_C_resist.Notes = '(estimated)';
 % Number of folds increase of nab-paclitaxel EC50 in resistant cancer clones
 params.r_resist.Value = 100;
 params.r_resist.Units = 'dimensionless';
-params.r_resist.Notes = '(Němcová-Fürstová 2016, PMID: 27664577)';
+params.r_resist.Notes = '(Nemcova-Furstova 2016, PMID: 27664577)';
 
 % Initial Tumor Capacity
 params.K0.Value = 2.7e4;
@@ -923,7 +1133,7 @@ params.Treg_CTLA4_tot.Notes = '(Jansson 2005, PMID: 16034096)';
 % Ipi ADCC (antibody-dependent cellular cytotoxicity) rate of Treg
 params.k_CTLA4_ADCC.Value = 0.1;
 params.k_CTLA4_ADCC.Units = '1/day';
-params.k_CTLA4_ADCC.Notes = '(Richards 2008, PMID: 18723496)';
+params.k_CTLA4_ADCC.Notes = 'Anti-CTLA4 ADCC (antibody-dependent cellular cytotoxicity) rate of Treg (Richards 2008, PMID: 18723496)';
 % IgG1-FcRIIIa V158 kon
 % params.kon_IgG1_FcR.Value =  8.2e3;
 % params.kon_IgG1_FcR.Units = '1/(molarity*second)';

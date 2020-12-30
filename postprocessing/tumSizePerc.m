@@ -24,7 +24,7 @@ for i = 1:n_PSA
     [~,V_T,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T');
     % Calculate tumor size (diameter) assuming a single sphere nodule (comes out as mm if Tum volume was at microliter)
     D_T = 2*(3/(4*pi)*V_T).^(1/3);
-    % Calculates total clonality
+    % Calculates percentage change of tumor size 
     D_T_perc = (D_T - D_T(1))/D_T(1)*100;
 
     % Add calculated tumor size to postprocess structure

@@ -79,7 +79,7 @@ vol_Tcell = addparameter(model,'vol_Tcell',params.vol_Tcell.Value,'ValueUnits',p
 % rho_cell = addparameter(model,'rho_cell',params.rho_cell.Value,'ValueUnits',params.rho_cell.Units,'ConstantValue',false);
 %     set(rho_cell,'Notes',['Tumor density']);
 Ve_T = addparameter(model,'Ve_T',params.Ve_T.Value,'ValueUnits',params.Ve_T.Units,'ConstantValue',false);
-    set(Ve_T,'Notes',['Void fraction of the tumor']);
+    set(Ve_T,'Notes',['Void fraction of the tumor ' params.Ve_T.Notes]);
 
 % addrule(model,'V_T = V_Tmin+vol_cell*C_x+vol_Tcell*T_exh','repeatedAssignment');
 addrule(model,'V_T = ((C_x+C_total)*vol_cell+(T1_exh+Th_exh+T_total+V_T.Th)*vol_Tcell)/Ve_T','repeatedAssignment');
