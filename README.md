@@ -9,6 +9,8 @@ This repository contains the latest QSP platform for TNBC developed by the Popel
 - Bioinformatics Toolbox
 
 ## Publications
+- H. Wang, H. Ma, R. J. Sove, L. A. Emens, A. S. Popel, Quantitative systems pharmacology model predictions for efficacy of atezolizumab and nab-paclitaxel in triple-negative breast cancer. J Immunother Cancer 9,  (2021).
+
 - H. Ma, H. Wang, R. J. Sove, J. Wang, C. Giragossian, A. S. Popel, Combination therapy with T cell engager and PD-L1 blockade enhances the antitumor potency of T cells as predicted by a QSP model. J Immunother Cancer 8,  (2020).
 
 - H. Ma, H. Wang, R. J. Sove, M. Jafarnejad, C. H. Tsai, J. Wang, C. Giragossian, A. S. Popel, A Quantitative Systems Pharmacology Model of T Cell Engager Applied to Solid Tumor. AAPS J 22, 85 (2020).
