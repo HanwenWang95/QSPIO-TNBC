@@ -48,15 +48,15 @@ params.D_cell.Notes = '(Abramczyk 2015, PMID: 25730442)';
 params.D_Tcell.Value = 6.94;
 params.D_Tcell.Units = 'micrometer';
 params.D_Tcell.Notes = '(Chapman 1981, PMID: 6975780)';
-% Lymph Nodes Compartment Volume
+% Volume of a Cancer Cell
 params.vol_cell.Value = [];
-params.vol_cell.Units = 'micrometer/cell';
+params.vol_cell.Units = 'micrometer^3/cell';
 params.vol_cell.Notes = ['Volume of a cancer cell calculated based on cancer cell diameter ' params.D_cell.Notes];
 params.vol_cell.Factors = ["D_cell", "cell"];
 params.vol_cell.Equation = '4/3*pi*(p(1)/2)^3/p(2)';
-% Lymph Nodes Compartment Volume
+% Volume of a T cell
 params.vol_Tcell.Value = [];
-params.vol_Tcell.Units = 'micrometer/cell';
+params.vol_Tcell.Units = 'micrometer^3/cell';
 params.vol_Tcell.Notes = ['Volume of a T cell calculated based on the average T cell diameter ' params.D_Tcell.Notes];
 params.vol_Tcell.Factors = ["D_Tcell", "cell"];
 params.vol_Tcell.Equation = '4/3*pi*(p(1)/2)^3/p(2)';
@@ -476,7 +476,7 @@ params.A_Tcell.Equation = '4*pi*(p(1)/2)^2';
 % Surface Area of Cancer Cells
 params.A_cell.Value = [];
 params.A_cell.Units = 'micrometer^2';
-params.A_cell.Notes = ['calculated based on the average Cancer cell diameter ' params.D_cell.Notes];
+params.A_cell.Notes = ['calculated based on the average cancer cell diameter ' params.D_cell.Notes];
 params.A_cell.Factors = ["D_cell"];
 params.A_cell.Equation = '4*pi*(p(1)/2)^2';
 % Surface Area of APC Cells
@@ -985,7 +985,7 @@ params.k_Th_act.Notes = '(Robertson-Tessi 2012, PMID: 22051568)';
 params.k_reg.Value = 0.022;
 params.k_reg.Units = '1/day';
 params.k_reg.Notes = '(Robertson-Tessi 2012, PMID: 22051568)';
-% Th differentiation rate to Treg
+% Secretion rate of TGFb by Treg
 params.k_TGF_Tsec.Value = 1.2e-10;
 params.k_TGF_Tsec.Units = 'nanomole/cell/day';
 params.k_TGF_Tsec.Notes = '(Liyanage 2002, PMID: 12193750)';
@@ -1014,7 +1014,7 @@ params.k_IFNg_sec.Value = 4e-13;
 params.k_IFNg_sec.Units = 'nanomole/cell/day';
 params.k_IFNg_sec.Notes = '(Borj 2017, doi:10.15171/ijbms.2017.05)';
 % IFNg degradation rate
-params.k_IFNg_deg.Value = 11;
+params.k_IFNg_deg.Value = 7.68;
 params.k_IFNg_deg.Units = '1/day';
 params.k_IFNg_deg.Notes = '(Hofstra 1998, PMID: 9806748)';
 % Half-Maximal IFNg level for PD-L1 induction

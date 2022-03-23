@@ -1,6 +1,6 @@
 % Checkpoint Module
 %
-% Models PD1 Interactions
+% Models PD1 and CTLA4 Interactions
 %
 % Inputs: model       -- simbio model object with four compartments
 %         params      -- object containing the default parameters
@@ -63,12 +63,12 @@ catch
 end
 if first_call
 % Add Pharmacokinetics
-params_nivo   = pk_parameters('nivolumab');
-params_atezo  = pk_parameters('atezolizumab');
-params_ipi    = pk_parameters('ipilimumab');
-model = pk_module(model,'nivo',params_nivo);
-model = pk_module(model,'atezo',params_atezo);
-model = pk_module(model,'ipi' ,params_ipi);
+params_aPD1    = pk_parameters('pembrolizumab');
+params_aPDL1   = pk_parameters('atezolizumab');
+params_aCTLA4  = pk_parameters('tremelimumab');
+model = pk_module(model,'nivo',params_aPD1);
+model = pk_module(model,'atezo',params_aPDL1);
+model = pk_module(model,'ipi' ,params_aCTLA4);
 
 k_out_PDL1 = addparameter(model,'k_out_PDL1',params.k_out_PDL1.Value,'ValueUnits',params.k_out_PDL1.Units); % estimated by 5e4 PMID 29034543
     set(k_out_PDL1,'Notes',['Expression rate of PDL1 on tumor cells ' params.k_out_PDL1.Notes]);
@@ -277,7 +277,7 @@ R = addreaction(model,['null -> ' comp.Name,'.PDL2']);
     set (R, 'ReactionRate', ['k_in_PDL1*(',Cname,'_PDL1_base/A_cell*r_PDL2',Cname,'-',comp.Name,'.PDL2_total)']);
     set (R, 'Notes'       , 'Translocation of PDL2 between cell surface and cytoplasm');
 
-% Dynamics of PD1/PDL1/PDL2/nivo/atezoa
+% Dynamics of PD1/PDL1/PDL2/nivo/atezo
  R = addreaction(model,[comp.Name,'.PD1 + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PD1_PDL1']);
     set (R, 'ReactionRate', ['kon_PD1_PDL1*(',comp.Name,'.PD1)*(',comp.Name,'.PDL1)  -  koff_PD1_PDL1*',comp.Name,'.PD1_PDL1']);
     set (R, 'Notes'       , 'binding and unbinding of PD1 PDL1 in synapse');

@@ -122,9 +122,9 @@ xlabel('Time (days)'); ylabel(''); title('Number of Cells'); legend; set(gca, 'Y
 
 %% Checkpoints and drugs
 subplot(3,5,13); hold on; box on;
-simbio_plot(simData,'nivo','CompartmentName','V_C','LegendEntry','nivolumab' );
-simbio_plot(simData,'atezo','CompartmentName','V_C','LegendEntry','atezolizumab');
-simbio_plot(simData,'ipi','CompartmentName','V_C','LegendEntry','ipilimumab');
+simbio_plot(simData,'aPD1','CompartmentName','V_C','LegendEntry','aPD1' );
+simbio_plot(simData,'aPDL1','CompartmentName','V_C','LegendEntry','aPDL1');
+simbio_plot(simData,'aCTLA4','CompartmentName','V_C','LegendEntry','aCTLA4');
 xlabel('Time (days)'); ylabel('Concentration (M)');legend;
 
 
@@ -132,8 +132,8 @@ A_syn = sbioselect(model,'name','A_syn');
 subplot(3,5,14); hold on; box on;
 simbio_plot(simData,'PD1_PDL1','CompartmentName','syn_T_C1' ,'LegendEntry','[PD1-PDL1]' ,'surfaceArea',num2str(A_syn.Value));
 simbio_plot(simData,'PD1_PDL2','CompartmentName','syn_T_C1' ,'LegendEntry','[PD1-PDL2]' ,'surfaceArea',num2str(A_syn.Value));
-simbio_plot(simData,'PD1_nivo','CompartmentName','syn_T_C1' ,'LegendEntry','[PD1-Nivo]' ,'surfaceArea',num2str(A_syn.Value));
-simbio_plot(simData,'PDL1_atezo','CompartmentName','syn_T_C1','LegendEntry','[PDL1-atezo]','surfaceArea',num2str(A_syn.Value));
+simbio_plot(simData,'PD1_aPD1','CompartmentName','syn_T_C1' ,'LegendEntry','[PD1-aPD1]' ,'surfaceArea',num2str(A_syn.Value));
+simbio_plot(simData,'PDL1_aPDL1','CompartmentName','syn_T_C1','LegendEntry','[PDL1-aPDL1]','surfaceArea',num2str(A_syn.Value));
 xlabel('Time (days)'); ylabel('Molecules in synapse'); legend; set(gca, 'YScale', 'log');
 
 subplot(3,5,15); hold on; box on;
@@ -142,5 +142,5 @@ simbio_plot(simData,'CD28_CD86','CompartmentName','syn_T_C1' ,'LegendEntry','[CD
 simbio_plot(simData,'CD80_CTLA4','CompartmentName','syn_T_C1' ,'LegendEntry','[CTLA4-CD80]' ,'surfaceArea',num2str(A_syn.Value));
 simbio_plot(simData,'CD86_CTLA4','CompartmentName','syn_T_C1' ,'LegendEntry','[CTLA4-CD86]' ,'surfaceArea',num2str(A_syn.Value));
 simbio_plot(simData,'TPDL1_CD80','CompartmentName','syn_T_C1' ,'LegendEntry','[CD80-PDL1]' ,'surfaceArea',num2str(A_syn.Value));
-simbio_plot(simData,'CTLA4_ipi','CompartmentName','syn_T_C1' ,'LegendEntry','[CTLA4-Ipi]' ,'surfaceArea',num2str(A_syn.Value));
+simbio_plot(simData,'CTLA4_aCTLA4','CompartmentName','syn_T_C1' ,'LegendEntry','[CTLA4-aCTLA4]' ,'surfaceArea',num2str(A_syn.Value));
 xlabel('Time (days)'); ylabel('Molecules in synapse'); legend; set(gca, 'YScale', 'log');

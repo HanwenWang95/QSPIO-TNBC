@@ -44,8 +44,8 @@ for i = 1:n_PSA
         [~,Ti,~] = selectbyname(simDataPSA(index(i)).simData, ['V_C.T',num2str(j)]);
         T_C_total = T_C_total + Ti;
 
-        [~,Ti,~] = selectbyname(simDataPSA(index(i)).simData, ['V_T.nT',num2str(j)]);
-        nT_T_total = nT_T_total + Ti*div_CD8;
+        % [~,Ti,~] = selectbyname(simDataPSA(index(i)).simData, ['V_T.nT',num2str(j)]);
+        % nT_T_total = nT_T_total + Ti*div_CD8;
         [~,Ti,~] = selectbyname(simDataPSA(index(i)).simData, ['V_T.T',num2str(j)]);
         T_T_total = T_T_total + Ti;
     end
@@ -59,8 +59,8 @@ for i = 1:n_PSA
     [~,Ti,~] = selectbyname(simDataPSA(index(i)).simData, ['V_C.T0']);
     T0_C_total = T0_C_total + Ti;
 
-    [~,Ti,~] = selectbyname(simDataPSA(index(i)).simData, ['V_T.nT0']);
-    nT0_T_total = nT0_T_total + Ti*div_CD4;
+    % [~,Ti,~] = selectbyname(simDataPSA(index(i)).simData, ['V_T.nT0']);
+    % nT0_T_total = nT0_T_total + Ti*div_CD4;
     [~,Ti,~] = selectbyname(simDataPSA(index(i)).simData, ['V_T.T0']);
     T0_T_total = T0_T_total + Ti;
     [~,Ti,~] = selectbyname(simDataPSA(index(i)).simData, ['V_T.Th']);
@@ -73,9 +73,9 @@ for i = 1:n_PSA
 
     % Calculate ratios of T cell subsets
     CD8FoxP3ratio_C = (nT_C_total + T_C_total)./T0_C_total;
-    CD8FoxP3ratio_T = (nT_T_total + T_T_total + T1exh_total)./T0_T_total;
+    CD8FoxP3ratio_T = (T_T_total + T1exh_total)./T0_T_total;
     CD4FoxP3ratio_C = (nT0_C_total + T0_C_total)./T0_C_total;
-    CD4FoxP3ratio_T = (nT0_T_total + T0_T_total + Th_T_total + Thexh_total)./T0_T_total;
+    CD4FoxP3ratio_T = (T0_T_total + Th_T_total + Thexh_total)./T0_T_total;
     Teff_Treg_C = T_C_total./T0_C_total;
     Teff_Treg_T = T_T_total./T0_T_total;
 
@@ -83,8 +83,8 @@ for i = 1:n_PSA
     [~,V_T,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T');
     Teff_density = T_T_total./V_T;
     Treg_density = T0_T_total./V_T;
-    CD8_density = (nT_T_total + T_T_total + T1exh_total)./V_T;
-    CD4_density = (nT0_T_total + T0_T_total + Th_T_total + Thexh_total)./V_T;
+    CD8_density = (T_T_total + T1exh_total)./V_T;
+    CD4_density = (T0_T_total + Th_T_total + Thexh_total)./V_T;
     % Calculate MDSC density
     MDSC_density = MDSC_total./V_T;
 

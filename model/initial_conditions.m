@@ -134,7 +134,7 @@ else
             model.Species(i).InitialAmount = simData.Data(idx,i);
         catch
             model.Species(i).InitialAmount = 0;
-            % disp(['Initial Amount of Species ' num2str(i) ' is Inf or NaN'])
+            % disp(['Initial Amount of Species ' num2str(i) ' is negative, Inf, or NaN'])
         end
     end
     % Set New ICs for varying Parameters

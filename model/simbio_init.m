@@ -82,8 +82,8 @@ Ve_T = addparameter(model,'Ve_T',params.Ve_T.Value,'ValueUnits',params.Ve_T.Unit
     set(Ve_T,'Notes',['Void fraction of the tumor ' params.Ve_T.Notes]);
 
 % addrule(model,'V_T = V_Tmin+vol_cell*C_x+vol_Tcell*T_exh','repeatedAssignment');
-addrule(model,'V_T = ((C_x+C_total)*vol_cell+(T1_exh+Th_exh+T_total+V_T.Th)*vol_Tcell)/Ve_T','repeatedAssignment');
-%addrule(model,'V_T = (C_x+C_total+T1_exh+Th_exh+T_total+V_T.Th)/rho_cell','repeatedAssignment');
+addrule(model,'V_T = ((C_x+C_total)*vol_cell+(T1_exh+Th_exh+T_total)*vol_Tcell)/Ve_T','repeatedAssignment');
+%addrule(model,'V_T = (C_x+C_total+T1_exh+Th_exh+T_total)/rho_cell','repeatedAssignment');
 %addrule(model,'V_T = (C_x+C_total)*vol_cell/Ve_T','repeatedAssignment');
 
 % Set Total Number of Cancer Cells (Rule 2)

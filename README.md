@@ -4,9 +4,9 @@ This repository contains the latest QSP platform for TNBC developed by the Popel
 
 ## Requirements
 - Model simulations and analyses were performed using MATLAB R2019a 
-- SimBiology Toolbox 
-- Statistics and Machine Learning Toolbox
-- Bioinformatics Toolbox
+- SimBiology Toolbox (Model Structure and Simulation)
+- Statistics and Machine Learning Toolbox (Sensitivity Analysis)
+- Symbolic Math Toolbox (Units and Dimensional Analysis / Model Initialization)
 
 ## Publications
 - H. Wang, H. Ma, R. J. Sove, L. A. Emens, A. S. Popel, Quantitative systems pharmacology model predictions for efficacy of atezolizumab and nab-paclitaxel in triple-negative breast cancer. J Immunother Cancer 9,  (2021).

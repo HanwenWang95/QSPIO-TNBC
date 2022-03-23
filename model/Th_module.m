@@ -51,7 +51,7 @@ k_TGF_deg = addparameter(model,'k_TGF_deg',params.k_TGF_deg.Value,'ValueUnits',p
     set(k_TGF_deg,'Notes',['TGF degradtion rate ' params.k_TGF_deg.Notes]);
 
 TGF_50_reg = addparameter(model,'TGF_50_reg',params.TGF_50_reg.Value,'ValueUnits',params.TGF_50_reg.Units);
-    set(TGF_50_reg,'Notes',['Half-Maximal TGFb level for differentiation of Th to Treg ' params.TGF_50_reg.Notes]);
+    set(TGF_50_reg,'Notes',['Half-Maximal TGFb level for Th-to-Treg differentiation / chemoresistance development / M1-to-M2 polarization ' params.TGF_50_reg.Notes]);
 TGF_50_ctl = addparameter(model,'TGF_50_ctl',params.TGF_50_ctl.Value,'ValueUnits',params.TGF_50_ctl.Units);
     set(TGF_50_ctl,'Notes',['Half-Maximal TGFb level for CD8 T cell inhibition ' params.TGF_50_ctl.Notes]);
 Kc_rec = addparameter(model,'Kc_rec',params.Kc_rec.Value,'ValueUnits',params.Kc_rec.Units);

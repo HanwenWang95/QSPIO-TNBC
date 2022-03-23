@@ -58,7 +58,7 @@ reaction = addreaction(model,'V_T.C -> V_T.C_x');
     set(reaction,'ReactionRate','k_C_death*V_T.C');
     set(reaction,'Notes','Cancer cell death');
 
-% Tumour Erradication
+% Tumour Eradication
 addevent(model,'V_T.C < 0.5*cell','V_T.C = 0.01*cell');
 
 % Get Model Rules for Updating

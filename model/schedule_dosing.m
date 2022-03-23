@@ -8,7 +8,7 @@
 %                     - drugName_schedule [start,interval,repeat]
 %                     - patientWeight (kg)
 %
-%       vaild drugName values: nivolumab, atezolizumab, ipilimumab
+%       vaild drugName values: nivolumab, atezolizumab, ipilimumab, pembrolizumab, entinostat, nab-paclitaxel, tremelimumab
 %
 % Outputs: dosing -- SimBiology model object with new antigen module
 
@@ -25,6 +25,9 @@ end
 
 % Optional Inputs
 in = inputParser;
+% Pembrolizumab
+addParameter(in,'pembrolizumab_dose',2.5); % 200 mg every three weeks
+addParameter(in,'pembrolizumab_schedule',[0,21,30]);
 % Nivolumab
 addParameter(in,'nivolumab_dose',3); % 3 mg/kg every two weeks
 addParameter(in,'nivolumab_schedule',[0,14,30]);
@@ -34,6 +37,9 @@ addParameter(in,'atezolizumab_schedule',[0,21,30]);
 % Ipilimumab
 addParameter(in,'ipilimumab_dose',1); % 1 mg/kg every three weeks
 addParameter(in,'ipilimumab_schedule',[0,21,30]);
+% Tremelimumab
+addParameter(in,'tremelimumab_dose',1); % 1 mg/kg every four weeks
+addParameter(in,'tremelimumab_schedule',[0,28,30]);
 % Entinostat
 addParameter(in,'entinostat_dose',3); % 3 mg every week
 addParameter(in,'entinostat_schedule',[0,7,55]);
@@ -46,15 +52,21 @@ addParameter(in,'patientWeight',80);
 addParameter(in,'patientBSA',1.9);
 % Parse Inputs
 parse(in,varargin{:});
+% Pembrolizumab
+dose_pembro = in.Results.pembrolizumab_dose;
+schedule_pembro = in.Results.pembrolizumab_schedule;
 % Nivolumab
 dose_nivo = in.Results.nivolumab_dose;
 schedule_nivo = in.Results.nivolumab_schedule;
-% atezolizumab
+% Atezolizumab
 dose_atezo = in.Results.atezolizumab_dose;
 schedule_atezo = in.Results.atezolizumab_schedule;
 % Ipilimumab
 dose_ipil = in.Results.ipilimumab_dose;
 schedule_ipil = in.Results.ipilimumab_schedule;
+% Tremelimumab
+dose_treme = in.Results.tremelimumab_dose;
+schedule_treme = in.Results.tremelimumab_schedule;
 % Entinostat
 dose_ENT = in.Results.entinostat_dose;
 schedule_ENT = in.Results.entinostat_schedule;
@@ -66,9 +78,18 @@ patient_weight = in.Results.patientWeight;
 % Patient BSA
 patient_BSA = in.Results.patientBSA;
 
+% Pembrolizumab
+MW_pembro = 1.49E8;
+doseObj_pembro = sbiodose('pembro','Amount',patient_weight*dose_pembro/MW_pembro,'AmountUnits','mole','TargetName','V_C.aPD1');
+doseObj_pembro.StartTime = schedule_pembro(1);
+doseObj_pembro.Interval = schedule_pembro(2);
+doseObj_pembro.TimeUnits = 'day';
+doseObj_pembro.RepeatCount = schedule_pembro(3);
+doseObj_pembro.Active = true;
+
 % Nivolumab
 MW_nivo = 1.436E8; % milligrams per mole
-doseObj_nivo = sbiodose('nivo','Amount',patient_weight*dose_nivo/MW_nivo,'AmountUnits','mole','TargetName','V_C.nivo');
+doseObj_nivo = sbiodose('nivo','Amount',patient_weight*dose_nivo/MW_nivo,'AmountUnits','mole','TargetName','V_C.aPD1');
 doseObj_nivo.StartTime = schedule_nivo(1);
 doseObj_nivo.Interval = schedule_nivo(2);
 doseObj_nivo.TimeUnits = 'day';
@@ -124,9 +145,9 @@ doseObj_nabp_3.Interval = schedule_nabp(2);
 doseObj_nabp_3.TimeUnits = 'day';
 doseObj_nabp_3.RepeatCount = schedule_nabp(3);
 
-% atezolizumab
+% Atezolizumab
 MW_atezo = 1.436E8; % milligrams per mole
-doseObj_atezo = sbiodose('atezo','Amount',patient_weight*dose_atezo/MW_atezo,'AmountUnits','mole','TargetName','V_C.atezo');
+doseObj_atezo = sbiodose('atezo','Amount',patient_weight*dose_atezo/MW_atezo,'AmountUnits','mole','TargetName','V_C.aPDL1');
 doseObj_atezo.StartTime = schedule_atezo(1);
 doseObj_atezo.Interval = schedule_atezo(2);
 doseObj_atezo.TimeUnits = 'day';
@@ -135,12 +156,21 @@ doseObj_atezo.Active = true;
 
 % Ipilimumab
 MW_ipil = 1.486349E8; % milligrams per mole
-doseObj_ipi = sbiodose('ipi','Amount',patient_weight*dose_ipil/MW_ipil,'AmountUnits','mole','TargetName','V_C.ipi');
+doseObj_ipi = sbiodose('ipi','Amount',patient_weight*dose_ipil/MW_ipil,'AmountUnits','mole','TargetName','V_C.aCTLA4');
 doseObj_ipi.StartTime = schedule_ipil(1);
 doseObj_ipi.Interval = schedule_ipil(2);
 doseObj_ipi.TimeUnits = 'day';
 doseObj_ipi.RepeatCount = schedule_ipil(3);
 doseObj_ipi.Active = true;
+
+% Tremelimumab
+MW_treme = 1.4638E8; % milligrams per mole
+doseObj_treme = sbiodose('treme','Amount',patient_weight*dose_treme/MW_treme,'AmountUnits','mole','TargetName','V_C.aCTLA4');
+doseObj_treme.StartTime = schedule_treme(1);
+doseObj_treme.Interval = schedule_treme(2);
+doseObj_treme.TimeUnits = 'day';
+doseObj_treme.RepeatCount = schedule_treme(3);
+doseObj_treme.Active = true;
 
 % Dose Schedule Array
 dose_schedule(N) = sbiodose('empty'); % preallocate array
@@ -148,10 +178,14 @@ for i = 1:N
     switch drugName{i}
         case 'nivolumab'
             dose_schedule(i) = doseObj_nivo;
+        case 'pembrolizumab'
+            dose_schedule(i) = doseObj_pembro;
         case 'atezolizumab'
             dose_schedule(i) = doseObj_atezo;
         case 'ipilimumab'
             dose_schedule(i) = doseObj_ipi;
+        case 'tremelimumab'
+            dose_schedule(i) = doseObj_treme;
         case 'nabPaclitaxel'
             dose_schedule(i) = doseObj_nabp_1;
         case 'entinostat'

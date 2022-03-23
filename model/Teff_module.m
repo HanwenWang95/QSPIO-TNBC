@@ -22,8 +22,8 @@ nCD8_C  = addspecies(model.Compartment(1),'nT',params.nCD8_C.Value/params.nCD8_d
     set(nCD8_C,'Notes',['Number of naive ' species_name ' cells in the central compartment']);
 nCD8_P  = addspecies(model.Compartment(2),'nT',params.nCD8_P.Value/params.nCD8_div.Value,'InitialAmountUnits','cell');
     set(nCD8_P,'Notes',['Number of naive ' species_name ' cells in the peripheral compartment']);
-nCD8_T  = addspecies(model.Compartment(3),'nT',0,'InitialAmountUnits','cell');
-    set(nCD8_T,'Notes',['Number of naive ' species_name ' cells in the tumor compartment']);
+% nCD8_T  = addspecies(model.Compartment(3),'nT',0,'InitialAmountUnits','cell');
+%     set(nCD8_T,'Notes',['Number of naive ' species_name ' cells in the tumor compartment']);
 nCD8_LN = addspecies(model.Compartment(4),'nT',params.nCD8_LN.Value/params.nCD8_div.Value,'InitialAmountUnits','cell');
     set(nCD8_LN,'Notes',['Number of naive ' species_name ' cells in the lymph node']);
 % Activated T cells
@@ -156,9 +156,9 @@ reaction = addreaction(model,'V_C.nT -> null');
 reaction = addreaction(model,'V_LN.nT -> null');
     set(reaction,'ReactionRate','k_nT_death*V_LN.nT');
     set(reaction,'Notes','Naive T cell death in the TDLN compartment');
-reaction = addreaction(model,'V_T.nT -> null');
-    set(reaction,'ReactionRate','k_nT_death*V_T.nT');
-    set(reaction,'Notes','Naive T cell death in the tumor compartment');
+% reaction = addreaction(model,'V_T.nT -> null');
+%     set(reaction,'ReactionRate','k_nT_death*V_T.nT');
+%     set(reaction,'Notes','Naive T cell death in the tumor compartment');
 % Naive T cell transport into and out of the peripheral compartment
 reaction = addreaction(model,'V_C.nT -> V_P.nT');
     set(reaction,'ReactionRate','q_nCD8_P_in*V_C.nT');
@@ -305,7 +305,7 @@ rename(nCD8_div,['div_' species_name]);
 rename(n_clones_tum,['n_' species_name '_clones']);
 rename(nCD8_C,['n' species_name]);
 rename(nCD8_P,['n' species_name]);
-rename(nCD8_T,['n' species_name]);
+% rename(nCD8_T,['n' species_name]);
 rename(nCD8_LN,['n' species_name]);
 rename(aT,['a' species_name]);
 % rename(aT_T,['a' species_name]);

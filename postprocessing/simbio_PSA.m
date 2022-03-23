@@ -15,6 +15,7 @@ config = getconfigset(model);
 time = get(config.SolverOptions,'OutputTimes');
 
 n_dose = 1;
+idx_nab = 0;
 for k = 1:length(dose_schedule)
     if ~isempty(strfind(dose_schedule(k).Name, 'nabp'))
         idx_nab(n_dose) = k;
@@ -50,12 +51,10 @@ for i = 1:n_PSA
 
     % Run the model with drugs
     if (success)
-          try
-          if ~isempty(idx_nab)
+          if idx_nab ~= 0
               for k = 1:length(idx_nab)
                   dose_schedule(idx_nab(k)).Amount = dose*params_in.BSA.LHS(i);
               end
-          end
           end
 
           try
