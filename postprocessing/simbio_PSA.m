@@ -32,11 +32,18 @@ n_PSA = length(params_in.(params_in.names{1}).LHS);
 for i = 1:n_PSA
     display(['Sample ',num2str(i),'/',num2str(n_PSA)]);
     % Set the new parameters
+    if i > 1
+      delete(model_PSA)
+    end
     model_PSA = copyobj(model);
     variantObj = addvariant(model_PSA, ['v',num2str(i,'%5.5i')]);
     for j = 1:length(params_in.names)
         if ~isempty(sbioselect (model, 'Type', 'parameter', 'Name', params_in.names{j}))
             addcontent(variantObj, {'parameter', params_in.names{j}, 'Value', params_in.(params_in.names{j}).LHS(i)});
+        elseif ~isempty(sbioselect (model, 'Type', 'compartment', 'Name', params_in.names{j}))
+            addcontent(variantObj, {'compartment', params_in.names{j}, 'Capacity', params_in.(params_in.names{j}).LHS(i)});
+        else
+            disp(['Unable to identify parameter/compartment named ', params_in.names{j}, ' in the model'])
         end
     end
 
