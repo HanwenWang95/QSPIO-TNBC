@@ -97,6 +97,9 @@ reaction = addreaction(model,'null -> V_T.Mac_M1');
 reaction = addreaction(model,'V_T.Mac_M1 -> null');
     set(reaction,'ReactionRate','k_cell_clear*V_T.Mac_M1*(Kc_rec/(C_total^2 + Kc_rec))');
     set(reaction,'Notes','Macrophage death upon tumor eradication');
+reaction = addreaction(model,'V_T.Mac_M2 -> null');
+    set(reaction,'ReactionRate','k_cell_clear*V_T.Mac_M2*(Kc_rec/(C_total^2 + Kc_rec))');
+    set(reaction,'Notes','Macrophage death upon tumor eradication');
 
 % Death of macrophage
 reaction = addreaction(model,'V_T.Mac_M1 -> null');

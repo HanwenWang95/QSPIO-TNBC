@@ -71,7 +71,7 @@ params.Ve_T.Notes = '(Finley 2012, PMID: 22547351)';
 
 %% Cancer Parameters
 % Growth Rate
-params.k_C_growth.Value = 0.0075;
+params.k_C_growth.Value = 0.0072;
 params.k_C_growth.Units = '1/day';
 params.k_C_growth.Notes = '(Ryu 2014, PMID: 24895040; Desai 2006, PMID: 16489089)';
 % Death Rate
@@ -572,7 +572,7 @@ params.kd_PD1_PDL1.Value = 8.2;
 params.kd_PD1_PDL1.Units = 'micromolarity';
 params.kd_PD1_PDL1.Notes = '(Cheng 2013, PMID: 23417675)';
 % PD1-PDL1 kon
-params.kon_PD1_PDL1_3D.Value = 0.175;
+params.kon_PD1_PDL1_3D.Value = 0.18;
 params.kon_PD1_PDL1_3D.Units = '1/(micromolarity*second)';
 params.kon_PD1_PDL1_3D.Notes = '(Cheng 2013, PMID: 23417675)';
 % PD1-PDL1 kon for 2D
@@ -586,7 +586,7 @@ params.kd_PD1_PDL2.Value = 2.3;
 params.kd_PD1_PDL2.Units = 'micromolarity';
 params.kd_PD1_PDL2.Notes = '(Cheng 2013, PMID: 23417675)';
 % PD1-PDL2 kon
-params.kon_PD1_PDL2_3D.Value = 0.23;
+params.kon_PD1_PDL2_3D.Value = 0.24;
 params.kon_PD1_PDL2_3D.Units = '1/(micromolarity*second)';
 params.kon_PD1_PDL2_3D.Notes = '(Cheng 2013, PMID: 23417675)';
 % PD1-PDL2 kon for 2D
@@ -702,73 +702,87 @@ params.r_PDL1_IFNg.Notes = '(Shin 2017, PMID: 27903500)';
 % CD28-CD80 kd
 params.kd_CD28_CD80.Value = 4.0;
 params.kd_CD28_CD80.Units = 'micromolarity';
-params.kd_CD28_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kd_CD28_CD80.Notes = '(van der Merwe 1997, PMID: 9053440)';
 % CD28-CD80 kon
 params.kon_CD28_CD80_3D.Value = 0.4;
 params.kon_CD28_CD80_3D.Units = '1/(micromolarity*second)';
-params.kon_CD28_CD80_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CD28_CD80_3D.Notes = '(van der Merwe 1997, PMID: 9053440)';
 % CD28-CD80 kon for 2D
 params.kon_CD28_CD80.Value = [];
 params.kon_CD28_CD80.Units = '';
-params.kon_CD28_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CD28_CD80.Notes = '(van der Merwe 1997, PMID: 9053440)';
 params.kon_CD28_CD80.Factors = ["kon_CD28_CD80_3D","d_syn"];
 params.kon_CD28_CD80.Equation = 'p(1)/p(2)';
 % CD28-CD86 kd
 params.kd_CD28_CD86.Value = 20.0;
 params.kd_CD28_CD86.Units = 'micromolarity';
-params.kd_CD28_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kd_CD28_CD86.Notes = '(Collins 2002, PMID: 12196291)';
 % CD28-CD86 kon
 params.kon_CD28_CD86_3D.Value = 1.4;
 params.kon_CD28_CD86_3D.Units = '1/(micromolarity*second)';
-params.kon_CD28_CD86_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CD28_CD86_3D.Notes = '(Collins 2002, PMID: 12196291)';
 % CD28-CD86 kon for 2D
 params.kon_CD28_CD86.Value = [];
 params.kon_CD28_CD86.Units = '';
-params.kon_CD28_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CD28_CD86.Notes = '(Collins 2002, PMID: 12196291)';
 params.kon_CD28_CD86.Factors = ["kon_CD28_CD86_3D","d_syn"];
 params.kon_CD28_CD86.Equation = 'p(1)/p(2)';
 % CTLA4-CD80 kd
-params.kd_CTLA4_CD80.Value = 0.2;
+params.kd_CTLA4_CD80.Value = 0.42;
 params.kd_CTLA4_CD80.Units = 'micromolarity';
-params.kd_CTLA4_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kd_CTLA4_CD80.Notes = '(van der Merwe 1997, PMID: 9053440)';
 % CTLA4-CD80 kon
-params.kon_CTLA4_CD80_3D.Value = 2.2;
+params.kon_CTLA4_CD80_3D.Value = 1.0;
 params.kon_CTLA4_CD80_3D.Units = '1/(micromolarity*second)';
-params.kon_CTLA4_CD80_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CTLA4_CD80_3D.Notes = '(van der Merwe 1997, PMID: 9053440)';
 % CTLA4-CD80 kon for 2D
 params.kon_CTLA4_CD80.Value = [];
 params.kon_CTLA4_CD80.Units = '';
-params.kon_CTLA4_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CTLA4_CD80.Notes = '(van der Merwe 1997, PMID: 9053440)';
 params.kon_CTLA4_CD80.Factors = ["kon_CTLA4_CD80_3D","d_syn"];
 params.kon_CTLA4_CD80.Equation = 'p(1)/p(2)';
 % CTLA4-CD86 kd
 params.kd_CTLA4_CD86.Value = 2.6;
 params.kd_CTLA4_CD86.Units = 'micromolarity';
-params.kd_CTLA4_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kd_CTLA4_CD86.Notes = '(Jansson 2005, PMID: 16034096; Collins 2002, PMID: 12196291)';
 % CTLA4-CD86 kon
 params.kon_CTLA4_CD86_3D.Value = 2.0;
 params.kon_CTLA4_CD86_3D.Units = '1/(micromolarity*second)';
-params.kon_CTLA4_CD86_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CTLA4_CD86_3D.Notes = '(Jansson 2005, PMID: 16034096; Collins 2002, PMID: 12196291)';
 % CTLA4-CD86 kon for 2D
 params.kon_CTLA4_CD86.Value = [];
 params.kon_CTLA4_CD86.Units = '';
-params.kon_CTLA4_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CTLA4_CD86.Notes = '(Jansson 2005, PMID: 16034096; Collins 2002, PMID: 12196291)';
 params.kon_CTLA4_CD86.Factors = ["kon_CTLA4_CD86_3D","d_syn"];
 params.kon_CTLA4_CD86.Equation = 'p(1)/p(2)';
 % CD80-PDL1 kd
-params.kd_CD80_PDL1.Value = 1.9;
+params.kd_CD80_PDL1.Value = 18.8;
 params.kd_CD80_PDL1.Units = 'micromolarity';
-params.kd_CD80_PDL1.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kd_CD80_PDL1.Notes = '(Cheng 2014, PMID: 23417675; Butte 2008, PMID: 18585785)';
 % CD80-PDL1 kon
-params.kon_CD80_PDL1_3D.Value = 3.16;
+params.kon_CD80_PDL1_3D.Value = 0.32;
 params.kon_CD80_PDL1_3D.Units = '1/(micromolarity*second)';
-params.kon_CD80_PDL1_3D.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CD80_PDL1_3D.Notes = '(Cheng 2014, PMID: 23417675)';
 % CD80-PDL1 kon for 2D
 params.kon_CD80_PDL1.Value = [];
 params.kon_CD80_PDL1.Units = '';
-params.kon_CD80_PDL1.Notes = '(Jansson 2005, PMID: 16034096)';
+params.kon_CD80_PDL1.Notes = '(Cheng 2014, PMID: 23417675)';
 params.kon_CD80_PDL1.Factors = ["kon_CD80_PDL1_3D","d_syn"];
 params.kon_CD80_PDL1.Equation = 'p(1)/p(2)';
+% CD80-CD80 kd
+params.kd_CD80_CD80.Value = 17;
+params.kd_CD80_CD80.Units = 'micromolarity';
+params.kd_CD80_CD80.Notes = '(Ikemizu 2000, PMID: 10661405)';
+% CD80-CD80 kon
+params.kon_CD80_CD80_3D.Value = 5.9e-4;
+params.kon_CD80_CD80_3D.Units = '1/(micromolarity*second)';
+params.kon_CD80_CD80_3D.Notes = '(Ikemizu 2000, PMID: 10661405)';
+% CD80-CD80 kon for 2D
+params.kon_CD80_CD80.Value = [];
+params.kon_CD80_CD80.Units = '';
+params.kon_CD80_CD80.Notes = '(Ikemizu 2000, PMID: 10661405)';
+params.kon_CD80_CD80.Factors = ["kon_CD80_CD80_3D","d_syn"];
+params.kon_CD80_CD80.Equation = 'p(1)/p(2)';
 % CTLA4-aCTLA4 kd
 params.kd_CTLA4_aCTLA4.Value = 18.2;
 params.kd_CTLA4_aCTLA4.Units = 'nanomolarity';
@@ -818,6 +832,12 @@ params.koff_CD80_PDL1.Units = '1/second';
 params.koff_CD80_PDL1.Notes = ['calculated based on the measured kd and kon ' params.kd_CD80_PDL1.Notes];
 params.koff_CD80_PDL1.Factors = ["kon_CD80_PDL1_3D","kd_CD80_PDL1"];
 params.koff_CD80_PDL1.Equation = 'p(1)*p(2)';
+% CD80-CD80 koff
+params.koff_CD80_CD80.Value = [];
+params.koff_CD80_CD80.Units = '1/second';
+params.koff_CD80_CD80.Notes = ['calculated based on the measured kd and kon ' params.kd_CD80_CD80.Notes];
+params.koff_CD80_CD80.Factors = ["kon_CD80_CD80_3D","kd_CD80_CD80"];
+params.koff_CD80_CD80.Equation = 'p(1)*p(2)';
 % CTLA4-aCTLA4 koff
 params.koff_CTLA4_aCTLA4.Value = [];
 params.koff_CTLA4_aCTLA4.Units = '1/second';
@@ -834,7 +854,7 @@ params.T8_CTLA4.Value = 400*20;
 params.T8_CTLA4.Units = 'molecule';
 params.T8_CTLA4.Notes = '(Jansson 2005, PMID: 16034096)';
 % CD80 Expression on Cancer Cells
-params.C_CD80.Value = 2000*20;
+params.C_CD80.Value = 4000*20;
 params.C_CD80.Units = 'molecule';
 params.C_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
 % CD86 Expression on Cancer Cells
@@ -842,7 +862,7 @@ params.C_CD86.Value = 43000*20;
 params.C_CD86.Units = 'molecule';
 params.C_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
 % CD80 Expression on mAPCs
-params.APC_CD80.Value = 2000*20;
+params.APC_CD80.Value = 4000*20;
 params.APC_CD80.Units = 'molecule';
 params.APC_CD80.Notes = '(Jansson 2005, PMID: 16034096)';
 % CD86 Expression on mAPCs
@@ -852,7 +872,7 @@ params.APC_CD86.Notes = '(Jansson 2005, PMID: 16034096)';
 % CD28/CD80/CD86 Concentration for Half-Maximal T Cell Killing
 params.CD28_CD8X_50.Value = 200;
 params.CD28_CD8X_50.Units = 'molecule/micrometer^2';
-params.CD28_CD8X_50.Notes = '(estimated)';
+params.CD28_CD8X_50.Notes = 'estimated assuming T cell activation is inhibited by 70% at baseline CTLA-4 expression (Parry 2005, PMID: 16227604)';
 % Hill Coefficient for CD28/CD80/CD86
 params.n_CD28_CD8X.Value = 2;
 params.n_CD28_CD8X.Units = 'dimensionless';
@@ -977,11 +997,11 @@ params.k_TGFb_deg.Value = 14.3;
 params.k_TGFb_deg.Units = '1/day';
 params.k_TGFb_deg.Notes = '(Robertson-Tessi 2012, PMID: 22051568)';
 % Half-Maximal TGFb level for differentiation of Th to Treg / chemoresistance development / M1-to-M2 polarization
-params.TGFb_50.Value = 0.14;
+params.TGFb_50.Value = 0.07;
 params.TGFb_50.Units = 'nanomolarity';
 params.TGFb_50.Notes = '(Robertson-Tessi 2012, PMID: 22051568)';
 % Half-Maximal TGFb level for CD8+ T cell inhibition
-params.TGFb_50_Teff.Value = 0.28;
+params.TGFb_50_Teff.Value = 0.14;
 params.TGFb_50_Teff.Units = 'nanomolarity';
 params.TGFb_50_Teff.Notes = '(Robertson-Tessi 2012, PMID: 22051568)';
 % Half-Maximal cancer cell number for T cell recruitment
@@ -1063,15 +1083,15 @@ params.r_resist.Units = 'dimensionless';
 params.r_resist.Notes = '(Nemcova-Furstova 2016, PMID: 27664577)';
 
 % Initial Tumor Capacity
-params.K0.Value = 2.7e4;
+params.K0.Value = 1.03e4;
 params.K0.Units = 'cell';
 params.K0.Notes = '(Desai 2006, PMID: 16489089)';
 % Tumour vasculature growth rate
-params.k_K_g.Value = 3.9;
+params.k_K_g.Value = 4.12;
 params.k_K_g.Units = '1/day';
 params.k_K_g.Notes = '(Desai 2006, PMID: 16489089)';
 % Tumour vasculature inhibition rate
-params.k_K_d.Value = 2.3e-3;
+params.k_K_d.Value = 3.4e-3;
 params.k_K_d.Units = '1/day';
 params.k_K_d.Notes = '(Desai 2006, PMID: 16489089; Hahnfeldt 1999, PMID: 10519381)';
 % Secretion rate of angiogenic factors induced by nab-paclitaxel
@@ -1091,7 +1111,7 @@ params.k_vas_deg.Value = 16.6;
 params.k_vas_deg.Units = '1/day';
 params.k_vas_deg.Notes = '(Finley 2011, PMID: 22104283)';
 % Half-maximal conc. of angiogenic factor on tumor capacity growth
-params.c_vas_50.Value = 839;
+params.c_vas_50.Value = 1.07e3; 
 params.c_vas_50.Units = 'picogram/milliliter';
 params.c_vas_50.Notes = '(Desai 2006, PMID: 16489089)';
 % Inhibition rate of maximal tumor capacity by nab-paclitaxel
@@ -1181,7 +1201,7 @@ params.k_M2_pol.Value = 0.25;
 params.k_M2_pol.Units = '1/day';
 params.k_M2_pol.Notes = '(estimated assuming that polarization takes roughly 2-3 days)';
 % M2 to M1 polarization rate
-params.k_M1_pol.Value = 0.02;
+params.k_M1_pol.Value = 0.045;
 params.k_M1_pol.Units = '1/day';
 params.k_M1_pol.Notes = '(estimated based on the M1/M2 ratio)';
 % Half-maximal IL10 level for M1 to M2 polarization / maintaining Treg function / mAPC inhibition (*STAT6 related)
@@ -1209,7 +1229,7 @@ params.IL10_50_phago.Value = 270;
 params.IL10_50_phago.Units = 'picomolarity';
 params.IL10_50_phago.Notes = '(Bian 2016, PMID: 27578867)';
 % Dependence of phagocytosis rate on M1/C ratio
-params.K_Mac_C.Value = 1;
+params.K_Mac_C.Value = 2;
 params.K_Mac_C.Units = 'dimensionless';
 params.K_Mac_C.Notes = '(estimated)'; % Gardner 2020, PMID: 33209523
 % Dependence of Teff killing rate on Teff/C ratio
@@ -1296,7 +1316,7 @@ params.M_SIRPa.Value = 100;
 params.M_SIRPa.Units = 'molecule/micrometer^2';
 params.M_SIRPa.Notes = '(Subramanian 2006, PMID: 16291597)';
 % PD-1 expression on macrophage
-params.M_PD1.Value = 9.64e3;
+params.M_PD1.Value = 1.25e4;
 params.M_PD1.Units = 'molecule';
 params.M_PD1.Notes = 'estimated based on PD-1 expression on T cell (Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483) and adjusted to fit its inhibitory effect on phagocytosis (Gordon 2017, PMID: 28514441)';
   

@@ -47,8 +47,8 @@ params.names = {};
 
 % Cancer cell growth rate
 params.names = [params.names; 'k_C1_growth'];
-params.k_C1_growth.Median = log(0.0075);
-params.k_C1_growth.Sigma = .7;
+params.k_C1_growth.Median = log(0.0072);
+params.k_C1_growth.Sigma = .8;
 params.k_C1_growth.Sampling   = 'lognormal';
 params.k_C1_growth.ScreenName = 'Rate of tumor growth';
 
@@ -116,7 +116,7 @@ params.N_IL2_CD4.ScreenName = '# of CD4 T cell division by IL-2';
 % Initial tumor diameter
 params.names = [params.names; 'initial_tumour_diameter'];
 params.initial_tumour_diameter.Median = log(2.5);
-params.initial_tumour_diameter.Sigma = 0.4;
+params.initial_tumour_diameter.Sigma = 0.3;
 params.initial_tumour_diameter.Sampling   = 'lognormal';
 params.initial_tumour_diameter.ScreenName = 'Initial tumor diameter';
 
@@ -160,14 +160,14 @@ params.r_PDL2APC.Sampling   = 'loguniform';
 params.r_PDL2APC.ScreenName = 'PDL2/PDL1 ratio on APCs';
 % Maximal rate of Th-to-Treg transdifferentiation
 params.names = [params.names; 'k_Th_Treg'];
-params.k_Th_Treg.Median = log(0.03);
+params.k_Th_Treg.Median = log(0.022);
 params.k_Th_Treg.Sigma = 1;
 params.k_Th_Treg.Sampling   = 'lognormal';
 params.k_Th_Treg.ScreenName = 'Rate of Th to Treg differentiation';
 % Rate of tumor vasculature growth fitted to in vivo MX-1 growth
 params.names = [params.names; 'k_K_g'];
-params.k_K_g.UpperBound = 5.9;
-params.k_K_g.LowerBound = 1.9;
+params.k_K_g.UpperBound = 6.12;
+params.k_K_g.LowerBound = 2.12;
 params.k_K_g.Sampling   = 'uniform';
 params.k_K_g.ScreenName = 'Rate of tumor vasculature growth';
 
@@ -214,18 +214,19 @@ params.k_M1_phago.Median = log(.33);
 params.k_M1_phago.Sigma = 1;
 params.k_M1_phago.Sampling   = 'lognormal';
 params.k_M1_phago.ScreenName = 'Maximal rate of macrophage-mediated phagocytosis ';
-
+% Half-maximal SIRPa-CD47 for phagocytosis inhibition
 params.names = [params.names; 'SIRPa_50'];
 params.SIRPa_50.Median = log(37);
 params.SIRPa_50.Sigma = .5;
 params.SIRPa_50.Sampling   = 'lognormal';
 params.SIRPa_50.ScreenName = 'Half-maximal SIRPa-CD47 for phagocytosis inhibition';
-
+% Dependence of phagocytosis on M1/C ratio
 params.names = [params.names; 'K_Mac_C'];
 params.K_Mac_C.Median = log(2);
 params.K_Mac_C.Sigma = 1;
 params.K_Mac_C.Sampling   = 'lognormal';
 params.K_Mac_C.ScreenName = 'Dependence of phagocytosis on M1/C ratio';
+
 
 %% Nab-paclitaxel
 % nabPaclitaxel PK Parameters
@@ -291,7 +292,7 @@ params.IC50_nabp.Sampling   = 'lognormal';
 params.IC50_nabp.ScreenName = 'Half-max conc. of Nab-P for cancer killing ';
 
 params.names = [params.names; 'k_C_resist'];
-params.k_C_resist.Median = log(1e-4);
+params.k_C_resist.Median = log(1.5e-4);
 params.k_C_resist.Sigma = 1;
 params.k_C_resist.Sampling   = 'lognormal';
 params.k_C_resist.ScreenName = 'Rate of chemo-resistance development ';

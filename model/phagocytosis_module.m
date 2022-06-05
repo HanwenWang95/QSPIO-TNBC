@@ -106,6 +106,8 @@ x = addspecies(comp,'PDL1_CD80',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of PDL1-CD80 complex');
 x = addspecies(comp,'CD80',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of CD80 in synapse');
+x = addspecies(comp,'CD80m',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of CD80 monomer in synapse');
 
 p = addparameter(model,'A_Mcell' ,params.A_Mcell.Value ,'ValueUnits',params.A_Mcell.Units);
     set(p,'Notes',['Surface area of the macrophage ' params.A_Mcell.Notes]);
@@ -163,10 +165,13 @@ R = addreaction(model,[comp.Name,'.PDL1_aPDL1 + ',comp.Name,'.PDL1 <-> ',comp.Na
     set (R, 'ReactionRate', ['Chi_PDL1_aPDL1*kon_PDL1_aPDL1*(',comp.Name,'.PDL1 * ',comp.Name,'.PDL1_aPDL1) -  2*koff_PDL1_aPDL1*',comp.Name,'.PDL1_aPDL1_PDL1']);
     set (R, 'Notes'       , ['binding and unbinding of PDL1 to PDL1-aPDL1 on cancer cell surface in synapse']);
 
-% PDL1-CD80
-R = addreaction(model,[comp.Name,'.CD80 + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PDL1_CD80']);
-    set (R, 'Stoichiometry', [-1 -2 2]);
-    set (R, 'ReactionRate', ['kon_CD80_PDL1*(',comp.Name,'.CD80)*(',comp.Name,'.PDL1)  -  koff_CD80_PDL1*',comp.Name,'.PDL1_CD80']);
+% CD80 dimer dissociation
+R = addreaction(model,[comp.Name,'.CD80m + ',comp.Name,'.CD80m <-> ',comp.Name,'.CD80']);
+    set (R, 'ReactionRate', ['kon_CD80_CD80*(',comp.Name,'.CD80m)*(',comp.Name,'.CD80m) - koff_CD80_CD80*',comp.Name,'.CD80']);
+    set (R, 'Notes'       , 'self-association and dissociation of CD80 monomers in synapse');
+% cis PDL1-CD80-CD28
+R = addreaction(model,[comp.Name,'.CD80m + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PDL1_CD80']);
+    set (R, 'ReactionRate', ['kon_CD80_PDL1*(',comp.Name,'.CD80m)*(',comp.Name,'.PDL1)  -  koff_CD80_PDL1*',comp.Name,'.PDL1_CD80']);
     set (R, 'Notes'       , 'binding and unbinding of CD80 and PDL1 in synapse');
 
 if (antiCD47)

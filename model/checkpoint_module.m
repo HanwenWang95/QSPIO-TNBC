@@ -96,6 +96,8 @@ kon = addparameter(model,'kon_CD80_PDL1',params.kon_CD80_PDL1.Value,'ValueUnits'
     set(kon,'Notes',['kon of CD80-PDL1 binding ' params.kon_CD80_PDL1.Notes]);
 kon = addparameter(model,'kon_CTLA4_aCTLA4',params.kon_CTLA4_aCTLA4.Value,'ValueUnits',params.kon_CTLA4_aCTLA4.Units);
     set(kon,'Notes',['kon of CTLA4-aCTLA4 binding ' params.kon_CTLA4_aCTLA4.Notes]);
+kon = addparameter(model,'kon_CD80_CD80',params.kon_CD80_CD80.Value,'ValueUnits',params.kon_CD80_CD80.Units);
+    set(kon,'Notes',['kon of CD80 self-association ' params.kon_CD80_CD80.Notes]);
 
 % Add koff Values
 koff = addparameter(model,'koff_PD1_PDL1' ,params.koff_PD1_PDL1.Value ,'ValueUnits',params.koff_PD1_PDL1.Units);
@@ -118,6 +120,8 @@ koff = addparameter(model,'koff_CD80_PDL1' ,params.koff_CD80_PDL1.Value ,'ValueU
     set(koff,'Notes',['koff of CD80-PDL1 binding ' params.koff_CD80_PDL1.Notes]);
 koff = addparameter(model,'koff_CTLA4_aCTLA4',params.koff_CTLA4_aCTLA4.Value,'ValueUnits',params.koff_CTLA4_aCTLA4.Units);
     set(koff,'Notes',['koff of CTLA4-aCTLA4 binding ' params.koff_CTLA4_aCTLA4.Notes]);
+koff = addparameter(model,'koff_CD80_CD80',params.koff_CD80_CD80.Value,'ValueUnits',params.koff_CD80_CD80.Units);
+    set(koff,'Notes',['koff of CD80 self-association ' params.koff_CD80_CD80.Notes]);
 
 % Bivalent anibody parameters
 p = addparameter(model,'Chi_PD1_aPD1' ,params.Chi_PD1_aPD1.Value,'ValueUnits',params.Chi_PD1_aPD1.Units);
@@ -235,6 +239,8 @@ x = addspecies(comp,'CTLA4',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of CTLA4 in synapse');
 x = addspecies(comp,'CD80',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of CD80 dimer in synapse');
+x = addspecies(comp,'CD80m',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of CD80 monomer in synapse');
 x = addspecies(comp,'CD86',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of CD86 in synapse');
 x = addspecies(comp,'CTLA4_aCTLA4',0,'InitialAmountUnits','molecule/micrometer^2');
@@ -317,17 +323,17 @@ R = addreaction(model,[comp.Name,'.CD28 + ',comp.Name,'.CD86 <-> ',comp.Name,'.C
 R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD80 <-> ',comp.Name,'.CD80_CTLA4']);
     set (R, 'ReactionRate', ['4*kon_CTLA4_CD80*(',comp.Name,'.CTLA4)*(',comp.Name,'.CD80)  -  koff_CTLA4_CD80*',comp.Name,'.CD80_CTLA4']);
     set (R, 'Notes'       , 'binding and unbinding of CTLA4 and CD80 in synapse');
- R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD80_CTLA4 <-> ',comp.Name,'.CTLA4_CD80_CTLA4']);
-    set (R, 'ReactionRate', ['kon_CTLA4_CD80*(',comp.Name,'.CTLA4)*(',comp.Name,'.CD80_CTLA4)  -  2*koff_CTLA4_CD80*',comp.Name,'.CTLA4_CD80_CTLA4']);
+R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD80_CTLA4 <-> ',comp.Name,'.CTLA4_CD80_CTLA4']);
+    set (R, 'ReactionRate', ['2*kon_CTLA4_CD80*(',comp.Name,'.CTLA4)*(',comp.Name,'.CD80_CTLA4)  -  2*koff_CTLA4_CD80*',comp.Name,'.CTLA4_CD80_CTLA4']);
     set (R, 'Notes'       , 'binding and unbinding of CTLA4 and CD80-CTLA4 in synapse');
- R = addreaction(model,[comp.Name,'.CD80 + ',comp.Name,'.CTLA4_CD80_CTLA4 <-> ',comp.Name,'.CD80_CTLA4_CD80_CTLA4']);
-    set (R, 'ReactionRate', ['kon_CTLA4_CD80*(',comp.Name,'.CD80)*(',comp.Name,'.CTLA4_CD80_CTLA4)  -  koff_CTLA4_CD80*',comp.Name,'.CD80_CTLA4_CD80_CTLA4']);
+R = addreaction(model,[comp.Name,'.CD80 + ',comp.Name,'.CTLA4_CD80_CTLA4 <-> ',comp.Name,'.CD80_CTLA4_CD80_CTLA4']);
+    set (R, 'ReactionRate', ['4*kon_CTLA4_CD80*(',comp.Name,'.CD80)*(',comp.Name,'.CTLA4_CD80_CTLA4)  -  koff_CTLA4_CD80*',comp.Name,'.CD80_CTLA4_CD80_CTLA4']);
     set (R, 'Notes'       , 'binding and unbinding of CD80 and CTLA4-CD80-CTLA4 in synapse');
- R = addreaction(model,[comp.Name,'.CD80_CTLA4 + ',comp.Name,'.CD80 <-> ',comp.Name,'.CD80_CTLA4_CD80']);
-    set (R, 'ReactionRate', ['kon_CTLA4_CD80*(',comp.Name,'.CD80_CTLA4)*(',comp.Name,'.CD80)  -  2*koff_CTLA4_CD80*',comp.Name,'.CD80_CTLA4_CD80']);
+R = addreaction(model,[comp.Name,'.CD80_CTLA4 + ',comp.Name,'.CD80 <-> ',comp.Name,'.CD80_CTLA4_CD80']);
+    set (R, 'ReactionRate', ['2*kon_CTLA4_CD80*(',comp.Name,'.CD80_CTLA4)*(',comp.Name,'.CD80)  -  2*koff_CTLA4_CD80*',comp.Name,'.CD80_CTLA4_CD80']);
     set (R, 'Notes'       , 'binding and unbinding of CD80-CTLA4 and CD80 in synapse');
- R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD80_CTLA4_CD80 <-> ',comp.Name,'.CD80_CTLA4_CD80_CTLA4']);
-    set (R, 'ReactionRate', ['kon_CTLA4_CD80*(',comp.Name,'.CTLA4)*(',comp.Name,'.CD80_CTLA4_CD80)  -  koff_CTLA4_CD80*',comp.Name,'.CD80_CTLA4_CD80_CTLA4']);
+R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD80_CTLA4_CD80 <-> ',comp.Name,'.CD80_CTLA4_CD80_CTLA4']);
+    set (R, 'ReactionRate', ['4*kon_CTLA4_CD80*(',comp.Name,'.CTLA4)*(',comp.Name,'.CD80_CTLA4_CD80)  -  koff_CTLA4_CD80*',comp.Name,'.CD80_CTLA4_CD80_CTLA4']);
     set (R, 'Notes'       , 'binding and unbinding of CTLA4 and CD80-CTLA4-CD80 in synapse');
 % CTLA4-CD86
 R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD86 <-> ',comp.Name,'.CD86_CTLA4']);
@@ -340,19 +346,22 @@ R = addreaction(model,[comp.Name,'.CD86_CTLA4 + ',comp.Name,'.CD86 <-> ',comp.Na
 R = addreaction(model,[comp.Name,'.CTLA4 <-> ',comp.Name,'.CTLA4_aCTLA4']);
     set (R, 'ReactionRate', ['4*kon_CTLA4_aCTLA4*(',comp.Name,'.CTLA4 * ',compDrug.Name,'.aCTLA4/',gamma,'_aCTLA4) -  koff_CTLA4_aCTLA4*',comp.Name,'.CTLA4_aCTLA4']);
     set (R, 'Notes'       , ['binding and unbinding of CTLA4 to aCTLA4 on ',Tname,' surface in synapse']);
- R = addreaction(model,[comp.Name,'.CTLA4_aCTLA4 + ',comp.Name,'.CTLA4 <-> ',comp.Name,'.CTLA4_aCTLA4_CTLA4']);
-    set (R, 'ReactionRate', ['Chi_CTLA4_aCTLA4*kon_CTLA4_aCTLA4*(',comp.Name,'.CTLA4 * ',comp.Name,'.CTLA4_aCTLA4) -  2*koff_CTLA4_aCTLA4*',comp.Name,'.CTLA4_aCTLA4_CTLA4']);
+R = addreaction(model,[comp.Name,'.CTLA4_aCTLA4 + ',comp.Name,'.CTLA4 <-> ',comp.Name,'.CTLA4_aCTLA4_CTLA4']);
+    set (R, 'ReactionRate', ['2*Chi_CTLA4_aCTLA4*kon_CTLA4_aCTLA4*(',comp.Name,'.CTLA4 * ',comp.Name,'.CTLA4_aCTLA4) -  2*koff_CTLA4_aCTLA4*',comp.Name,'.CTLA4_aCTLA4_CTLA4']);
     set (R, 'Notes'       , ['binding and unbinding of CTLA4 to aCTLA4 on ',Tname,' surface in synapse']);
+% CD80 dimer dissociation
+R = addreaction(model,[comp.Name,'.CD80m + ',comp.Name,'.CD80m <-> ',comp.Name,'.CD80']);
+    set (R, 'ReactionRate', ['kon_CD80_CD80*(',comp.Name,'.CD80m)*(',comp.Name,'.CD80m) - koff_CD80_CD80*',comp.Name,'.CD80']);
+    set (R, 'Notes'       , 'self-association and dissociation of CD80 monomers in synapse');
 % cis PDL1-CD80-CD28
- R = addreaction(model,[comp.Name,'.CD80 + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PDL1_CD80']);
-    set (R, 'Stoichiometry', [-1 -2 2]);
-    set (R, 'ReactionRate', ['kon_CD80_PDL1*(',comp.Name,'.CD80)*(',comp.Name,'.PDL1)  -  koff_CD80_PDL1*',comp.Name,'.PDL1_CD80']);
+R = addreaction(model,[comp.Name,'.CD80m + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PDL1_CD80']);
+    set (R, 'ReactionRate', ['kon_CD80_PDL1*(',comp.Name,'.CD80m)*(',comp.Name,'.PDL1)  -  koff_CD80_PDL1*',comp.Name,'.PDL1_CD80']);
     set (R, 'Notes'       , 'binding and unbinding of CD80 and PDL1 in synapse');
 R = addreaction(model,[comp.Name,'.PDL1_CD80 + ',comp.Name,'.CD28 <-> ',comp.Name,'.PDL1_CD80_CD28']);
     set (R, 'ReactionRate', ['kon_CD28_CD80*(',comp.Name,'.PDL1_CD80)*(',comp.Name,'.CD28)  - koff_CD28_CD80*',comp.Name,'.PDL1_CD80_CD28']);
     set (R, 'Notes'       , 'binding and unbinding of PDL1-CD80 and CD28 in synapse');
 R = addreaction(model,[comp.Name,'.PDL1_CD80 + ',comp.Name,'.CTLA4 <-> ',comp.Name,'.PDL1_CD80_CTLA4']);
-    set (R, 'ReactionRate', ['kon_CTLA4_CD80*(',comp.Name,'.PDL1_CD80)*(',comp.Name,'.CTLA4)  - koff_CTLA4_CD80*',comp.Name,'.PDL1_CD80_CTLA4']);
+    set (R, 'ReactionRate', ['2*kon_CTLA4_CD80*(',comp.Name,'.PDL1_CD80)*(',comp.Name,'.CTLA4)  - koff_CTLA4_CD80*',comp.Name,'.PDL1_CD80_CTLA4']);
     set (R, 'Notes'       , 'binding and unbinding of PDL1-CD80 and CTLA4 in synapse');
 % TPDL1-aPDL1
 R = addreaction(model,[comp.Name,'.TPDL1 <-> ',comp.Name,'.TPDL1_aPDL1']);
