@@ -8,7 +8,6 @@
 % Outputs: simDataPSA  -- results from the LHS simulations
 
 
-
 function PSA_PRCC(params_in,params_out,varargin)
 
 % find if all the simulations are used or just the plausible ones
@@ -28,83 +27,67 @@ else
     index = params_out.iPatient;
 end
 
-% calculate PRCCs
-[rho ,pval] = partialcorr(params_in.all(index,:), params_out.post(index,:) , ones(n_PSA,1) , 'rows','complete','type','Spearman');
-% [rho ,pval] = partialcorr([params_in.all(index,:), params_in.allObs(index,:)], params_out.post(index,:) , ones(n_PSA,1) , 'rows','complete','type','Spearman');
-
-% replace NaNs to zero to be able to heatmap
-k = find(isnan(rho))';
-rho(k) = 0;
-
-%% heatmap correlations coefficients
-fontsize = 12;
-% colormap = 'redbluecmap';
-% colormap = 'redgreencmap';
-% colormap = 'hot';
-% colormap = 'jet';
-load('cmap.mat')
-
+% load parameter labels
 for i = 1:length(params_in.names)
     namesIn{i} = params_in.(params_in.names{i}).ScreenName;
 end
-% for i = 1:length(params_in.namesObs)
-%     namesIn{i+length(params_in.names)} = params_in.(params_in.namesObs{i}).ScreenName;
-% end
 
 for i = 1:length(params_out.names)
     namesOut{i} = params_out.(params_out.names{i}).ScreenName;
 end
 
-% hMap = HeatMap(heatData,'RowLabels',namesOut,'ColumnLabels',[labelX],'Colormap', colormap,'Symmetric', 0,'DisplayRange',.5)
-hMap = HeatMap(rho','RowLabels',[namesOut],'ColumnLabels',[namesIn],'Colormap', cmap,'Symmetric', 1, 'DisplayRange', .5);
-% hMap = HeatMap(rho,'RowLabels',[namesIn],'ColumnLabels',[namesOut],'Colormap', cmap,'Symmetric', 1, 'DisplayRange', .5);
+% calculate PRCCs
+alpha = 0.05/size(params_in.all(index,:), 2);
+[rho,pval,~] = PRCC(params_in.all(index,:), params_out.post(index,:), 1, namesIn, alpha);
+% by Simeone Marino, May 29 2007
+% modified by Marissa Renardy, October 8 2020
 
-hPlot = plot(hMap);
-set(gcf,'Position', [100 200 950 750]);
-set(hPlot,'YTickLabelRotation',35)
-set(hPlot,'XTickLabelRotation',35)
-set(hPlot,'FontSize',fontsize+2, 'Position', [.27 .55 .60 .40]);
-hBar = colorbar(hPlot); % ('SouthOutside')
-set(hBar, 'Position', [.90 .55 .02 .4]);
-set(hPlot,'FontSize',fontsize+4);
-get(gcf,'Colormap');
-% title('PRCC')
-%     set(gca,'Fontsize',fontsize+2)
-%
+% replace NaNs to zero to be able to heatmap
+k = find(isnan(rho))';
+rho(k) = 0;
 
-%% Heatmap p-values
+figure
+h = imagesc(rho);
+hold on
 
-colormap = 'parula';
-
-% scale very small p values to 1e-3 as minimum
-pval = log10(pval);
-for i =1:size(pval,1)
-    for j =1:size(pval,2)
-        if(pval(i,j)<-3)
-            pval(i,j) = -3;
+[rows,cols] = size(rho);
+for i = 1:rows
+    for j = 1:cols
+        if pval(i,j) <= 0.001 / size(params_in.all(index,:), 2)
+            textHandles(i,j) = text(j,i,'***',...
+                'horizontalAlignment','center', 'FontSize',14);
+        elseif pval(i,j) <= 0.01 / size(params_in.all(index,:), 2)
+            textHandles(i,j) = text(j,i,'**',...
+                'horizontalAlignment','center', 'FontSize',14);
+        elseif pval(i,j) <= 0.05 / size(params_in.all(index,:), 2)
+            textHandles(i,j) = text(j,i,'*',...
+                'horizontalAlignment','center', 'FontSize',14);
         end
     end
 end
 
-% hMap = HeatMap(heatData,'RowLabels',namesOut,'ColumnLabels',[labelX],'Colormap', colormap,'Symmetric', 0,'DisplayRange',.5)
-hMap = HeatMap(pval','RowLabels',namesOut,'ColumnLabels',namesIn,'Colormap', colormap,'Symmetric', 0);
+ax = gca;
+ax.XTick = 1:length(namesIn);
+ax.XTickLabel = namesIn;
+ax.YTick = 1:length(namesOut);
+ax.YTickLabel = namesOut;
+ax.TickLength = [0 0];
 
-hPlot = plot(hMap);
-set(gcf,'Position', [100 200 950 750]);
-set(hPlot,'YTickLabelRotation',35)
-set(hPlot,'XTickLabelRotation',35)
-set(hPlot,'FontSize',fontsize+2, 'Position', [.27 .55 .60 .40]);
-hBar = colorbar(hPlot); % ('SouthOutside')
+set(gcf, 'Position', [100 200 1665 830]);
+set(gca,'YTickLabelRotation',35)
+set(gca,'XTickLabelRotation',35)
+set(gca,'FontSize',12, 'Position', [.27 .55 .60 .40]);
+
+mycolormap = customcolormap([0 .25 .5 .75 1], {'#9d0142','#f66e45','#ffffbb','#65c0ae','#5e4f9f'});
+% - Author:   Víctor Martínez-Cagigal
+% - Date:     19/11/2018
+% - Version:  1.0
+% - E-mail:   vicmarcag (at) gmail (dot) com
+% - Biomedical Engineering Group (University of Valladolid), Spain
+
+% colorbar('southoutside');
+colormap(mycolormap);
+hBar = colorbar;
+caxis([-1 1])
 set(hBar, 'Position', [.90 .55 .02 .4]);
-set(hPlot,'FontSize',fontsize+4);
-c = get(gcf,'Colormap');
-set(gcf,'Colormap',flipud(c));
-% title('log_1_0(p-value)')
-% caxis([-3 0])
-
-%% Close unnecessary figure duplicates
-
-set(groot,'ShowHiddenHandles','on')
-close 'HeatMap 1'
-close 'HeatMap 2'
-set(groot,'ShowHiddenHandles','off')
+set(gca,'FontSize',14);

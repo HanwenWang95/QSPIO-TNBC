@@ -43,7 +43,7 @@ T_LN = addspecies(model.Compartment(4),'T',0,'InitialAmountUnits','cell');
 % Determine if first call
 first_call = true;
 try % add IL2 if it does not exist yet
-IL2 = addspecies(model.Compartment(4),'IL2',1e-18,'InitialAmountUnits','molarity');
+IL2 = addspecies(model.Compartment(4),'IL2',1.9e-4,'InitialAmountUnits','nanomolarity'); % PMID: 21774806
     set(IL2,'Notes','Concentration of IL2 in the lymph node compartment');
 % IL2_T = addspecies(model.Compartment(3),'IL2',1e-18,'InitialAmountUnits','molarity');
 %     set(IL2_T,'Notes','Concentration of IL2 in the tumor compartment');
@@ -204,6 +204,11 @@ reaction = addreaction(model,'V_T.T -> null');
     set(reaction,'ReactionRate','k_CD4_death*V_T.T');
     set(reaction,'Notes','T cell death in the tumor compartment');
 
+% T cell clearance upon Ag clearance
+reaction = addreaction(model,'V_T.T -> null');
+    set(reaction,'ReactionRate','k_cell_clear*V_T.T*(Kc_rec/(C_total^2 + Kc_rec))');
+    set(reaction,'Notes','T cell clearance upon antigen clearance');
+
 % T cell transport
 % Central & Peripheral
 reaction = addreaction(model,'V_C.T -> V_P.T');
@@ -248,16 +253,11 @@ if (first_call)
     p = addparameter(model,'N_aT0',1,'ValueUnits','dimensionless','ConstantValue',false);
         set(p,'Notes',['Number of Activated Treg Generations']);
 
-    addrule(model,'N_aT0 = N0 + N_costim*H_CD28_APC + N_IL2_CD4*V_LN.IL2/(IL2_50_Treg+V_LN.IL2)','repeatedAssignment');
+    addrule(model,'N_aT0 = N0 + N_costim*H_CD28_APC + N_IL2_CD4*V_LN.IL2/(IL2_50+V_LN.IL2)','repeatedAssignment');
 end
 
 % Get Model Rules for Updating
 model_rules = get(model,'Rules');
-
-% Update tumor Volume (Rule 1)
-% volume_rule = model_rules(1);
-% rule = get(volume_rule,'Rule');
-% set(volume_rule,'Rule',[rule '+vol_Tcell*V_T.' species_name]);
 
 % Update Total T Cells in tumor (Rule 3)
 Tcell_rule = model_rules(3);

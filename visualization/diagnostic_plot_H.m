@@ -19,7 +19,7 @@ set(f,'units','normalized','outerposition',[0 0 1 1])
 j = 1;
 for i = 1:length(simData.DataNames)
     if (simData.DataNames{i}(1)=='H')
-        subplot(3,5,j); hold on; box on;
+        subplot(5,5,j); hold on; box on;
         [~,temp,~] = selectbyname(simData, simData.DataNames{i});
         plot(simData.time, simData.Data(:,i))
         Hname = strrep(simData.DataNames{i},'_','\_');

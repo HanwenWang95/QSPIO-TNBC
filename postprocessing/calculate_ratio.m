@@ -71,6 +71,10 @@ for i = 1:n_PSA
     % Calculate total MDSC in Tumor
     [~,MDSC_total,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.MDSC');
 
+    % Calculate total macrophage in Tumor
+    [~,M1_total,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.Mac_M1');
+    [~,M2_total,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.Mac_M2');
+
     % Calculate ratios of T cell subsets
     CD8FoxP3ratio_C = (nT_C_total + T_C_total)./T0_C_total;
     CD8FoxP3ratio_T = (T_T_total + T1exh_total)./T0_T_total;
@@ -87,6 +91,15 @@ for i = 1:n_PSA
     CD4_density = (T0_T_total + Th_T_total + Thexh_total)./V_T;
     % Calculate MDSC density
     MDSC_density = MDSC_total./V_T;
+    % Calculate macrophage density and ratio
+    M_density = (M1_total + M2_total)./V_T;
+    M_ratio = (M1_total ./ M2_total);
+
+    % Cytokine concentration
+    [~,CCL2,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.CCL2');
+    [~,IL10,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.IL10');
+    [~,IFNg,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.IFNg');
+    [~,TGF,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.TGF');
 
     % Add calculated densities and ratios to postprocess structure
     %simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'CD8FoxP3ratio_C'}];
@@ -113,4 +126,18 @@ for i = 1:n_PSA
     simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , Treg_density];
     simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'MDSC_density'}];
     simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , MDSC_density];
+    simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'M_density'}];
+    simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , M_density];
+    simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'M_ratio'}];
+    simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , M_ratio];
+    % Add cytokine concentration to postprocess structure
+    simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'CCL2'}];
+    simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , CCL2];
+    simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'IL10'}];
+    simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , IL10];
+    simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'IFNg'}];
+    simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , IFNg];
+    simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'TGF'}];
+    simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , TGF];
+
 end

@@ -1,7 +1,7 @@
 % Treg CTLA4 Module
 %
 % Models Treg depletion through antibody binding to CTLA4
-% [Use after checkopoint and Treg module]
+% [Use after checkpoint and Treg module]
 %
 % Inputs: model        -- SimBiology model object with four compartments
 %         params       -- object containing the default parameters
@@ -14,20 +14,21 @@ function model = Treg_ADCC_module(model,params)
 % Determine if some of the prameters that could have been defined in Checkpoint module are defined
 first_call = true;
 try % Add kon Values
-    kon = addparameter(model,'kon_CTLA4_ipi',params.kon_CTLA4_ipi.Value,'ValueUnits',params.kon_CTLA4_ipi.Units);
-    set(kon,'Notes',['kon of CTLA4-ipilimumab binding ' params.kon_CTLA4_ipi.Notes]);
+    kon = addparameter(model,'kon_CTLA4_aCTLA4',params.kon_CTLA4_aCTLA4.Value,'ValueUnits',params.kon_CTLA4_aCTLA4.Units);
+    set(kon,'Notes',['kon of CTLA4-aCTLA4 binding ' params.kon_CTLA4_aCTLA4.Notes]);
 catch
     first_call = false;
 end
 if first_call
-% add Ipi PK if it does not exist yet
-model = pk_module(model,'ipi' ,ipi_params);
+% add aCTLA-4 PK if it does not exist yet
+params_aCTLA4  = pk_parameters('ipilimumab');
+model = pk_module(model,'aCTLA4' ,params_aCTLA4);
 % Add koff Values
-koff = addparameter(model,'koff_CTLA4_ipi',params.koff_CTLA4_ipi.Value,'ValueUnits',params.koff_CTLA4_ipi.Units);
-    set(koff,'Notes',['koff of CTLA4-ipilimumab binding ' params.koff_CTLA4_ipi.Notes]);
+koff = addparameter(model,'koff_CTLA4_aCTLA4',params.koff_CTLA4_aCTLA4.Value,'ValueUnits',params.koff_CTLA4_aCTLA4.Units);
+    set(koff,'Notes',['koff of CTLA4-aCTLA4 binding ' params.koff_CTLA4_aCTLA4.Notes]);
 % Bivalent anibody parameters
-p = addparameter(model,'Chi_CTLA4_ipi' ,params.Chi_CTLA4_ipi.Value ,'ValueUnits',params.Chi_CTLA4_ipi.Units);
-    set(p,'Notes',['Antibody cross-arm binding efficiency ' params.Chi_CTLA4_ipi.Notes]);
+p = addparameter(model,'Chi_CTLA4_aCTLA4' ,params.Chi_CTLA4_aCTLA4.Value ,'ValueUnits',params.Chi_CTLA4_aCTLA4.Units);
+    set(p,'Notes',['Antibody cross-arm binding efficiency ' params.Chi_CTLA4_aCTLA4.Notes]);
 end
 
 % Add area of a T cell if not defined before in antigen module
@@ -57,37 +58,44 @@ p = addparameter(model,'H_Treg_P',0.0,'ValueUnits','dimensionless','ConstantValu
 % Species for states of CTLA4 on Treg
 x = addspecies(model.Compartment(3),'Treg_CTLA4',0,'InitialAmountUnits','molecule');
     set(x,'Notes','Number of free CTLA4 molecules on Treg in Tumour compartment');
-x = addspecies(model.Compartment(3),'Treg_CTLA4_ipi',0,'InitialAmountUnits','molecule');
-    set(x,'Notes','Number of CTLA4-ipilimumab complex on Treg in Tumour compartment');
-x = addspecies(model.Compartment(3),'Treg_CTLA4_ipi_CTLA4',0,'InitialAmountUnits','molecule');
-    set(x,'Notes','Number of CTLA4-ipilimumab-CTLA4 complex on Treg in Tumour compartment');
+x = addspecies(model.Compartment(3),'Treg_CTLA4_aCTLA4',0,'InitialAmountUnits','molecule');
+    set(x,'Notes','Number of CTLA4-aCTLA4 complex on Treg in Tumour compartment');
+x = addspecies(model.Compartment(3),'Treg_CTLA4_aCTLA4_CTLA4',0,'InitialAmountUnits','molecule');
+    set(x,'Notes','Number of CTLA4-aCTLA4-CTLA4 complex on Treg in Tumour compartment');
 x = addspecies(model.Compartment(2),'Treg_CTLA4',0,'InitialAmountUnits','molecule');
     set(x,'Notes','Number of free CTLA4 molecules on Treg in Peripheral compartment');
-x = addspecies(model.Compartment(2),'Treg_CTLA4_ipi',0,'InitialAmountUnits','molecule');
-    set(x,'Notes','Number of CTLA4-ipilimumab complex on Treg in Peripheral compartment');
-x = addspecies(model.Compartment(2),'Treg_CTLA4_ipi_CTLA4',0,'InitialAmountUnits','molecule');
-    set(x,'Notes','Number of CTLA4-ipilimumab-CTLA4 complex on Treg in Peripheral compartment');
+x = addspecies(model.Compartment(2),'Treg_CTLA4_aCTLA4',0,'InitialAmountUnits','molecule');
+    set(x,'Notes','Number of CTLA4-aCTLA4 complex on Treg in Peripheral compartment');
+x = addspecies(model.Compartment(2),'Treg_CTLA4_aCTLA4_CTLA4',0,'InitialAmountUnits','molecule');
+    set(x,'Notes','Number of CTLA4-aCTLA4-CTLA4 complex on Treg in Peripheral compartment');
 
 % Initialize the total CTLA4 on the cells
 addrule(model,'V_T.Treg_CTLA4 = Treg_CTLA4_tot' ,'initialAssignment');
 addrule(model,'V_P.Treg_CTLA4 = Treg_CTLA4_tot' ,'initialAssignment');
 % Add the Hill parameters and the rules for them
-addrule(model,'H_Treg_T = ((V_T.Treg_CTLA4_ipi+2*V_T.Treg_CTLA4_ipi_CTLA4)/Treg_CTLA4_50)^n_Treg_CTLA4/(((V_T.Treg_CTLA4_ipi+2*V_T.Treg_CTLA4_ipi_CTLA4)/Treg_CTLA4_50)^n_Treg_CTLA4 + 1)','repeatedAssignment');
-addrule(model,'H_Treg_P = ((V_P.Treg_CTLA4_ipi+2*V_P.Treg_CTLA4_ipi_CTLA4)/Treg_CTLA4_50)^n_Treg_CTLA4/(((V_P.Treg_CTLA4_ipi+2*V_P.Treg_CTLA4_ipi_CTLA4)/Treg_CTLA4_50)^n_Treg_CTLA4 + 1)','repeatedAssignment');
+addrule(model,'H_Treg_T = ((V_T.Treg_CTLA4_aCTLA4+2*V_T.Treg_CTLA4_aCTLA4_CTLA4)/Treg_CTLA4_50)^n_Treg_CTLA4/(((V_T.Treg_CTLA4_aCTLA4+2*V_T.Treg_CTLA4_aCTLA4_CTLA4)/Treg_CTLA4_50)^n_Treg_CTLA4 + 1)','repeatedAssignment');
+addrule(model,'H_Treg_P = ((V_P.Treg_CTLA4_aCTLA4+2*V_P.Treg_CTLA4_aCTLA4_CTLA4)/Treg_CTLA4_50)^n_Treg_CTLA4/(((V_P.Treg_CTLA4_aCTLA4+2*V_P.Treg_CTLA4_aCTLA4_CTLA4)/Treg_CTLA4_50)^n_Treg_CTLA4 + 1)','repeatedAssignment');
 
-% Binding and unbinding of Ipi to CTLA4 on Treg on Tumour and Peripheral
-R = addreaction(model, 'V_T.Treg_CTLA4 <-> V_T.Treg_CTLA4_ipi');
-    set (R, 'ReactionRate', 'kon_CTLA4_ipi*(V_T.Treg_CTLA4 * V_T.ipi/gamma_C_ipi) -  koff_CTLA4_ipi*V_T.Treg_CTLA4_ipi');
-    set (R, 'Notes'       , 'binding and unbinding of CTLA4 to Ipi on Treg surface in Tumor');
-R = addreaction(model, 'V_T.Treg_CTLA4_ipi + V_T.Treg_CTLA4 <-> V_T.Treg_CTLA4_ipi_CTLA4');
-    set (R, 'ReactionRate', 'Chi_CTLA4_ipi*kon_CTLA4_ipi*(V_T.Treg_CTLA4 * V_T.Treg_CTLA4_ipi)/A_Tcell -  koff_CTLA4_ipi*V_T.Treg_CTLA4_ipi_CTLA4');
-    set (R, 'Notes'       , 'binding and unbinding of CTLA4 to CTLA4-Ipi on Treg surface in Tumor');
-R = addreaction(model, 'V_P.Treg_CTLA4 <-> V_P.Treg_CTLA4_ipi');
-    set (R, 'ReactionRate', 'kon_CTLA4_ipi*(V_P.Treg_CTLA4 * V_P.ipi/gamma_P_ipi) -  koff_CTLA4_ipi*V_P.Treg_CTLA4_ipi');
-    set (R, 'Notes'       , 'binding and unbinding of CTLA4 to Ipi on Treg surface in Peripheral compartment');
-R = addreaction(model, 'V_P.Treg_CTLA4_ipi + V_P.Treg_CTLA4 <-> V_P.Treg_CTLA4_ipi_CTLA4');
-    set (R, 'ReactionRate', 'Chi_CTLA4_ipi*kon_CTLA4_ipi*(V_P.Treg_CTLA4 * V_P.Treg_CTLA4_ipi)/A_Tcell -  koff_CTLA4_ipi*V_P.Treg_CTLA4_ipi_CTLA4');
-    set (R, 'Notes'       , 'binding and unbinding of CTLA4 to CTLA4-Ipi on Treg surface in Peripheral compartment');
+% Binding and unbinding of aCTLA4 to CTLA4 on Treg on Tumour and Peripheral
+R = addreaction(model, 'V_T.Treg_CTLA4 <-> V_T.Treg_CTLA4_aCTLA4');
+    set (R, 'ReactionRate', 'kon_CTLA4_aCTLA4*(V_T.Treg_CTLA4 * V_T.aCTLA4/gamma_T_aCTLA4) -  koff_CTLA4_aCTLA4*V_T.Treg_CTLA4_aCTLA4');
+    set (R, 'Notes'       , 'binding and unbinding of CTLA4 to aCTLA4 on Treg surface in Tumor');
+R = addreaction(model, 'V_T.Treg_CTLA4_aCTLA4 + V_T.Treg_CTLA4 <-> V_T.Treg_CTLA4_aCTLA4_CTLA4');
+    set (R, 'ReactionRate', 'Chi_CTLA4_aCTLA4*kon_CTLA4_aCTLA4*(V_T.Treg_CTLA4 * V_T.Treg_CTLA4_aCTLA4)/A_Tcell -  koff_CTLA4_aCTLA4*V_T.Treg_CTLA4_aCTLA4_CTLA4');
+    set (R, 'Notes'       , 'binding and unbinding of CTLA4 to CTLA4-aCTLA4 on Treg surface in Tumor');
+% R = addreaction(model, 'V_T.Treg_CTLA4_aCTLA4 + V_T.Mac_FcRIIIa <-> V_T.Treg_CTLA4_aCTLA4_FcRIIIa');
+%     set (R, 'ReactionRate', 'kon_IgG1_FcR*(V_T.Treg_CTLA4_aCTLA4 * V_T.Mac_FcRIIIa)/A_Tcell -  koff_CTLA4_aCTLA4*V_T.Treg_CTLA4_aCTLA4_FcRIIIa');
+%     set (R, 'Notes'       , 'binding and unbinding of CTLA4-aCTLA4 on Treg surface to Fc receptor on macrophages in Tumor');
+% R = addreaction(model, 'V_T.Treg_CTLA4_aCTLA4_CTLA4 + V_T.Mac_FcRIIIa <-> V_T.Treg_CTLA4_aCTLA4_CTLA4_FcRIIIa');
+%     set (R, 'ReactionRate', 'kon_IgG1_FcR*(V_T.Treg_CTLA4_aCTLA4_CTLA4 * V_T.Mac_FcRIIIa)/A_Tcell -  koff_CTLA4_aCTLA4*V_T.Treg_CTLA4_aCTLA4_CTLA4_FcRIIIa');
+%     set (R, 'Notes'       , 'binding and unbinding of CTLA4-aCTLA4-CTLA4 on Treg surface to Fc receptor on macrophages in Tumor');
+
+R = addreaction(model, 'V_P.Treg_CTLA4 <-> V_P.Treg_CTLA4_aCTLA4');
+    set (R, 'ReactionRate', 'kon_CTLA4_aCTLA4*(V_P.Treg_CTLA4 * V_P.aCTLA4/gamma_P_aCTLA4) -  koff_CTLA4_aCTLA4*V_P.Treg_CTLA4_aCTLA4');
+    set (R, 'Notes'       , 'binding and unbinding of CTLA4 to aCTLA4 on Treg surface in Peripheral compartment');
+R = addreaction(model, 'V_P.Treg_CTLA4_aCTLA4 + V_P.Treg_CTLA4 <-> V_P.Treg_CTLA4_aCTLA4_CTLA4');
+    set (R, 'ReactionRate', 'Chi_CTLA4_aCTLA4*kon_CTLA4_aCTLA4*(V_P.Treg_CTLA4 * V_P.Treg_CTLA4_aCTLA4)/A_Tcell -  koff_CTLA4_aCTLA4*V_P.Treg_CTLA4_aCTLA4_CTLA4');
+    set (R, 'Notes'       , 'binding and unbinding of CTLA4 to CTLA4-aCTLA4 on Treg surface in Peripheral compartment');
 
 % Treg Death through CTLA4 binding
 R = addreaction(model,'V_T.T0 -> null');

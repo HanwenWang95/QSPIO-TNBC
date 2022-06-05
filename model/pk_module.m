@@ -32,59 +32,55 @@ comp_LN = model.Compartment(4);
 
 % Add Species
 % Central
-A_C = addspecies(comp_C,'A',0.0,'InitialAmountUnits','molarity');
+A_C = addspecies(comp_C,'A',0.0,'InitialAmountUnits','nanomolarity');
     set(A_C,'Notes',['Concentration of ' species_name ' in central compartment']);
 % Peripheral
-A_P = addspecies(comp_P,'A',0.0,'InitialAmountUnits','molarity');
+A_P = addspecies(comp_P,'A',0.0,'InitialAmountUnits','nanomolarity');
     set(A_P,'Notes',['Concentration of ' species_name ' in peripheral compartment']);
 % Tumour
-A_T = addspecies(comp_T,'A',0.0,'InitialAmountUnits','molarity');
+A_T = addspecies(comp_T,'A',0.0,'InitialAmountUnits','nanomolarity');
     set(A_T,'Notes',['Concentration of ' species_name ' in tumour compartment']);
 % Lymph Node
-A_LN = addspecies(comp_LN,'A',0.0,'InitialAmountUnits','molarity');
+A_LN = addspecies(comp_LN,'A',0.0,'InitialAmountUnits','nanomolarity');
     set(A_LN,'Notes',['Concentration of ' species_name ' in lymph node compartment']);
 % Oral Administration
 if (nargin==4 && dose_type == 'o')
 
-    A_Buccal = addspecies(comp_C,'A_Buccal',0.0,'InitialAmountUnits','molarity');
+    A_Buccal = addspecies(comp_C,'A_Buccal',0.0,'InitialAmountUnits','nanomolarity');
         set(A_Buccal,'Notes',['Concentration of ' species_name ' from buccal absorption']);
-    A_GI = addspecies(comp_C,'A_GI',0.0,'InitialAmountUnits','molarity');
+    A_GI = addspecies(comp_C,'A_GI',0.0,'InitialAmountUnits','nanomolarity');
         set(A_GI,'Notes',['Concentration of ' species_name ' from GI absorption']);
     k_a1 = addparameter(model,'k_a1',params.k_a1.Value,'ValueUnits',params.k_a1.Units);
-        set(k_a1,'Notes',['Rate of buccal absorption of ' species_name ' into central compartment']);
+        set(k_a1,'Notes',['Absorption rate of ' species_name ' from buccal to central compartment' params.k_a1.Notes]);
     k_a2 = addparameter(model,'k_a2',params.k_a2.Value,'ValueUnits',params.k_a2.Units);
-        set(k_a2,'Notes',['Rate of GI absorption of ' species_name ' into central compartment']);
+        set(k_a2,'Notes',['Absorption rate of ' species_name ' from GI to central compartment' params.k_a2.Notes]);
     k_cln = addparameter(model,'k_cln',params.k_cln.Value,'ValueUnits',params.k_cln.Units);
-        set(k_cln,'Notes',['Non-linear clearance rate of ' species_name ' from central compartment']);
+        set(k_cln,'Notes',['Non-linear clearance rate of ' species_name ' from central compartment' params.k_cln.Notes]);
     Kc = addparameter(model,'Kc',params.Kc.Value,'ValueUnits',params.Kc.Units);
-        set(Kc,'Notes',['Concentration of ' species_name ' in central compartment at 50% k_cln']);
+        set(Kc,'Notes',['Half-maximal concentration of ' species_name ' in central compartment for nonlinear clearance' params.Kc.Notes]);
     % add parameters for dose schedule
-    lagP = addparameter(model,'lagP','Value',3.6472,'ValueUnits','hour');
-        set(lagP,'Notes',['Lag time of ' species_name ' absorption into central compartment']);
-    durP = addparameter(model,'durP','Value',0.1797,'ValueUnits','hour');
-        set(durP,'Notes',['Duration of zero-order absorption of ' species_name ' into central compartment']);
+    lagP = addparameter(model,'lagP','Value',params.lagP.Value,'ValueUnits',params.lagP.Units);
+        set(lagP,'Notes',['Lag time of ' species_name ' absorption into central compartment' params.lagP.Notes]);
+    durP = addparameter(model,'durP','Value',params.durP.Value,'ValueUnits',params.durP.Units);
+        set(durP,'Notes',['Duration of zero-order absorption of ' species_name ' into central compartment' params.durP.Notes]);
 
-    % Dose1 = addspecies(model.Compartment(1),'Dose1',0,'InitialAmountUnits','molarity');
-    Dose2 = addspecies(model.Compartment(1),'Dose2',0,'InitialAmountUnits','molarity');
-        set(Dose2,'Notes',['Fraction of an oral drug dose for GI absorption']);
-    % k_dose1 = addparameter(model,'k_dose1',Bio*dose_ENT/MW_ENT/5000/0.1797,'ValueUnits','molarity/hour');
-    k_dose2 = addparameter(model,'k_dose2',0.0138,'ValueUnits','1/hour');
-        set(k_dose2,'Notes',['Rate of GI absorption of ' species_name ' into buccal compartment']);
+    Dose_GI = addspecies(model.Compartment(1),'Dose_GI',0,'InitialAmountUnits','nanomolarity');
+        set(Dose_GI,'Notes',['Fraction of ' species_name ' dose for GI absorption']);
+    k_GI = addparameter(model,'k_GI',params.k_GI.Value,'ValueUnits',params.k_GI.Units);
+        set(k_GI,'Notes',['Absorption rate of ' species_name ' to gastro-intestinal compartment' params.k_GI.Notes]);
 
-    % reaction = addreaction(model,'V_C.Dose1 -> V_C.ENT_Buccal');
-    %     set(reaction,'ReactionRate','k_dose1');
-    reaction = addreaction(model,'V_C.Dose2 -> V_C.A_GI');
-        set(reaction,'ReactionRate','k_dose2*V_C.Dose2');
-        set(reaction,'Notes',['first-order absorption of ' species_name ' into buccal compartment']);
+    reaction = addreaction(model,'V_C.Dose_GI -> V_C.A_GI');
+        set(reaction,'ReactionRate','k_GI*V_C.Dose_GI');
+        set(reaction,'Notes',['First-order absorption of ' species_name ' to gastro-intestinal compartment']);
     reaction = addreaction(model,'V_C.A_Buccal -> V_C.A');
         set(reaction,'ReactionRate','k_a1*V_C.A_Buccal');
-        set(reaction,'Notes',['Buccal absorption of ' species_name 'into central comparment']);
+        set(reaction,'Notes',['Absorption of ' species_name ' from buccal to central comparment']);
     reaction = addreaction(model,'V_C.A_GI -> V_C.A');
         set(reaction,'ReactionRate','k_a2*V_C.A_GI');
-        set(reaction,'Notes',['Gastro-intestinal absorption of ' species_name 'into central comparment']);
+        set(reaction,'Notes',['Absorption of ' species_name ' from gastro-intestinal to central comparment']);
     reaction = addreaction(model,'V_C.A -> null');
         set(reaction,'ReactionRate','k_cln*V_C.A/(V_C.A + Kc)');
-        set(reaction,'Notes',[species_name ' Non-linear clearance from central compartment']);
+        set(reaction,'Notes',['Nonlinear clearance of ' species_name ' from central compartment']);
 
     rename(A_Buccal,[species_name '_Buccal']);
     rename(A_GI,[species_name '_GI']);
@@ -92,27 +88,30 @@ if (nargin==4 && dose_type == 'o')
     rename(k_a2,['k_a2_' species_name]);
     rename(k_cln,['k_cln_' species_name]);
     rename(Kc,['Kc_' species_name]);
+    rename(lagP,['lagP_' species_name]);
+    rename(durP,['durP_' species_name]);
+    rename(k_GI,['k_GI_' species_name]);
 end
 
 % Add Parameters
 q_P = addparameter(model,'q_P',params.q_P.Value,'ValueUnits',params.q_P.Units);
-    set(q_P,'Notes',['Volumetric flow rate of ' species_name ' between central and peripheral compartment']);
+    set(q_P,'Notes',['Volumetric flow rate of ' species_name ' between central and peripheral compartment' params.q_P.Notes]);
 q_T = addparameter(model,'q_T',params.q_T.Value,'ValueUnits',params.q_T.Units);
-    set(q_T,'Notes',['Volumetric flow rate of ' species_name ' between central and tumor compartment']);
+    set(q_T,'Notes',['Volumetric flow rate of ' species_name ' between central and tumor compartment' params.q_T.Notes]);
 q_LN = addparameter(model,'q_LN',params.q_LN.Value,'ValueUnits',params.q_LN.Units);
-    set(q_LN,'Notes',['Volumetric flow rate of ' species_name ' between central and TDLN compartment']);
+    set(q_LN,'Notes',['Volumetric flow rate of ' species_name ' between central and TDLN compartment' params.q_LN.Notes]);
 q_LD = addparameter(model,'q_LD',params.q_LD.Value,'ValueUnits',params.q_LD.Units);
-    set(q_LD,'Notes',['Rate of lymphatic drainage of ' species_name ' from TDLN to central compartment']);
+    set(q_LD,'Notes',['Rate of lymphatic drainage of ' species_name ' from TDLN to central compartment' params.q_LD.Notes]);
 k_cl = addparameter(model,'k_cl',params.k_cl.Value,'ValueUnits',params.k_cl.Units);
-    set(k_cl,'Notes',['Clearance rate of ' species_name ' from central compartment']);
+    set(k_cl,'Notes',['Clearance rate of ' species_name ' from central compartment' params.k_cl.Notes]);
 gamma_C = addparameter(model,'gamma_C',params.gamma_C.Value,'ValueUnits',params.gamma_C.Units);
-    set(gamma_C,'Notes',['Volume fraction of interstitial space available to ' species_name ' in central compartment']);
+    set(gamma_C,'Notes',['Volume fraction of interstitial space available to ' species_name ' in central compartment' params.gamma_C.Notes]);
 gamma_P = addparameter(model,'gamma_P',params.gamma_P.Value,'ValueUnits',params.gamma_P.Units);
-    set(gamma_P,'Notes',['Volume fraction of interstitial space available to ' species_name ' in peripheral compartment']);
+    set(gamma_P,'Notes',['Volume fraction of interstitial space available to ' species_name ' in peripheral compartment' params.gamma_P.Notes]);
 gamma_T = addparameter(model,'gamma_T',params.gamma_T.Value,'ValueUnits',params.gamma_T.Units);
-    set(gamma_T,'Notes',['Volume fraction of interstitial space available to ' species_name ' in tumor compartment']);
+    set(gamma_T,'Notes',['Volume fraction of interstitial space available to ' species_name ' in tumor compartment' params.gamma_T.Notes]);
 gamma_LN = addparameter(model,'gamma_LN',params.gamma_LN.Value,'ValueUnits',params.gamma_LN.Units);
-    set(gamma_LN,'Notes',['Volume fraction of interstitial space available to ' species_name ' in TDLN compartment']);
+    set(gamma_LN,'Notes',['Volume fraction of interstitial space available to ' species_name ' in TDLN compartment' params.gamma_LN.Notes]);
 
 % Add Reactions
 % Diffusive Transport: Central to Peripheral

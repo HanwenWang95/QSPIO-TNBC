@@ -24,22 +24,10 @@ end
 
 rate = '';
 for i = 1:length(C)
-    kT = '';
-    for j = 1:nTcells
-        if strcmp(kT,'')
-            % kT = kT + k_Tj*Tj
-            kT = sprintf('k_C_T%d*V_T.T%d',j,j);
-        else
-            kT = sprintf('%s+k_C_T%d*V_T.T%d',kT,j,j);
-        end
-    end
-    % rate = rate + P_Ci*(k_Ci_death+k_Ci_therapy+kT/(C_total+T_total)*(1-H_PD1))*Ci
-    % rate = sprintf('%s+%s_%s*(k_%s_death+k_%s_therapy+(%s)/(C_total+T_total+cell)*(1-H_TGF_CTL)*(1-H_PD1_C1)*(1-H_MDSC_C1))*%s',...
-    %       rate,P,C{i},C{i},C{i},kT,C{i});
     for k = 1:length(model.reaction)
         if strcmp(model.reaction(k).reaction, ['V_T.' C{i} ' -> V_T.C_x']) ...
             && ~isempty(strfind(model.reaction(k).ReactionRate, 'k_C_T'))
-            R_T = [model.reaction(k).ReactionRate, '*(1-H_MDSC_C1)'];
+            R_T = model.reaction(k).ReactionRate;
         end
     end
     if strcmp(rate,'')

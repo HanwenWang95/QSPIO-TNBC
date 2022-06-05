@@ -7,7 +7,6 @@
 %                 - ipilimumab
 %                 - pembrolizumab
 %                 - tremelimumab
-%                 - aCD47
 %
 % Output: params_out -- object containing model parameters
 %                       - q_P--rate of diffusive transport C<->P
@@ -101,7 +100,7 @@ switch (name)
         % Central to Peripheral
         q_P.Value = 320;
         q_P.Units = 'milliliter/second';
-        q_P.Notes = '(optimized)';
+        q_P.Notes = '(fitted)';
         % Central to Tumour
         q_T.Value = 3200;
         q_T.Units = 'milliliter/second';
@@ -109,7 +108,7 @@ switch (name)
         % Central to LN
         q_LN.Value = 320;
         q_LN.Units = 'milliliter/second';
-        q_LN.Notes = '(optimized)';
+        q_LN.Notes = '(fitted)';
         % Tumour to LN
         q_LD.Value = 0.0015;
         q_LD.Units = '1/minute';
@@ -117,32 +116,44 @@ switch (name)
         % Clearence
         k_cl.Value = .152;
         k_cl.Units = '1/hour';
-        k_cl.Notes = '(optimized)';
+        k_cl.Notes = '(fitted)';
         % Volume Fractions
         gamma_C.Value = 0.55;
         gamma_C.Notes = '(estimated)';
         gamma_P.Value = 0.062;
-        gamma_P.Notes = '(optimized)';
+        gamma_P.Notes = '(fitted)';
         gamma_T.Value = 0.611;
-        gamma_T.Notes = '(Stefanini 2008)';
+        gamma_T.Notes = '(Stefanini 2008, PMID: 18713470)';
         gamma_LN.Value = 0.2;
         gamma_LN.Notes = '(Wang 2019, PMID: 31218069)';
-        % Buccal absorption rate
+        % Buccal compartment to central
         params_out.k_a1.Value = 1.9;
         params_out.k_a1.Units = '1/hour';
-        params_out.k_a1.Notes = '(optimized)';
-        % GI absorption
+        params_out.k_a1.Notes = '(fitted)';
+        % GI compartment to central
         params_out.k_a2.Value = 2.5;
         params_out.k_a2.Units = '1/hour';
-        params_out.k_a2.Notes = '(optimized)';
+        params_out.k_a2.Notes = '(fitted)';
         % Non-linear clearance rate Vmax
         params_out.k_cln.Value = 46/MW_ENT;
         params_out.k_cln.Units = 'mole/(liter*hour)';
-        params_out.k_cln.Notes = '(optimized)';
+        params_out.k_cln.Notes = '(fitted)';
         % Drug conc. at .5*Vmax
         params_out.Kc.Value = 3.53/MW_ENT;
         params_out.Kc.Units = 'mole/liter';
-        params_out.Kc.Notes = '(optimized)';
+        params_out.Kc.Notes = '(fitted)';
+        % Absorption rate of fractional dose to GI compartment
+        params_out.k_GI.Value = 0.0138;
+        params_out.k_GI.Units = '1/hour';
+        params_out.k_GI.Notes = '(fitted)';
+        % T lag parameter
+        params_out.lagP.Value = 3.6472;
+        params_out.lagP.Units = 'hour';
+        params_out.lagP.Notes = '(fitted)';
+        % Duration parameter
+        params_out.durP.Value = 0.1797;
+        params_out.durP.Units = 'hour';
+        params_out.durP.Notes = '(fitted)';
 
     case 'ipilimumab'
         % Central to Peripheral
@@ -267,8 +278,7 @@ switch (name)
         gamma_T.Notes = '(Coughlin 2010, PMID: 20125040; Finley 2015, PMID: 26783500)';
         gamma_LN.Value = 0.2;
         gamma_LN.Notes = '(Wang 2019, PMID: 31218069)';
-        gamma_LN.Value = 0.2;
-        gamma_LN.Notes = '(Wang 2019, PMID: 31218069)';
+
 end
 
 % Diffusive Transport: C<->P
@@ -291,3 +301,5 @@ params_out.gamma_C = gamma_C;
 params_out.gamma_P = gamma_P;
 params_out.gamma_T = gamma_T;
 params_out.gamma_LN = gamma_LN;
+
+end

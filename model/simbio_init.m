@@ -68,23 +68,20 @@ p = addparameter(model,'cell',1.0,'ValueUnits','cell');
 p = addparameter(model,'day',1.0,'ValueUnits','day');
     set(p,'Notes','unit parameter for calculation');
 
-% Set Tumour Volume (Rule 1)
 vol_cell = addparameter(model,'vol_cell',params.vol_cell.Value,'ValueUnits',params.vol_cell.Units);
     set(vol_cell,'Notes',['Average volume of cancer cell ' params.vol_cell.Notes]);
 vol_Tcell = addparameter(model,'vol_Tcell',params.vol_Tcell.Value,'ValueUnits',params.vol_Tcell.Units);
     set(vol_Tcell,'Notes',['Average volume of T cells ' params.vol_Tcell.Notes]);
-% V_Tmin = addparameter(model,'V_Tmin',params.V_Tmin.Value,'ValueUnits',params.V_Tmin.Units);
-%     set(V_Tmin,'Notes',['Cancer-Free Tumour compartment volume' params.V_Tmin.Notes]);
 
 % rho_cell = addparameter(model,'rho_cell',params.rho_cell.Value,'ValueUnits',params.rho_cell.Units,'ConstantValue',false);
 %     set(rho_cell,'Notes',['Tumor density']);
 Ve_T = addparameter(model,'Ve_T',params.Ve_T.Value,'ValueUnits',params.Ve_T.Units,'ConstantValue',false);
     set(Ve_T,'Notes',['Void fraction of the tumor ' params.Ve_T.Notes]);
 
-% addrule(model,'V_T = V_Tmin+vol_cell*C_x+vol_Tcell*T_exh','repeatedAssignment');
-addrule(model,'V_T = ((C_x+C_total)*vol_cell+(T1_exh+Th_exh+T_total)*vol_Tcell)/Ve_T','repeatedAssignment');
-%addrule(model,'V_T = (C_x+C_total+T1_exh+Th_exh+T_total)/rho_cell','repeatedAssignment');
-%addrule(model,'V_T = (C_x+C_total)*vol_cell/Ve_T','repeatedAssignment');
+% Set Tumour Volume (Rule 1)
+% addrule(model,'V_T = (C_x+C_total)*vol_cell/Ve_T','repeatedAssignment');
+addrule(model,'V_T = ((C_x+C_total)*vol_cell+(T1_exh+Th_exh+T_total)*vol_Tcell)/Ve_T','repeatedAssignment'); % total cells in tumor / constant cellular volume fraction
+% addrule(model,'V_T = (C_x+C_total+T1_exh+Th_exh+T_total)/rho_cell','repeatedAssignment'); % total cells in tumor / constant cellular density in the tumor
 
 % Set Total Number of Cancer Cells (Rule 2)
 p = addparameter(model,'C_total',0,'ValueUnits','cell','ConstantValue',false);
@@ -126,7 +123,7 @@ p = addparameter(model,'H_APCh',1,'ValueUnits','dimensionless','ConstantValue',f
 p = addparameter(model,'H_PD1_C1',0.90,'ValueUnits','dimensionless','ConstantValue',false);
     set(p,'Notes','Hill function of PDL1 on tumor cells for T cell exhaustion');
 
-%addparameter(model,'H_PD1_C2',0.90,'ValueUnits','dimensionless','ConstantValue',false);
+% addparameter(model,'H_PD1_C2',0.90,'ValueUnits','dimensionless','ConstantValue',false);
 p = addparameter(model,'H_PD1_APC',0.90,'ValueUnits','dimensionless','ConstantValue',false);
     set(p,'Notes','Hill function of PDL1 on APC for T cell exhaustion');
 
@@ -134,12 +131,6 @@ p = addparameter(model,'H_PD1_APC',0.90,'ValueUnits','dimensionless','ConstantVa
 p = addparameter(model,'H_CD28_C1',0.1,'ValueUnits','dimensionless','ConstantValue',false);
     set(p,'Notes','Hill function of CD28 on tumor cells');
 
-%addparameter(model,'H_CD28_C2',0.1,'ValueUnits','dimensionless','ConstantValue',false);
+% addparameter(model,'H_CD28_C2',0.1,'ValueUnits','dimensionless','ConstantValue',false);
 p = addparameter(model,'H_CD28_APC',0.1,'ValueUnits','dimensionless','ConstantValue',false);
     set(p,'Notes','Hill function of CD28 on APCs for T cell activation');
-
-% Set Default Hill Function for MDSC and ENT
-p = addparameter(model,'H_MDSC_C1',1,'ValueUnits','dimensionless','ConstantValue',false);
-    set(p,'Notes','Hill function of MDSC on T cell inhibition');
-p = addparameter(model,'H_ENT_C1',1,'ValueUnits','dimensionless','ConstantValue',false);
-    set(p,'Notes','Hill function of entinostat on MDSC inhibition');

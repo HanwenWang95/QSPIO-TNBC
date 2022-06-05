@@ -44,7 +44,7 @@ T_LN = addspecies(model.Compartment(4),'T',0,'InitialAmountUnits','cell');
 % Determine if first call
 first_call = true;
 try % add IL2 if it does not exist yet
-IL2 = addspecies(model.Compartment(4),'IL2',1e-18,'InitialAmountUnits','molarity');
+IL2 = addspecies(model.Compartment(4),'IL2',1.9e-4,'InitialAmountUnits','nanomolarity'); % PMID: 21774806
     set(IL2,'Notes','Concentration of IL2 in the lymph node compartment');
 % IL2_T = addspecies(model.Compartment(3),'IL2',1e-18,'InitialAmountUnits','molarity');
 %     set(IL2_T,'Notes','Concentration of IL2 in the tumor compartment');
@@ -207,6 +207,11 @@ reaction = addreaction(model,'V_T.T -> V_T.T1_exh');
     set(reaction,'ReactionRate','k_CD8_death*V_T.T');
     set(reaction,'Notes','T cell death in the tumor compartment');
 
+% T cell clearance upon Ag clearance
+reaction = addreaction(model,'V_T.T -> V_T.T1_exh');
+    set(reaction,'ReactionRate','k_cell_clear*V_T.T*(Kc_rec/(C_total^2 + Kc_rec))');
+    set(reaction,'Notes','T cell clearance upon antigen clearance');
+
 % T cell death from Treg
 reaction = addreaction(model,'V_T.T -> V_T.T1_exh');
     set(reaction,'ReactionRate','k_Treg*V_T.T*Tregs_/(V_T.T+Tregs_+cell)');
@@ -264,16 +269,11 @@ if (first_call)
     p = addparameter(model,'N_aT0',1,'ValueUnits','dimensionless','ConstantValue',false);
         set(p,'Notes',['Number of Activated Treg Generations (see Rules)']);
 
-    addrule(model,'N_aT0 = N0 + N_costim*H_CD28_APC + N_IL2_CD4*V_LN.IL2/(IL2_50_Treg+V_LN.IL2)','repeatedAssignment');
+    addrule(model,'N_aT0 = N0 + N_costim*H_CD28_APC + N_IL2_CD4*V_LN.IL2/(IL2_50+V_LN.IL2)','repeatedAssignment');
 end
 
 % Get Model Rules for Updating
 model_rules = get(model,'Rules');
-
-% Update tumor Volume (Rule 1)
-% volume_rule = model_rules(1);
-% rule = get(volume_rule,'Rule');
-% set(volume_rule,'Rule',[rule '+vol_Tcell*V_T.' species_name]);
 
 % Update Total T Cells in tumor (Rule 3)
 Tcell_rule = model_rules(3);
@@ -285,18 +285,18 @@ Tcell_rule = model_rules(4);
 rule = get(Tcell_rule,'Rule');
 set(Tcell_rule,'Rule',[rule '+V_LN.' species_name]);
 
-
+K_T_C = addparameter(model,'K_T_C',params.K_T_C.Value,'ValueUnits',params.K_T_C.Units);
+    set(K_T_C,'Notes',['Dependence of Teff killing rate on Teff/C ratio ',params.K_T_C.Notes]);
+K_T_Treg = addparameter(model,'K_T_Treg',params.K_T_Treg.Value,'ValueUnits',params.K_T_Treg.Units);
+    set(K_T_Treg,'Notes',['Dependence of Teff killing rate on Teff/Treg ratio ',params.K_T_Treg.Notes]);
 % Update Cancer Killing by T Cells (Rule 5)
 if (exist('cancer_types','var'))
     for i = 1:length(cancer_types)
         reaction = addreaction(model,['V_T.' cancer_types{i} ' -> V_T.C_x']);
-            set(reaction,'ReactionRate',['k_C_Tcell*V_T.' cancer_types{i} '*V_T.T/(1.2*V_T.' cancer_types{i} '+V_T.T+cell)*V_T.T/(V_T.T+11*Tregs_+cell)*(1-H_TGF_CTL)*(1-H_PD1_C1)']);
-            %set(reaction,'ReactionRate',['k_C_Tcell*V_T.' cancer_types{i} '*V_T.T/(C_total+T_total+cell)*(1-H_TGF_CTL)*(1-H_PD1_C1)']);
+            set(reaction,'ReactionRate',['k_C_Tcell*V_T.' cancer_types{i} '*V_T.T/(K_T_C*V_T.' cancer_types{i} '+V_T.T+cell)*V_T.T/(V_T.T+K_T_Treg*Tregs_+cell)*(1-H_TGFb_Teff)*(1-H_PD1_C1)']);
             set(reaction,'Notes','Cancer cell killing by T cells');
         rule = get(model_rules(5),'Rule');
-            set(model_rules(5),'Rule',[rule,'+(k_CD8_death+k_' cancer_types{i} '_therapy)*V_T.' cancer_types{i} '+k_C_Tcell*V_T.' cancer_types{i} '*V_T.T/(1.2*V_T.' cancer_types{i} '+V_T.T+cell)*V_T.T/(V_T.T+11*Tregs_+cell)*(1-H_TGF_CTL)*(1-H_PD1_C1)']);
-            % set(model_rules(5),'Rule',[rule,'+k_C_Tcell*V_T.' cancer_types{i} '*V_T.T/(1.2*V_T.' cancer_types{i} '+V_T.T+cell)*V_T.T/(V_T.T+11*Tregs_+cell)*(1-H_TGF_CTL)*(1-H_PD1_C1)']);
-            % set(model_rules(5),'Rule',[rule,'+(k_CD8_death+k_' cancer_types{i} '_therapy)*V_T.' cancer_types{i} '+k_C_Tcell*V_T.' cancer_types{i} '*V_T.T/(C_total+T_total+cell)*(1-H_TGF_CTL)*(1-H_PD1_C1)']);
+            set(model_rules(5),'Rule',[rule,'+(k_' cancer_types{i} '_death+k_' cancer_types{i} '_therapy)*V_T.' cancer_types{i} '+k_C_Tcell*V_T.' cancer_types{i} '*V_T.T/(K_T_C*V_T.' cancer_types{i} '+V_T.T+cell)*V_T.T/(V_T.T+K_T_Treg*Tregs_+cell)*(1-H_TGFb_Teff)*(1-H_PD1_C1)']);
     end
 end
 

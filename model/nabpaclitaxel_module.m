@@ -119,19 +119,19 @@ IC50_nabp = addparameter(model,'IC50_nabp',params.IC50_nabp.Value,'ValueUnits',p
     set(IC50_nabp,'Notes',['Half-maximal nab-paclitaxel concentration for cancer cell killing ' params.IC50_nabp.Notes]);
 MW_nabp = addparameter(model,'MW_nabp',params.MW_nabp.Value,'ValueUnits',params.MW_nabp.Units);
     set(MW_nabp,'Notes',['Molecular weight of nab-paclitaxel ' params.MW_nabp.Notes]);
-Kc_cyt = addparameter(model,'Kc_cyt',params.Kc_cyt.Value,'ValueUnits',params.Kc_cyt.Units);
-    set(Kc_cyt,'Notes',['Half-Maximal cancer cell number for cytotoxic drug diffusion ' params.Kc_cyt.Notes]);
+Kc_nabp = addparameter(model,'Kc_nabp',params.Kc_nabp.Value,'ValueUnits',params.Kc_nabp.Units);
+    set(Kc_nabp,'Notes',['Half-Maximal cancer cell number for cytotoxic drug diffusion ' params.Kc_nabp.Notes]);
 
-NabP = addspecies(model.Compartment(3),'NabP',0,'InitialAmountUnits','molarity');
+NabP = addspecies(model.Compartment(3),'NabP',0,'InitialAmountUnits','nanomolarity');
     set(NabP,'Notes','Nab-paclitaxel concentration in tumour ');
 
 addrule(model,'V_T.NabP = r_nabp*V_1.NabP/MW_nabp','repeatedAssignment');
 
 reaction = addreaction(model,'V_T.C1 -> V_T.C_x');
-    set(reaction,'ReactionRate','k_C_nabp*V_T.C1*(V_T.NabP/(V_T.NabP+IC50_nabp))*min(C_total,Kc_cyt)/C_total'); % *(1-C_total/(C_total+Kc_cyt))
+    set(reaction,'ReactionRate','k_C_nabp*V_T.C1*(V_T.NabP/(V_T.NabP+IC50_nabp))*min(C_total,Kc_nabp)/C_total'); % *(1-C_total/(C_total+Kc_nabp))
     set(reaction,'Notes','Cancer cell death by nab-paclitaxel ');
 
-addrule(model,'k_C1_therapy = k_C_nabp*(V_T.NabP/(V_T.NabP+IC50_nabp))*min(C_total,Kc_cyt)/C_total','repeatedAssignment');
+addrule(model,'k_C1_therapy = k_C_nabp*(V_T.NabP/(V_T.NabP+IC50_nabp))*min(C_total,Kc_nabp)/C_total','repeatedAssignment');
 
 %% Resistance
 k_C_resist = addparameter(model,'k_C_resist',params.k_C_resist.Value,'ValueUnits',params.k_C_resist.Units,'ConstantValue',false);
@@ -140,61 +140,30 @@ r_resist = addparameter(model,'r_resist',params.r_resist.Value,'ValueUnits',para
     set(r_resist,'Notes',['Number of folds increase of nab-paclitaxel EC50 in resistant cancer clones ' params.r_resist.Notes]);
 
 reaction = addreaction(model,'V_T.C1 -> V_T.C2');
-    set(reaction,'ReactionRate','k_C_resist*V_T.C1*H_TGF_CTL'); % *H_TGF_CTL
+    set(reaction,'ReactionRate','k_C_resist*V_T.C1*H_TGFb');
     set(reaction,'Notes','Cancer cell resistance to nab-paclitaxel ');
 reaction = addreaction(model,'V_T.C2 -> V_T.C_x');
-    set(reaction,'ReactionRate','k_C_nabp*V_T.C2*(V_T.NabP/(V_T.NabP+IC50_nabp*r_resist))*min(C_total,Kc_cyt)/C_total');
+    set(reaction,'ReactionRate','k_C_nabp*V_T.C2*(V_T.NabP/(V_T.NabP+IC50_nabp*r_resist))*min(C_total,Kc_nabp)/C_total');
     set(reaction,'Notes','Resistant cancer cell death by nab-paclitaxel ');
 
-addrule(model,'k_C2_therapy = k_C_nabp*(V_T.NabP/(V_T.NabP+IC50_nabp*r_resist))*min(C_total,Kc_cyt)/C_total','repeatedAssignment');
+addrule(model,'k_C2_therapy = k_C_nabp*(V_T.NabP/(V_T.NabP+IC50_nabp*r_resist))*min(C_total,Kc_nabp)/C_total','repeatedAssignment');
 
 % set tumour growth rate of the resistant the same as the sensitive clone
 addrule(model,'k_C2_growth = k_C1_growth','repeatedAssignment');
 addrule(model,'k_C2_death = k_C1_death','repeatedAssignment');
 
 %% Vascularization
-s = addspecies(model.Compartment(3),'K',params.K0.Value,'InitialAmountUnits',params.K0.Units); % 2.4e8
-    set(s,'Notes',['Maximal tumor capacity ' params.K0.Notes]);
-s = addspecies(model.Compartment(3),'c_vas',0,'InitialAmountUnits','picogram/milliliter');
-    set(s,'Notes','Angiogenic factors ');
-
-p = addparameter(model,'k_K_g',params.k_K_g.Value,'ValueUnits',params.k_K_g.Units,'ConstantValue',false); % 5.33
-    set(p,'Notes',['Tumour vasculature growth rate ' params.k_K_g.Notes]);
-p = addparameter(model,'k_K_d',params.k_K_d.Value,'ValueUnits',params.k_K_d.Units,'ConstantValue',false); % 7.9e-3
-    set(p,'Notes',['Tumour vasculature inhibition rate ' params.k_K_d.Notes]);
-
-p = addparameter(model,'k_c_nabp',params.k_c_nabp.Value,'ValueUnits',params.k_c_nabp.Units,'ConstantValue',false);
-    set(p,'Notes',['Secretion rate of angiogenic factors induced by nab-paclitaxel ' params.k_c_nabp.Notes]);
+p = addparameter(model,'k_vas_nabp',params.k_vas_nabp.Value,'ValueUnits',params.k_vas_nabp.Units,'ConstantValue',false);
+    set(p,'Notes',['Secretion rate of angiogenic factors induced by nab-paclitaxel ' params.k_vas_nabp.Notes]);
 p = addparameter(model,'IC50_nabp_vas',params.IC50_nabp_vas.Value,'ValueUnits',params.IC50_nabp_vas.Units,'ConstantValue',false);
     set(p,'Notes',['Half-maximal conc. of nab-paclitaxel on angiogenic factor induction ' params.IC50_nabp_vas.Notes]);
-p = addparameter(model,'k_c_vas',params.k_c_vas.Value,'ValueUnits',params.k_c_vas.Units,'ConstantValue',false);
-    set(p,'Notes',['Secretion rate of angiogenic factors by cancer cells ' params.k_c_vas.Notes]);
-p = addparameter(model,'k_c_deg',params.k_c_deg.Value,'ValueUnits',params.k_c_deg.Units,'ConstantValue',false);
-    set(p,'Notes',['Degradation rate of angiogenic factors ' params.k_c_deg.Notes]);
-p = addparameter(model,'IC50_vas',params.IC50_vas.Value,'ValueUnits',params.IC50_vas.Units,'ConstantValue',false);
-    set(p,'Notes',['Half-maximal conc. of angiogenic factor on tumor capacity growth ' params.IC50_vas.Notes]);
-p = addparameter(model,'k_endo_nabp',params.k_endo_nabp.Value,'ValueUnits',params.k_endo_nabp.Units,'ConstantValue',false);
-    set(p,'Notes',['Inhibition rate of maximal tumor capacity by nab-paclitaxel ' params.k_endo_nabp.Notes]);
+p = addparameter(model,'k_K_nabp',params.k_K_nabp.Value,'ValueUnits',params.k_K_nabp.Units,'ConstantValue',false);
+    set(p,'Notes',['Inhibition rate of maximal tumor capacity by nab-paclitaxel ' params.k_K_nabp.Notes]);
+
 
 reaction = addreaction(model,'null -> V_T.c_vas');
-    set(reaction,'ReactionRate','k_c_vas*C_total');
-    set(reaction,'Notes','Baseline secretion/degradation of angiogenic factors ');
-reaction = addreaction(model,'null -> V_T.c_vas');
-    set(reaction,'ReactionRate','k_c_nabp*C_total*V_T.NabP/(V_T.NabP+IC50_nabp_vas)');
+    set(reaction,'ReactionRate','k_vas_nabp*C_total*V_T.NabP/(V_T.NabP+IC50_nabp_vas)');
     set(reaction,'Notes','Angiogenic factor release in response to nab-paclitaxel ');
-reaction = addreaction(model,'V_T.c_vas -> null');
-    set(reaction,'ReactionRate','k_c_deg*V_T.c_vas');
-    set(reaction,'Notes','Baseline secretion/degradation of angiogenic factors ');
-
-reaction = addreaction(model,'null -> V_T.K');
-    set(reaction,'ReactionRate','k_K_g*C_total*V_T.c_vas/(V_T.c_vas+IC50_vas)');
-    set(reaction,'Notes','Resistant cancer cell death by nab-paclitaxel ');
 reaction = addreaction(model,'V_T.K -> null');
-    set(reaction,'ReactionRate','k_K_d*V_T.K*(nthroot(C_total/cell*2.57e-6,3))^2');
-    set(reaction,'Notes','Resistant cancer cell death by nab-paclitaxel ');
-reaction = addreaction(model,'V_T.K -> null');
-    set(reaction,'ReactionRate','k_endo_nabp*V_T.K*V_T.NabP');
-    set(reaction,'Notes','Endothelial cell death by nab-paclitaxel ');
-
-addrule(model,'C_max = V_T.K','repeatedAssignment');
-addevent(model,'V_T.K < 0.5*cell','V_T.K = 0.01*cell');
+    set(reaction,'ReactionRate','k_K_nabp*V_T.K*V_T.NabP');
+    set(reaction,'Notes','Inhibition of tumor vasculature due to endothelial cell death by nab-paclitaxel ');

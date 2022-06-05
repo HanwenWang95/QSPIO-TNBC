@@ -2,11 +2,13 @@
 % Script for setting up and running in silico clinical trial
 clear
 close all
+sbioreset
 
 %% Create the model
 immune_oncology_model_TNBC
 
 %% Define dosing
+
 % Default dose regimen for atezolizumab is 1200 mg Q3W
 % Default dose regimen for nab-paclitaxel is 100 mg/m2 Q3/4W
 
@@ -63,11 +65,15 @@ dose_schedule = schedule_dosing({'nabPaclitaxel','atezolizumab'}, 'atezolizumab_
 % load('VP.mat')
 
 % Generate New Parameter Sets (New Virtual Patient Cohort)
-n_PSA = 1200;
+n_PSA = 1300;
 
+% Set distributions of the selected parameters for random sampling
 params_in  = PSA_param_in_TNBC;
+% Set boundaries for model species (only include those added in the present model)
 params_out = PSA_param_out(model);
+% Add selected model outputs to sensitivity analysis
 params_in  = PSA_param_obs(params_in);
+% Randomly generate parameter sets using Latin-Hypercube Sampling
 params_in  = PSA_setup(model,params_in,n_PSA);
 
 % Save Virtual Patient Cohort
@@ -75,9 +81,10 @@ save('VP.mat', 'params_in', 'params_out')
 
 %% Run Batch Simulations
 warning('off','all')
-dbstop if warning
+% dbstop if warning
 % dbclear all
 
+sbioaccelerate(model, dose_schedule)
 tic
 [simDataPSA, params_out] = simbio_PSA(model,params_in,params_out,dose_schedule);
 toc
@@ -93,23 +100,21 @@ params_in = PSA_preObs(simDataPSA,simDataPSApost,params_in,params_out);
 params_out = PSA_prep(simDataPSA,simDataPSApost,params_out);
 
 % Save and print data of interest (by assigning a unique code name for the trial)
-sprint_data(simDataPSA, simDataPSApost, params_out, 'combo')
+sprint_data(simDataPSA, simDataPSApost, params_in, params_out, 'combo')
 
 %% Perform and plot different types of analysis
 
-% Principle Component Analysis
-% PSA_PCA(simDataPSA,params_in)
+% Partial Rank Correlation Coefficients
+% PSA_PRCC(params_in,params_out,'plausible')
+% PSA_PRCC(params_in,params_out)
 
 % t-SNE Analysis
 % PSA_tSNE(params_in,params_out,'plausible')
 % PSA_tSNE(params_in,params_out,'patient')
-% PSA_tSNE(params_in,params_out)
-
-% Partial Rank Correlation Coefficients`
-% PSA_PRCC(params_in,params_out,'plausible')
-% PSA_PRCC(params_in,params_out)
 
 % eFAST
+
+% Principle Component Analysis
 
 %% Plot Results
 % close all

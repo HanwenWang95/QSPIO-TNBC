@@ -80,7 +80,7 @@ try
 catch
 end
 
-% Whe nwe have the final data, we need to think more carefully about the
+% When we have the final data, we need to think more carefully about the
 % standardization step and turn off clustergram's interfnal standardize
 data = log2(tsneData);
 cg = clustergram(data,     'RowLabels', params_out.RECIST(index),...

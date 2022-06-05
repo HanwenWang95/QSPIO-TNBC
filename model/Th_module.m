@@ -10,7 +10,7 @@
 
 function model = Th_module(model,params)
 
-% nT0 is naive CD4+, T0 is Treg
+% nT0 is naive CD4+, T0 is CD4+/Treg
 species_name = ['Th'];
 n_clones = 'n_T1_clones'; % number of tumor neoantigen clones
 
@@ -30,11 +30,9 @@ T_T = addspecies(model.Compartment(3),'T',0,'InitialAmountUnits','cell');
 T_LN = addspecies(model.Compartment(4),'T',0,'InitialAmountUnits','cell');
     set(T_LN,'Notes',['Number of ' species_name ' cells in the lymph node compartment']);
 
-% s = addspecies(model.Compartment(4),'TGF',0,'InitialAmountUnits','molarity');
-%     set(s,'Notes',['TGFb in the lymph node']);
-s = addspecies(model.Compartment(3),'TGF',0,'InitialAmountUnits','molarity');
+s = addspecies(model.Compartment(3),'TGFb',0,'InitialAmountUnits','nanomolarity');
     set(s,'Notes',['TGFb in the tumor comparment']);
-s = addspecies(model.Compartment(3),'IFNg',0,'InitialAmountUnits','molarity');
+s = addspecies(model.Compartment(3),'IFNg',0,'InitialAmountUnits','nanomolarity');
     set(s,'Notes',['IFNg in the tumor comparment']);
 
 % Add Hill Functions for APC/mAPC
@@ -43,29 +41,21 @@ H_APC = 'H_APCh';
 % Add Parameters
 k_Th_act = addparameter(model,'k_Th_act',params.k_Th_act.Value,'ValueUnits',params.k_Th_act.Units);
     set(k_Th_act,'Notes',['Rate of T helper cell activation ' params.k_Th_act.Notes]);
-k_reg = addparameter(model,'k_reg',params.k_reg.Value,'ValueUnits',params.k_reg.Units);
-    set(k_reg,'Notes',[species_name ' differentiation rate to Treg ' params.k_reg.Notes]);
-k_TGF_Tsec = addparameter(model,'k_TGF_Tsec',params.k_TGF_Tsec.Value,'ValueUnits',params.k_TGF_Tsec.Units); % 1.2e-10 12193750; 23393376 27589056 9697990
-    set(k_TGF_Tsec,'Notes',['TGF secretion rate by Treg ' params.k_TGF_Tsec.Notes]);
-k_TGF_deg = addparameter(model,'k_TGF_deg',params.k_TGF_deg.Value,'ValueUnits',params.k_TGF_deg.Units);
-    set(k_TGF_deg,'Notes',['TGF degradtion rate ' params.k_TGF_deg.Notes]);
+k_Th_Treg = addparameter(model,'k_Th_Treg',params.k_Th_Treg.Value,'ValueUnits',params.k_Th_Treg.Units);
+    set(k_Th_Treg,'Notes',[species_name ' differentiation rate to Treg ' params.k_Th_Treg.Notes]);
+k_TGFb_Tsec = addparameter(model,'k_TGFb_Tsec',params.k_TGFb_Tsec.Value,'ValueUnits',params.k_TGFb_Tsec.Units); % 1.2e-10 12193750; 23393376 27589056 9697990
+    set(k_TGFb_Tsec,'Notes',['TGF secretion rate by Treg ' params.k_TGFb_Tsec.Notes]);
+k_TGFb_deg = addparameter(model,'k_TGFb_deg',params.k_TGFb_deg.Value,'ValueUnits',params.k_TGFb_deg.Units);
+    set(k_TGFb_deg,'Notes',['TGF degradtion rate ' params.k_TGFb_deg.Notes]);
 
-TGF_50_reg = addparameter(model,'TGF_50_reg',params.TGF_50_reg.Value,'ValueUnits',params.TGF_50_reg.Units);
-    set(TGF_50_reg,'Notes',['Half-Maximal TGFb level for Th-to-Treg differentiation / chemoresistance development / M1-to-M2 polarization ' params.TGF_50_reg.Notes]);
-TGF_50_ctl = addparameter(model,'TGF_50_ctl',params.TGF_50_ctl.Value,'ValueUnits',params.TGF_50_ctl.Units);
-    set(TGF_50_ctl,'Notes',['Half-Maximal TGFb level for CD8 T cell inhibition ' params.TGF_50_ctl.Notes]);
+TGFb_50 = addparameter(model,'TGFb_50',params.TGFb_50.Value,'ValueUnits',params.TGFb_50.Units);
+    set(TGFb_50,'Notes',['Half-Maximal TGFb level for Th-to-Treg differentiation / chemoresistance development / M1-to-M2 polarization ' params.TGFb_50.Notes]);
+TGFb_50_Teff = addparameter(model,'TGFb_50_Teff',params.TGFb_50_Teff.Value,'ValueUnits',params.TGFb_50_Teff.Units);
+    set(TGFb_50_Teff,'Notes',['Half-Maximal TGFb level for CD8 T cell inhibition ' params.TGFb_50_Teff.Notes]);
 Kc_rec = addparameter(model,'Kc_rec',params.Kc_rec.Value,'ValueUnits',params.Kc_rec.Units);
     set(Kc_rec,'Notes',['Half-Maximal cancer cell number for T cell recruitment ' params.Kc_rec.Notes]);
 TGFbase = addparameter(model,'TGFbase',params.TGFbase.Value,'ValueUnits',params.TGFbase.Units);
     set(TGFbase,'Notes',['Baseline TGFb level in breast tumor ' params.TGFbase.Notes]);
-
-% k_TGF_Csec = addparameter(model,'k_TGF_Csec',2.6e-10,'ValueUnits','nanomole/cell/day'); % 1.7-6e-11 6.7e-10 9816237; 23393376 27589056 9697990
-%     set(k_TGF_Csec,'Notes',['TGF secretion rate by TNBC']);
-% TGF_50_pro = addparameter(model,'TGF_50_pro',1.2e-10,'ValueUnits','molarity');
-%     set(TGF_50_pro,'Notes',['Half-Maximal TGFb level for proliferation of effector cells']);
-% TGF_50_IL2 = addparameter(model,'TGF_50_IL2',7.2e-11,'ValueUnits','molarity');
-%     set(TGF_50_IL2,'Notes',['Half-Maximal TGFb level for IL2 secretion']);
-
 k_IFNg_sec = addparameter(model,'k_IFNg_sec',params.k_IFNg_sec.Value,'ValueUnits',params.k_IFNg_sec.Units);
     set(k_IFNg_sec,'Notes',['IFNg secretion rate by T helper cell ' params.k_IFNg_sec.Notes]);
 k_IFNg_deg = addparameter(model,'k_IFNg_deg',params.k_IFNg_deg.Value,'ValueUnits',params.k_IFNg_deg.Units);
@@ -73,12 +63,12 @@ k_IFNg_deg = addparameter(model,'k_IFNg_deg',params.k_IFNg_deg.Value,'ValueUnits
 IFNg_50_ind = addparameter(model,'IFNg_50_ind',params.IFNg_50_ind.Value,'ValueUnits',params.IFNg_50_ind.Units);
     set(IFNg_50_ind,'Notes',['Half-Maximal IFNg level for PD-L1 induction ' params.IFNg_50_ind.Notes]);
 
-p = addparameter(model,'H_TGF_reg',1,'ValueUnits','dimensionless','ConstantValue',false);
-    set(p,'Notes','Hill function of TGFb for Th transdifferentiation to Treg');
-addrule(model,'H_TGF_reg = V_T.TGF/(V_T.TGF+TGF_50_reg)','repeatedAssignment');
-p = addparameter(model,'H_TGF_CTL',1,'ValueUnits','dimensionless','ConstantValue',false);
+p = addparameter(model,'H_TGFb',1,'ValueUnits','dimensionless','ConstantValue',false);
+    set(p,'Notes','Hill function of TGFb for Th-to-Treg differentiation / chemoresistance development / M1-to-M2 polarization');
+addrule(model,'H_TGFb = V_T.TGFb/(V_T.TGFb+TGFb_50)','repeatedAssignment');
+p = addparameter(model,'H_TGFb_Teff',1,'ValueUnits','dimensionless','ConstantValue',false);
     set(p,'Notes','Hill function of TGFb for Teff inhibition and chemoresistance development');
-addrule(model,'H_TGF_CTL = V_T.TGF/(V_T.TGF+TGF_50_ctl)','repeatedAssignment');
+addrule(model,'H_TGFb_Teff = V_T.TGFb/(V_T.TGFb+TGFb_50_Teff)','repeatedAssignment');
 
 % Add Reactions
 % Naive T cell activation
@@ -93,11 +83,11 @@ reaction = addreaction(model,'V_LN.aT -> null');
     set(reaction,'ReactionRate','(k_T0_pro/N_aTh)*V_LN.aT');
     set(reaction,'Notes',['a' species_name ' cell proliferation']);
 reaction = addreaction(model,'null -> V_LN.T');
-    set(reaction,'ReactionRate','(k_T0_pro/N_aTh)*2^N_aTh*V_LN.aT');
+    set(reaction,'ReactionRate','(k_T0_pro/N_aTh)*2^N_aTh*V_LN.aT'); % *(1-H_PD1_APC)
     set(reaction,'Notes',['a' species_name ' cell proliferation']);
 % Differentiation between Treg and Th Cells
 reaction = addreaction(model,'V_T.T -> V_T.T0');
-    set(reaction,'ReactionRate','k_reg*V_T.T*ArgI/(EC50_ArgI_Treg+ArgI)*H_TGF_reg');
+    set(reaction,'ReactionRate','k_Th_Treg*V_T.T*H_TGFb');
     set(reaction,'Notes',['Differentiation between Treg and Th Cells']);
 
 % T cell Death
@@ -113,6 +103,11 @@ reaction = addreaction(model,'V_LN.T -> null');
 reaction = addreaction(model,'V_T.T -> V_T.Th_exh');
     set(reaction,'ReactionRate','k_T0_death*V_T.T');
     set(reaction,'Notes','T cell death in the tumor compartment');
+
+% T cell clearance upon Ag clearance
+reaction = addreaction(model,'V_T.T -> V_T.Th_exh');
+    set(reaction,'ReactionRate','k_cell_clear*V_T.T*(Kc_rec/(C_total^2 + Kc_rec))');
+    set(reaction,'Notes','T cell clearance upon antigen clearance');
 
 % T cell transport
 % Central & Peripheral
@@ -138,15 +133,15 @@ reaction = addreaction(model,'null -> V_LN.IL2');
    set(reaction,'ReactionRate','k_IL2_sec*V_LN.aT');
    set(reaction,'Notes','IL2 secretion from activated T cells');
 
-% TGF Reactions
+% TGFb Reactions
 % TGFb secretion and consumption by cancer cells
-reaction = addreaction(model,'null -> V_T.TGF');
-    set(reaction,'ReactionRate','k_TGF_deg*(TGFbase - V_T.TGF)*V_T');
+reaction = addreaction(model,'null -> V_T.TGFb');
+    set(reaction,'ReactionRate','k_TGFb_deg*(TGFbase - V_T.TGFb)*V_T');
     set(reaction,'Notes','TGFb secretion by triple-negative breast cancer cells');
 % TGFb Secretion by Activated Treg Cells
-reaction = addreaction(model,'null -> V_T.TGF');
-   set(reaction,'ReactionRate','k_TGF_Tsec*V_T.T0');
-   set(reaction,'Notes','TGF secretion from activated T cells in tumor');
+reaction = addreaction(model,'null -> V_T.TGFb');
+   set(reaction,'ReactionRate','k_TGFb_Tsec*V_T.T0');
+   set(reaction,'Notes','TGFb secretion from activated T cells in tumor');
 
 
 % IFNg Secretion by CD4 T helper Cells
@@ -166,11 +161,6 @@ addrule(model,'N_aTh = N0 + N_costim*H_CD28_APC + N_IL2_CD4*V_LN.IL2/(IL2_50+V_L
 
 % Get Model Rules for Updating
 model_rules = get(model,'Rules');
-
-% Update tumor Volume (Rule 1)
-% volume_rule = model_rules(1);
-% rule = get(volume_rule,'Rule');
-% set(volume_rule,'Rule',[rule '+vol_Tcell*V_T.' species_name]);
 
 % Update Total T Cells in tumor (Rule 3)
 Tcell_rule = model_rules(3);

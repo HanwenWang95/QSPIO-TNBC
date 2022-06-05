@@ -2,6 +2,7 @@
 % Script for setting up and running the immune oncology model in simbiology
 clear
 close all
+sbioreset
 
 %% Add use-defined units into both Simbiology and Symbolic libraries
 % Add 'cell' unit to SimBiology and Symbolic Toolboxes
@@ -37,7 +38,7 @@ model_name = 'Immune Oncology Model';
 start_time = 0.0; % [days]
 time_step = 1; % [days] 0.01 days ~ 15 mins
 end_time = 400; % [days]
-absolute_tolerance = 1e-12;
+absolute_tolerance = 1e-9;
 relative_tolerance = 1e-6;
 % solver = 'ode15s';
 solver = 'sundials';
@@ -46,12 +47,14 @@ time = start_time:time_step:end_time;
 model = simbio_init(model_name,time,solver,absolute_tolerance,relative_tolerance,params_out);
 % Maximal simulation time
 config = getconfigset(model);
-set(config, 'MaximumWallClock', 60)
+set(config, 'MaximumWallClock', 120)
+% set(config, 'MaximumNumberOfLogs', 1)
+set(config.SolverOptions, 'AbsoluteToleranceScaling', false)
 
 %% Add Modules to the Model
 % Cancer Modules
 model = cancer_module(model,'C1',params_out,4.7e6); % 4.7e6
-model = cancer_module(model,'C2',params_out,0);
+model = cancer_module(model,'C2',params_out,0); % chemotherapy-resistant clone
 % T cell Modules
 model = Treg_module(model,params_out);
 model = Teff_module(model,'1',params_out,{'C1','C2'});
@@ -65,18 +68,21 @@ model = antigen_module(model,'1',params_out,antigen);
 % Checkpoint Modules
 model = checkpoint_module(model,params_out,'T','C1');
 model = checkpoint_module(model,params_out,'T','APC');
-% ADCC Module (use in ipilimumab therapy)
-model = Treg_ADCC_module(model,params_out);
+% ADCC Module (use in ipilimumab therapy; in development)
+% model = Treg_ADCC_module(model,params_out);
 
 % QSPIO-TNBC Modules
-model = MDSC_module(model,params_out,{'C1','C2'});
-model = nabpaclitaxel_module(model,params_out);
 model = Th_module(model,params_out);
+model = MDSC_module(model,params_out,{'C1','C2'},'inostat',0,'drugName','entinostat');
+model = nabpaclitaxel_module(model,params_out);
+model = macrophage_module(model,params_out,{'C1','C2'},'aCD47',0); % PK module in development for aCD47
 
 %% Setup Dosing
 % dose_schedule = [];
-% dose_schedule = schedule_dosing({'nabPaclitaxel'});
 % dose_schedule = schedule_dosing({'atezolizumab'});
+% dose_schedule = schedule_dosing({'nabPaclitaxel'});
+
+% dbstop if warning
 
 %% Initialize and Run the Model (should run with realistic baseline parameters)
 % (should be commented out when conducting in silico virtual clinical trial)
@@ -97,6 +103,7 @@ model = Th_module(model,params_out);
 %     simData = simDataInit;
 %     disp('Tumour did not reach specified initial tumour diameter with current parameters');
 % end
+
 
 %% Plots
 % Plot diagnostics

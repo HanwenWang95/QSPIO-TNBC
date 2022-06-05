@@ -4,7 +4,7 @@
 
 
 
-function simbio_export(model,name)
+function simbio_export(model)
 m1 = copyobj(model);
 
 for i = 1:size(m1.Compartments,1)

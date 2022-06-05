@@ -1,15 +1,22 @@
 %% Function that save necessary data from an in silico clinical trial
-function sprint_data(simDataPSA, simDataPSApost, params_out, name)
-clear n_PSA
-try
-    load('VCT_data.mat')
-catch
-    disp('No VCT_data.mat was found or a loading error occurred.')
-end
+function sprint_data(simDataPSA, simDataPSApost, params_in, params_out, name, varargin)
+
+% Optional Inputs
+in = inputParser;
+% Frequency of tumor imaging during the trial (in weeks)
+addParameter(in,'freq',8);
+% Simulation time
+addParameter(in,'time',[0:400]');
+% Parse Inputs
+parse(in,varargin{:});
+time = in.Results.time;
+f_measure_wk = in.Results.freq;
 
 try
+    load('VCT_data.mat')
     if isfield(n_PSA, name)
         disp('There is a pre-existing trial with the same code name.')
+
         V_T = rmfield(V_T, name); nT1ln = rmfield(nT1ln, name);
         nT0ln = rmfield(nT0ln, name); aT1ln = rmfield(aT1ln, name);
         aT0ln = rmfield(aT0ln, name); aThln = rmfield(aThln, name);
@@ -28,17 +35,37 @@ try
         Thexh = rmfield(Thexh, name); Th = rmfield(Th, name);
         CD4 = rmfield(CD4, name); C1 = rmfield(C1, name);
         C2 = rmfield(C2, name); n_PSA = rmfield(n_PSA, name);
-        index = rmfield(index, name); ResObs = rmfield(ResObs, name);
-        ResObs_R = rmfield(ResObs_R, name); ORR = rmfield(ORR, name);
-        dor = rmfield(dor, name);
-        disp('Data from the pre-existing trial has been replaced.')
+        index = rmfield(index, name); CR = rmfield(CR, name);
+        PR_CR = rmfield(PR_CR, name); PR = rmfield(PR, name);
+        SD = rmfield(SD, name); PD = rmfield(PD, name);
+        ORR = rmfield(ORR, name); R_status = rmfield(R_status, name);
+        dor = rmfield(dor, name); Cx = rmfield(Cx, name);
+
+        PDL1_tum = rmfield(PDL1_tum, name); PDL1_APC = rmfield(PDL1_APC, name);
+        PDL2_tum = rmfield(PDL2_tum, name); PDL2_APC = rmfield(PDL2_APC, name);
+
+        IL2 = rmfield(IL2, name); IL10 = rmfield(IL10, name);
+        IL12 = rmfield(IL12, name); IFN = rmfield(IFN, name);
+        TGFb = rmfield(TGFb, name); CCL2 = rmfield(CCL2, name);
+
+        M1 = rmfield(M1, name); M2 = rmfield(M2, name);
+        Mac = rmfield(Mac, name); M_ratio = rmfield(M_ratio, name);
+        H_PD1_M = rmfield(H_PD1_M, name); H_Mac_C = rmfield(H_Mac_C, name);
+        PD1_PDL1 = rmfield(PD1_PDL1, name); PD1_PDL2 = rmfield(PD1_PDL2, name);
+        H_PD1_C = rmfield(H_PD1_C, name);
+
+        params_in_ = rmfield(params_in_, name); params_out_ = rmfield(params_out_, name);
+
+        disp('Data from the pre-existing trial will be replaced.')
+        disp('---------------------------------------------')
+    else
+        disp('New trial data will be added to VCT_data.mat.')
         disp('---------------------------------------------')
     end
 catch
-    disp('New VCT_data.mat file is generated.')
-    disp('---------------------------------------------')
+    disp('No VCT_data.mat was found or a loading error occurred.')
+    disp('A new VCT_data.mat will be generated.')
 end
-
 
 n_PSA.(name) = length(params_out.iPatientPlaus);
 index.(name) = params_out.iPatientPlaus;
@@ -81,6 +108,23 @@ for i = 1:n_PSA.(name)
     [~,temp29,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'syn_T_C1.PDL2_total');
     [~,temp30,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'syn_T_APC.PDL2_total');
 
+    [~,temp31,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.Mac_M1');
+    [~,temp32,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.Mac_M2');
+    [~,temp33,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.C_x');
+    [~,temp34,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'H_PD1_M');
+    [~,temp35,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'H_Mac_C');
+    [~,temp36,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'syn_T_C1.PD1_PDL1');
+    [~,temp37,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'syn_T_C1.PD1_PDL2');
+    [~,temp38,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'H_PD1_C1');
+
+    [~,temp39,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_LN.IL2');
+    [~,temp40,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.IL10');
+    [~,temp41,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.IL12');
+    [~,temp42,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.IFNg');
+    [~,temp43,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.TGFb');
+    [~,temp44,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.CCL2');
+    [~,temp45,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.c_vas');
+
     V_T.(name)(i,:) = temp1;
 
     nCD8c.(name)(i,:) = temp2.*1.11e6./5000;
@@ -99,8 +143,8 @@ for i = 1:n_PSA.(name)
     nT0ln.(name)(i,:) = temp15;
     aT1ln.(name)(i,:) = temp16;
     aT0ln.(name)(i,:) = temp17;
-    C1.(name)(i,:) = temp18./temp1;
-    C2.(name)(i,:) = temp19./temp1;
+    C1.(name)(i,:) = temp18;
+    C2.(name)(i,:) = temp19;
 
     aThln.(name)(i,:) = temp20;
     T1ln.(name)(i,:) = temp21;
@@ -116,6 +160,23 @@ for i = 1:n_PSA.(name)
     PDL2_tum.(name)(i,:) = temp29.*A_cell;
     PDL2_APC.(name)(i,:) = temp30.*A_APC;
 
+    M1.(name)(i,:) = temp31./temp1;
+    M2.(name)(i,:) = temp32./temp1;
+    M_ratio.(name)(i,:) = temp31./temp32;
+    Cx.(name)(i,:) = temp33;
+    H_PD1_M.(name)(i,:) = temp34;
+    H_Mac_C.(name)(i,:) = temp35;
+    PD1_PDL1.(name)(i,:) = temp36;
+    PD1_PDL2.(name)(i,:) = temp37;
+    H_PD1_C.(name)(i,:) = temp38;
+
+    IL2.(name)(i,:) = temp39;
+    IL10.(name)(i,:) = temp40;
+    IL12.(name)(i,:) = temp41;
+    IFN.(name)(i,:) = temp42;
+    TGFb.(name)(i,:) = temp43;
+    CCL2.(name)(i,:) = temp44;
+
     param_Obs = 'Teff_density';
     k = find(strcmp(simDataPSApost(index.(name)(i)).simData.DataNames, param_Obs));
     Teff.(name)(i,:) = simDataPSApost(index.(name)(i)).simData.Data(:,k);
@@ -127,6 +188,14 @@ for i = 1:n_PSA.(name)
     param_Obs = 'MDSC_density';
     k = find(strcmp(simDataPSApost(index.(name)(i)).simData.DataNames, param_Obs));
     MDSC.(name)(i,:) = simDataPSApost(index.(name)(i)).simData.Data(:,k);
+
+    param_Obs = 'M_density';
+    k = find(strcmp(simDataPSApost(index.(name)(i)).simData.DataNames, param_Obs));
+    Mac.(name)(i,:) = simDataPSApost(index.(name)(i)).simData.Data(:,k);
+
+    param_Obs = 'M_ratio';
+    k = find(strcmp(simDataPSApost(index.(name)(i)).simData.DataNames, param_Obs));
+    M_ratio.(name)(i,:) = simDataPSApost(index.(name)(i)).simData.Data(:,k);
 
     param_Obs = 'CD8_density';
     k = find(strcmp(simDataPSApost(index.(name)(i)).simData.DataNames, param_Obs));
@@ -143,81 +212,92 @@ end
 
 
 %% Outcome Predictions
-time = [0:1:400]';
-
+time = time(1:f_measure_wk*7:end);
 for i = 1:n_PSA.(name)
-    dt = D_T_perc.(name)(i,:);
+    dt = D_T_perc.(name)(i,1:f_measure_wk*7:end);
+    di = D_T.(name)(i,1:f_measure_wk*7:end);
     idx_min = find(dt==min(dt), 1);
 
-    if min(dt) <= -30
-        % ResObs is for easy calculation of ORR
-        ResObs_(i,1) = 1; % PR/CR
-        % ResObs_R is for generating data for RStudio
-        ResObs_R_(i,1) = {'R'}; % PR/CR
-        % ORR is for easy calculation and bootstrap of PD, PR/CR, and SD
-        ORR_(i,1) = 1; % PR/CR
+    if min(di) <= .2 % PMID: 28678153; 16612588
+        CR_(i,1) = 1; % CR
+        PR_CR_(i,1) = 1; % PR/CR
+        ORR_(i,1) = 1; % ORR: 1=PR/CR; .5=SD; 0=PD
+        PR_(i,1) = 0; % PR
+        SD_(i,1) = 0; % SD
+        PD_(i,1) = 0; % PD
+        R_status_(i,1) = {'R'};
+
         idx = find(dt<=-30, 1);
-        if (max(D_T.(name)(i,idx_min:end)) >= 1.2*min(D_T.(name)(i,idx_min))) && (max(D_T.(name)(i,idx_min:end)) - min(D_T.(name)(i,:)) >= 0.5)
-            dor_(i) = time(find(D_T.(name)(i,idx_min:end) >= 1.2*min(D_T.(name)(i,idx_min)), 1)+idx_min-1)-time(idx);
-            ttp_(i) = time(find(D_T.(name)(i,idx_min:end) >= 1.2*min(D_T.(name)(i,idx_min)), 1)+idx_min-1);
+        if (max(di(idx_min:end)) >= 1.2*min(di(idx_min))) && (max(di(idx_min:end)) - min(di) >= 0.5)
+            dor_(i) = time(find(di(idx_min:end) >= 1.2*min(di(idx_min)), 1)+idx_min-1)-time(idx);
+            ttp_(i) = time(find(di(idx_min:end) >= 1.2*min(di(idx_min)), 1)+idx_min-1);
         else
             dor_(i) = time(end)-time(idx);
             ttp_(i) = time(end) + 1;
         end
 
-    elseif (max(D_T.(name)(i,idx_min:end)) >= 1.2*min(D_T.(name)(i,idx_min))) && (max(D_T.(name)(i,idx_min:end)) - min(D_T.(name)(i,:)) >= 0.5) ...
-            && (time(find(D_T.(name)(i,idx_min:end) >= 1.2*min(D_T.(name)(i,idx_min)), 1)+idx_min-1) - time(1) <= 56)
-        ResObs_(i,1) = 0; % PD
-        ResObs_R_(i,1) = {'NR'}; % PD
-        ORR_(i,1) = 0; % PD
+    elseif min(dt) <= -30
+        CR_(i,1) = 0; % CR
+        PR_CR_(i,1) = 1; % PR/CR
+        ORR_(i,1) = 1; % ORR: 1=PR/CR; .5=SD; 0=PD
+        PR_(i,1) = 1; % PR
+        SD_(i,1) = 0; % SD
+        PD_(i,1) = 0; % PD
+        R_status_(i,1) = {'R'};
+
+        idx = find(dt<=-30, 1);
+        if (max(di(idx_min:end)) >= 1.2*min(di(idx_min))) && (max(di(idx_min:end)) - min(di) >= 0.5)
+            dor_(i) = time(find(di(idx_min:end) >= 1.2*min(di(idx_min)), 1)+idx_min-1)-time(idx);
+            ttp_(i) = time(find(di(idx_min:end) >= 1.2*min(di(idx_min)), 1)+idx_min-1);
+        else
+            dor_(i) = time(end)-time(idx);
+            ttp_(i) = time(end) + 1;
+        end
+
+    elseif (max(di(idx_min:end)) >= 1.2*min(di(idx_min))) && (max(di(idx_min:end)) - min(di) >= 0.5) ...
+            && (time(find(di(idx_min:end) >= 1.2*min(di(idx_min)), 1)+idx_min-1) - time(1) <= f_measure_wk*7)
+
+        CR_(i,1) = 0; % CR
+        PR_CR_(i,1) = 0; % PR/CR
+        ORR_(i,1) = 0; % ORR: 1=PR/CR; .5=SD; 0=PD
+        PR_(i,1) = 0; % PR
+        SD_(i,1) = 0; % SD
+        PD_(i,1) = 1; % PD
+        R_status_(i,1) = {'NR'};
+
         dor_(i) = 0;
         ttp_(i) = time(find(dt >= 1.2*(100+dt(1))-100, 1)) - time(1);
 
     else
-        ResObs_(i,1) = 0; % SD
-        ResObs_R_(i,1) = {'NR'}; % SD
-        ORR_(i,1) = 0.5; % SD
+        CR_(i,1) = 0; % CR
+        PR_CR_(i,1) = 0; % PR/CR
+        ORR_(i,1) = .5; % ORR: 1=PR/CR; .5=SD; 0=PD
+        PR_(i,1) = 0; % PR
+        SD_(i,1) = 1; % SD
+        PD_(i,1) = 0; % PD
+        R_status_(i,1) = {'NR'};
+
         dor_(i) = 0;
         ttp_(i) = time(end) + 1;
     end
 
 end
 
-dor_cor = 56.*ceil(dor_./56)./30;
-% median(dor_cor(dor_cor~=0))
-
-% plot(time(1:56:401), D_T_perc.(name)(:,1:56:401), '-.^', 'LineWidth', 2)
-% ylim([-100 100])
-
-% Complete Response
-len = size(D_T.(name),1);
-temp = zeros(len,1);
-for i = 1:len
-    if D_T.(name)(i,end) <= .2 % PMID: 28678153
-        temp(i) = 1;
-    else
-        temp(i) = 0;
-    end
-end
-
-% Overall Response
-len = size(D_T.(name),1);
-temp5 = zeros(len,1);
-
-for i = 1:len
-    if D_T_perc.(name)(i,end) <= -30 && 1.2*min(D_T.(name)(i,:)) > min(D_T.(name)(i,end))
-        temp5(i) = 1;
-    else
-        temp5(i) = 0;
-    end
-end
+dor_mo = dor_./30;
 
 
 %% Save Results
-ResObs.(name) = ResObs_;
-ResObs_R.(name) = ResObs_R_;
+CR.(name) = CR_;
+PR_CR.(name) = PR_CR_;
+PR.(name) = PR_;
+SD.(name) = SD_;
+PD.(name) = PD_;
 ORR.(name) = ORR_;
+R_status.(name) = R_status_;
 dor.(name) = dor_;
+
+params_in_.(name)  = params_in;
+params_out_.(name) = params_out;
 
 filename = 'VCT_data.mat';
 save(filename, 'V_T', 'nT1ln', 'nT0ln', 'aT1ln', 'aT0ln', 'aThln',...
@@ -225,17 +305,19 @@ save(filename, 'V_T', 'nT1ln', 'nT0ln', 'aT1ln', 'aT0ln', 'aThln',...
     'Teff', 'Treg', 'MDSC', 'CD8', 'D_T', 'D_T_perc',...
     'nCD8c', 'nCD4c', 'CD8c', 'Tregc', 'Thc', 'Ag0',...
     'Ag1', 'APC', 'mAPC', 'T1exh', 'Thexh', 'Th',...
-    'CD4', 'C1', 'C2', 'n_PSA', 'index', 'ResObs', ...
-    'ResObs_R', 'ORR', 'dor', 'PDL1_tum', 'PDL1_APC', 'PDL2_tum', 'PDL2_APC')
+    'CD4', 'C1', 'C2', 'n_PSA', 'index', 'CR', 'PR_CR',...
+    'PR', 'SD', 'PD', 'R_status', 'ORR', 'dor', 'PDL1_tum', 'PDL1_APC',...
+    'PDL2_tum', 'PDL2_APC', 'M1', 'M2', 'Mac', 'M_ratio',...
+    'H_PD1_M','H_Mac_C','Cx','IL2','IL10','IL12','IFN','TGFb','CCL2',...
+    'PD1_PDL1', 'PD1_PDL2', 'H_PD1_C', 'params_in_', 'params_out_')
 
 
 %% Print Results
 CD8_tot_t = Teff.(name) + T1exh.(name);
 CD4_tot_t = Treg.(name) + Th.(name) + Thexh.(name);
 
-disp(['Objective Response Rate: ' num2str(round(sum(ResObs_)/n_PSA.(name), 3, 'significant'))])
-disp(['Complete Response Rate: ' num2str(round(sum(temp)/n_PSA.(name), 3, 'significant'))])
-disp(['Response Rate at data cutt-off date: ' num2str(round(sum(temp5)/n_PSA.(name), 3, 'significant'))])
+disp(['Objective Response Rate: ' num2str(round(sum(PR_CR_)/n_PSA.(name), 3, 'significant'))])
+disp(['Complete Response Rate: ' num2str(round(sum(CR_)/n_PSA.(name), 3, 'significant'))])
 
 disp(['mean CD8 in tumor: ', num2str(round(mean(CD8_tot_t(:,1)), 3, 'significant')), ' cell/mL']) % 1.7e7
 disp(['mean CD4 in tumor: ', num2str(round(mean(CD4_tot_t(:,1)), 3, 'significant')), ' cell/mL']) % 1.9e7
@@ -247,12 +329,28 @@ disp(['median CD8 in tumor: ', num2str(round(median(CD8_tot_t(:,1)), 3, 'signifi
 disp(['median CD4 in tumor: ', num2str(round(median(CD4_tot_t(:,1)), 3, 'significant')), ' cell/mL']) % 1.4e8
 disp(['median Teffs in tumor: ', num2str(round(median(Teff.(name)(:,1)), 3, 'significant')), ' cell/mL'])
 disp(['median Tregs in tumor: ', num2str(round(median(Treg.(name)(:,1)), 3, 'significant')), ' cell/mL']) % 5.5e7
+disp(['median MDSC in tumor: ', num2str(round(median(MDSC.(name)(:,1)), 3, 'significant')), ' cell/mL']) % 8.4e7
+disp(['median macrophage in tumor: ', num2str(round(median(Mac.(name)(:,1)), 3, 'significant')), ' cell/mL']) % 8.4e7
+disp(['median M1/M2 in tumor: ', num2str(round(median(M_ratio.(name)(:,1)), 3, 'significant'))]) % 8.4e7
+
+disp(['median IL2 (15.3 kDa): ', num2str(round(median(IL2.(name)(:,1).*15300), 3, 'significant')), ' pg/mL'])
+disp(['IL2 range: ', num2str(round(min(IL2.(name)(:,1).*15300), 3, 'significant')), ' - ', num2str(round(max(IL2.(name)(:,1).*15300), 3, 'significant')), ' pg/mL'])
+disp(['median IL10 (18 kDa) in tumor: ', num2str(round(median(IL10.(name)(:,1).*18000), 3, 'significant')), ' pg/mL'])
+disp(['IL10 range in tumor: ', num2str(round(min(IL10.(name)(:,1).*18000), 3, 'significant')), ' - ', num2str(round(max(IL10.(name)(:,1).*18000), 3, 'significant')), ' pg/mL'])
+disp(['median IL12 (70 kDa): ', num2str(round(median(IL12.(name)(:,1).*70000), 3, 'significant')), ' pg/mL'])
+disp(['IL12 range: ', num2str(round(min(IL12.(name)(:,1).*70000), 3, 'significant')), ' - ', num2str(round(max(IL12.(name)(:,1).*70000), 3, 'significant')), ' pg/mL'])
+disp(['median IFN-gamma (17 kDa) in tumor: ', num2str(round(median(IFN.(name)(:,1).*17000), 3, 'significant')), ' pg/mL'])
+disp(['IFN-gamma range in tumor: ', num2str(round(min(IFN.(name)(:,1).*17000), 3, 'significant')), ' - ', num2str(round(max(IFN.(name)(:,1).*17000), 3, 'significant')), ' pg/mL'])
+disp(['median TGF-beta (25 kDa) in tumor: ', num2str(round(median(TGFb.(name)(:,1).*25000), 3, 'significant')), ' pg/mL'])
+disp(['TGF-beta range in tumor: ', num2str(round(min(TGFb.(name)(:,1).*25000), 3, 'significant')), ' - ', num2str(round(max(TGFb.(name)(:,1).*25000), 3, 'significant')), ' pg/mL'])
+disp(['median CCL2 (14 kDa) in tumor: ', num2str(round(median(CCL2.(name)(:,1).*14000), 3, 'significant')), ' pg/mL'])
+disp(['CCL2 range in tumor: ', num2str(round(min(CCL2.(name)(:,1).*14000), 3, 'significant')), ' - ', num2str(round(max(CCL2.(name)(:,1).*14000), 3, 'significant')), ' pg/mL'])
 
 % for i = 1:n_PSA
 %     TVDT(i,1) = 100*log(2)/(log(V_T.(name)(i,100)) - log(V_T.(name)(i,1)));
 % end
 % disp(['median tumor doubling time: ' num2str(median(TVDT))])
-disp(['median duration of response: ' num2str(round(median(dor_cor(dor_cor~=0)), 3, 'significant'))])
+disp(['median duration of response: ' num2str(round(median(dor_mo(dor_mo~=0)), 3, 'significant'))])
 
 % max(CD8_tot_t(:,1)./Treg.(name)(:,1))
 % min(CD8_tot_t(:,1)./Treg.(name)(:,1))

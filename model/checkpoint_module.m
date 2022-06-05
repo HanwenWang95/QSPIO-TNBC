@@ -66,9 +66,9 @@ if first_call
 params_aPD1    = pk_parameters('pembrolizumab');
 params_aPDL1   = pk_parameters('atezolizumab');
 params_aCTLA4  = pk_parameters('tremelimumab');
-model = pk_module(model,'nivo',params_aPD1);
-model = pk_module(model,'atezo',params_aPDL1);
-model = pk_module(model,'ipi' ,params_aCTLA4);
+model = pk_module(model,'aPD1',params_aPD1);
+model = pk_module(model,'aPDL1',params_aPDL1);
+model = pk_module(model,'aCTLA4' ,params_aCTLA4);
 
 k_out_PDL1 = addparameter(model,'k_out_PDL1',params.k_out_PDL1.Value,'ValueUnits',params.k_out_PDL1.Units); % estimated by 5e4 PMID 29034543
     set(k_out_PDL1,'Notes',['Expression rate of PDL1 on tumor cells ' params.k_out_PDL1.Notes]);
@@ -80,10 +80,10 @@ r_PDL1_IFNg = addparameter(model,'r_PDL1_IFNg',params.r_PDL1_IFNg.Value,'ValueUn
 % Add kon Values
 kon = addparameter(model,'kon_PD1_PDL2',params.kon_PD1_PDL2.Value,'ValueUnits',params.kon_PD1_PDL2.Units);
     set(kon,'Notes',['kon of PD1-PDL2 binding ' params.kon_PD1_PDL2.Notes]);
-kon = addparameter(model,'kon_PD1_nivo',params.kon_PD1_nivo.Value,'ValueUnits',params.kon_PD1_nivo.Units);
-    set(kon,'Notes',['kon of PD1-nivolumab binding ' params.kon_PD1_nivo.Notes]);
-kon = addparameter(model,'kon_PDL1_atezo',params.kon_PDL1_atezo.Value,'ValueUnits',params.kon_PDL1_atezo.Units);
-    set(kon,'Notes',['kon of PDL1-atezolizumab binding ' params.kon_PDL1_atezo.Notes]);
+kon = addparameter(model,'kon_PD1_aPD1',params.kon_PD1_aPD1.Value,'ValueUnits',params.kon_PD1_aPD1.Units);
+    set(kon,'Notes',['kon of PD1-aPD1 binding ' params.kon_PD1_aPD1.Notes]);
+kon = addparameter(model,'kon_PDL1_aPDL1',params.kon_PDL1_aPDL1.Value,'ValueUnits',params.kon_PDL1_aPDL1.Units);
+    set(kon,'Notes',['kon of PDL1-aPDL1 binding ' params.kon_PDL1_aPDL1.Notes]);
 kon = addparameter(model,'kon_CD28_CD80',params.kon_CD28_CD80.Value,'ValueUnits',params.kon_CD28_CD80.Units);
     set(kon,'Notes',['kon of CD28-CD80 binding ' params.kon_CD28_CD80.Notes]);
 kon = addparameter(model,'kon_CD28_CD86',params.kon_CD28_CD86.Value,'ValueUnits',params.kon_CD28_CD86.Units);
@@ -94,18 +94,18 @@ kon = addparameter(model,'kon_CTLA4_CD86',params.kon_CTLA4_CD86.Value,'ValueUnit
     set(kon,'Notes',['kon of CTLA4-CD86 binding ' params.kon_CTLA4_CD86.Notes]);
 kon = addparameter(model,'kon_CD80_PDL1',params.kon_CD80_PDL1.Value,'ValueUnits',params.kon_CD80_PDL1.Units);
     set(kon,'Notes',['kon of CD80-PDL1 binding ' params.kon_CD80_PDL1.Notes]);
-kon = addparameter(model,'kon_CTLA4_ipi',params.kon_CTLA4_ipi.Value,'ValueUnits',params.kon_CTLA4_ipi.Units);
-    set(kon,'Notes',['kon of CTLA4-ipilimumab binding ' params.kon_CTLA4_ipi.Notes]);
+kon = addparameter(model,'kon_CTLA4_aCTLA4',params.kon_CTLA4_aCTLA4.Value,'ValueUnits',params.kon_CTLA4_aCTLA4.Units);
+    set(kon,'Notes',['kon of CTLA4-aCTLA4 binding ' params.kon_CTLA4_aCTLA4.Notes]);
 
 % Add koff Values
 koff = addparameter(model,'koff_PD1_PDL1' ,params.koff_PD1_PDL1.Value ,'ValueUnits',params.koff_PD1_PDL1.Units);
     set(koff,'Notes',['koff of PD1-PDL1 binding ' params.koff_PD1_PDL1.Notes]);
 koff = addparameter(model,'koff_PD1_PDL2' ,params.koff_PD1_PDL2.Value ,'ValueUnits',params.koff_PD1_PDL2.Units);
     set(koff,'Notes',['koff of PD1-PDL2 binding ' params.koff_PD1_PDL2.Notes]);
-koff = addparameter(model,'koff_PD1_nivo' ,params.koff_PD1_nivo.Value ,'ValueUnits',params.koff_PD1_nivo.Units);
-    set(koff,'Notes',['koff of PD1-nivolumab binding ' params.koff_PD1_nivo.Notes]);
-koff = addparameter(model,'koff_PDL1_atezo',params.koff_PDL1_atezo.Value,'ValueUnits',params.koff_PDL1_atezo.Units);
-    set(koff,'Notes',['koff of PDL1-atezolizumab binding ' params.koff_PDL1_atezo.Notes]);
+koff = addparameter(model,'koff_PD1_aPD1' ,params.koff_PD1_aPD1.Value ,'ValueUnits',params.koff_PD1_aPD1.Units);
+    set(koff,'Notes',['koff of PD1-aPD1 binding ' params.koff_PD1_aPD1.Notes]);
+koff = addparameter(model,'koff_PDL1_aPDL1',params.koff_PDL1_aPDL1.Value,'ValueUnits',params.koff_PDL1_aPDL1.Units);
+    set(koff,'Notes',['koff of PDL1-aPDL1 binding ' params.koff_PDL1_aPDL1.Notes]);
 koff = addparameter(model,'koff_CD28_CD80' ,params.koff_CD28_CD80.Value ,'ValueUnits',params.koff_CD28_CD80.Units);
     set(koff,'Notes',['koff of CD28-CD80 binding ' params.koff_CD28_CD80.Notes]);
 koff = addparameter(model,'koff_CD28_CD86' ,params.koff_CD28_CD86.Value ,'ValueUnits',params.koff_CD28_CD86.Units);
@@ -116,16 +116,16 @@ koff = addparameter(model,'koff_CTLA4_CD86' ,params.koff_CTLA4_CD86.Value ,'Valu
     set(koff,'Notes',['koff of CTLA4-CD86 binding ' params.koff_CTLA4_CD86.Notes]);
 koff = addparameter(model,'koff_CD80_PDL1' ,params.koff_CD80_PDL1.Value ,'ValueUnits',params.koff_CD80_PDL1.Units);
     set(koff,'Notes',['koff of CD80-PDL1 binding ' params.koff_CD80_PDL1.Notes]);
-koff = addparameter(model,'koff_CTLA4_ipi',params.koff_CTLA4_ipi.Value,'ValueUnits',params.koff_CTLA4_ipi.Units);
-    set(koff,'Notes',['koff of CTLA4-ipilimumab binding ' params.koff_CTLA4_ipi.Notes]);
+koff = addparameter(model,'koff_CTLA4_aCTLA4',params.koff_CTLA4_aCTLA4.Value,'ValueUnits',params.koff_CTLA4_aCTLA4.Units);
+    set(koff,'Notes',['koff of CTLA4-aCTLA4 binding ' params.koff_CTLA4_aCTLA4.Notes]);
 
 % Bivalent anibody parameters
-p = addparameter(model,'Chi_PD1_nivo' ,params.Chi_PD1_nivo.Value,'ValueUnits',params.Chi_PD1_nivo.Units);
-    set(p,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_PD1_nivo.Notes]);
-p = addparameter(model,'Chi_PDL1_atezo' ,params.Chi_PDL1_atezo.Value,'ValueUnits',params.Chi_PDL1_atezo.Units);
-    set(p,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_PDL1_atezo.Notes]);
-p = addparameter(model,'Chi_CTLA4_ipi' ,params.Chi_CTLA4_ipi.Value,'ValueUnits',params.Chi_CTLA4_ipi.Units);
-    set(p,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_CTLA4_ipi.Notes]);
+p = addparameter(model,'Chi_PD1_aPD1' ,params.Chi_PD1_aPD1.Value,'ValueUnits',params.Chi_PD1_aPD1.Units);
+    set(p,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_PD1_aPD1.Notes]);
+p = addparameter(model,'Chi_PDL1_aPDL1' ,params.Chi_PDL1_aPDL1.Value,'ValueUnits',params.Chi_PDL1_aPDL1.Units);
+    set(p,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_PDL1_aPDL1.Notes]);
+p = addparameter(model,'Chi_CTLA4_aCTLA4' ,params.Chi_CTLA4_aCTLA4.Value,'ValueUnits',params.Chi_CTLA4_aCTLA4.Units);
+    set(p,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_CTLA4_aCTLA4.Notes]);
 
 % PD1-related Hill parameters
 p = addparameter(model,'PD1_50',params.PD1_50.Value,'ValueUnits',params.PD1_50.Units);
@@ -190,20 +190,20 @@ x = addspecies(comp,'PDL1',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of PDL1 in synapse');
 x = addspecies(comp,'PDL2',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of PDL2 in synapse');
-x = addspecies(comp,'PD1_nivo',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of PD1-nivolumab complex');
-x = addspecies(comp,'PD1_nivo_PD1',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of PD1-nivolumab-PD1 complex');
-x = addspecies(comp,'PDL1_atezo',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of PDL1-atezolizumab complex');
-x = addspecies(comp,'PDL1_atezo_PDL1',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of PDL1-atezolizumab-PDL1 complex');
+x = addspecies(comp,'PD1_aPD1',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of PD1-aPD1 complex');
+x = addspecies(comp,'PD1_aPD1_PD1',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of PD1-aPD1-PD1 complex');
+x = addspecies(comp,'PDL1_aPDL1',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of PDL1-aPDL1 complex');
+x = addspecies(comp,'PDL1_aPDL1_PDL1',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of PDL1-aPDL1-PDL1 complex');
 x = addspecies(comp,'TPDL1',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of PDL1 in synapse of T cell');
-x = addspecies(comp,'TPDL1_atezo',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of TPDL1-atezolizumab complex');
-x = addspecies(comp,'TPDL1_atezo_TPDL1',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of TPDL1-atezolizumab-TPDL1 complex');
+x = addspecies(comp,'TPDL1_aPDL1',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of TPDL1-aPDL1 complex');
+x = addspecies(comp,'TPDL1_aPDL1_TPDL1',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of TPDL1-aPDL1-TPDL1 complex');
 
 x = addspecies(comp,'CD28_CD80',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of CD28-CD80 complex');
@@ -223,22 +223,24 @@ x = addspecies(comp,'CD86_CTLA4',0,'InitialAmountUnits','molecule/micrometer^2')
     set(x,'Notes','concentration of CD86-CTLA4 complex');
 x = addspecies(comp,'CD86_CTLA4_CD86',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of CD86-CTLA4-CD86 complex');
-x = addspecies(comp,'TPDL1_CD80',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of TPDL1-CD80 complex');
-x = addspecies(comp,'TPDL1_CD80_TPDL1',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of TPDL1-CD80-TPDL1 complex');
+x = addspecies(comp,'PDL1_CD80',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of PDL1-CD80 complex');
+x = addspecies(comp,'PDL1_CD80_CD28',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of PDL1-CD80-CD28 complex');
+x = addspecies(comp,'PDL1_CD80_CTLA4',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of PDL1-CD80-CTLA4 complex');
 x = addspecies(comp,'CD28',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of CD28 in synapse');
 x = addspecies(comp,'CTLA4',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of CTLA4 in synapse');
 x = addspecies(comp,'CD80',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of CD80 in synapse');
+    set(x,'Notes','concentration of CD80 dimer in synapse');
 x = addspecies(comp,'CD86',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of CD86 in synapse');
-x = addspecies(comp,'CTLA4_ipi',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of CTLA4-ipilimumab complex');
-x = addspecies(comp,'CTLA4_ipi_CTLA4',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration of CTLA4-ipilimumab-CTLA4 complex');
+x = addspecies(comp,'CTLA4_aCTLA4',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of CTLA4-aCTLA4 complex');
+x = addspecies(comp,'CTLA4_aCTLA4_CTLA4',0,'InitialAmountUnits','molecule/micrometer^2');
+    set(x,'Notes','concentration of CTLA4-aCTLA4-CTLA4 complex');
 
 % Update Input Parameters
 addrule(model,[comp.Name,'.PD1',' = '  ,Tname,'_PD1_total /A_Tcell' ] ,'initialAssignment');
@@ -248,14 +250,16 @@ addrule(model,[comp.Name,'.TPDL1',' = ',Tname,'_PDL1_total /A_Tcell'] ,'initialA
 if Cname(1)=='C'
     addrule(model,[comp.Name,'.PDL1 = ',Cname,'_PDL1_base /A_cell'] ,'initialAssignment');
     addrule(model,[comp.Name,'.PDL2 = ',Cname,'_PDL1_base*r_PDL2',Cname,' /A_cell'] ,'initialAssignment');
-    addrule(model,[comp.Name,'.PDL1_total = ',comp.Name,'.PDL1+',comp.Name,'.PD1_PDL1+',comp.Name,'.PDL1_atezo+2*',comp.Name,'.PDL1_atezo_PDL1'] ,'repeatedAssignment');
+    addrule(model,[comp.Name,'.PDL1_total = ',comp.Name,'.PDL1+',comp.Name,'.PD1_PDL1+',comp.Name,'.PDL1_aPDL1+2*',comp.Name,'.PDL1_aPDL1_PDL1+',...
+                                              comp.Name,'.PDL1_CD80+',comp.Name,'.PDL1_CD80_CD28+',comp.Name,'.PDL1_CD80_CTLA4'] ,'repeatedAssignment');
     addrule(model,[comp.Name,'.PDL2_total = ',comp.Name,'.PD1_PDL2+',comp.Name,'.PDL2'] ,'repeatedAssignment');
     addrule(model,[comp.Name,'.CD80 = ',Cname,'_CD80_total /A_cell'] ,'initialAssignment');
     addrule(model,[comp.Name,'.CD86 = ',Cname,'_CD86_total /A_cell'] ,'initialAssignment');
 elseif Cname(1)=='A'
     addrule(model,[comp.Name,'.PDL1 = ',Cname,'_PDL1_base /A_APC'] ,'initialAssignment');
     addrule(model,[comp.Name,'.PDL2 = ',Cname,'_PDL1_base*r_PDL2',Cname,' /A_APC'] ,'initialAssignment');
-    addrule(model,[comp.Name,'.PDL1_total = ',comp.Name,'.PDL1+',comp.Name,'.PD1_PDL1+',comp.Name,'.PDL1_atezo+2*',comp.Name,'.PDL1_atezo_PDL1'] ,'repeatedAssignment');
+    addrule(model,[comp.Name,'.PDL1_total = ',comp.Name,'.PDL1+',comp.Name,'.PD1_PDL1+',comp.Name,'.PDL1_aPDL1+2*',comp.Name,'.PDL1_aPDL1_PDL1+',...
+                                              comp.Name,'.PDL1_CD80+',comp.Name,'.PDL1_CD80_CD28+',comp.Name,'.PDL1_CD80_CTLA4'] ,'repeatedAssignment');
     addrule(model,[comp.Name,'.PDL2_total = ',comp.Name,'.PD1_PDL2+',comp.Name,'.PDL2'] ,'repeatedAssignment');
     addrule(model,[comp.Name,'.CD80 = ',Cname,'_CD80_total /A_APC'] ,'initialAssignment');
     addrule(model,[comp.Name,'.CD86 = ',Cname,'_CD86_total /A_APC'] ,'initialAssignment');
@@ -277,40 +281,40 @@ R = addreaction(model,['null -> ' comp.Name,'.PDL2']);
     set (R, 'ReactionRate', ['k_in_PDL1*(',Cname,'_PDL1_base/A_cell*r_PDL2',Cname,'-',comp.Name,'.PDL2_total)']);
     set (R, 'Notes'       , 'Translocation of PDL2 between cell surface and cytoplasm');
 
-% Dynamics of PD1/PDL1/PDL2/nivo/atezo
- R = addreaction(model,[comp.Name,'.PD1 + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PD1_PDL1']);
+% Dynamics of PD1/PDL1/PDL2/aPD1/aPDL1
+R = addreaction(model,[comp.Name,'.PD1 + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PD1_PDL1']);
     set (R, 'ReactionRate', ['kon_PD1_PDL1*(',comp.Name,'.PD1)*(',comp.Name,'.PDL1)  -  koff_PD1_PDL1*',comp.Name,'.PD1_PDL1']);
     set (R, 'Notes'       , 'binding and unbinding of PD1 PDL1 in synapse');
- R = addreaction(model,[comp.Name,'.PD1 + ',comp.Name,'.PDL2 <-> ',comp.Name,'.PD1_PDL2']);
+R = addreaction(model,[comp.Name,'.PD1 + ',comp.Name,'.PDL2 <-> ',comp.Name,'.PD1_PDL2']);
     set (R, 'ReactionRate', ['kon_PD1_PDL2*(',comp.Name,'.PD1)*(',comp.Name,'.PDL2)  -  koff_PD1_PDL2*',comp.Name,'.PD1_PDL2']);
     set (R, 'Notes'       , 'binding and unbinding of PD1 PDL2 in synapse');
- R = addreaction(model,[comp.Name,'.PD1 <-> ',comp.Name,'.PD1_nivo']);
-    set (R, 'ReactionRate', ['2*kon_PD1_nivo*(',comp.Name,'.PD1 * ',compDrug.Name,'.nivo/',gamma,'_nivo) -  koff_PD1_nivo*',comp.Name,'.PD1_nivo']);
-    set (R, 'Notes'       , ['binding and unbinding of PD1 to Nivo on ',Tname,' surface in synapse']);
- R = addreaction(model,[comp.Name,'.PD1_nivo + ',comp.Name,'.PD1 <-> ',comp.Name,'.PD1_nivo_PD1']);
-    set (R, 'ReactionRate', ['Chi_PD1_nivo*kon_PD1_nivo*(',comp.Name,'.PD1 * ',comp.Name,'.PD1_nivo) -  2*koff_PD1_nivo*',comp.Name,'.PD1_nivo_PD1']);
-    set (R, 'Notes'       , ['binding and unbinding of PD1 to PD1-Nivo on ',Tname,' surface in synapse']);
- R = addreaction(model,[comp.Name,'.PDL1 <-> ',comp.Name,'.PDL1_atezo']);
-    set (R, 'ReactionRate', ['2*kon_PDL1_atezo*(',comp.Name,'.PDL1 * ',compDrug.Name,'.atezo/',gamma,'_atezo) -  koff_PDL1_atezo*',comp.Name,'.PDL1_atezo']);
-    set (R, 'Notes'       , ['binding and unbinding of PDL1 to atezo on ',Cname,' surface in synapse']);
- R = addreaction(model,[comp.Name,'.PDL1_atezo + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PDL1_atezo_PDL1']);
-    set (R, 'ReactionRate', ['Chi_PDL1_atezo*kon_PDL1_atezo*(',comp.Name,'.PDL1 * ',comp.Name,'.PDL1_atezo) -  2*koff_PDL1_atezo*',comp.Name,'.PDL1_atezo_PDL1']);
-    set (R, 'Notes'       , ['binding and unbinding of PDL1 to PDL1-atezo on ',Cname,' surface in synapse']);
+R = addreaction(model,[comp.Name,'.PD1 <-> ',comp.Name,'.PD1_aPD1']);
+    set (R, 'ReactionRate', ['2*kon_PD1_aPD1*(',comp.Name,'.PD1 * ',compDrug.Name,'.aPD1/',gamma,'_aPD1) -  koff_PD1_aPD1*',comp.Name,'.PD1_aPD1']);
+    set (R, 'Notes'       , ['binding and unbinding of PD1 to aPD1 on ',Tname,' surface in synapse']);
+R = addreaction(model,[comp.Name,'.PD1_aPD1 + ',comp.Name,'.PD1 <-> ',comp.Name,'.PD1_aPD1_PD1']);
+    set (R, 'ReactionRate', ['Chi_PD1_aPD1*kon_PD1_aPD1*(',comp.Name,'.PD1 * ',comp.Name,'.PD1_aPD1) -  2*koff_PD1_aPD1*',comp.Name,'.PD1_aPD1_PD1']);
+    set (R, 'Notes'       , ['binding and unbinding of PD1 to PD1-aPD1 on ',Tname,' surface in synapse']);
+R = addreaction(model,[comp.Name,'.PDL1 <-> ',comp.Name,'.PDL1_aPDL1']);
+    set (R, 'ReactionRate', ['2*kon_PDL1_aPDL1*(',comp.Name,'.PDL1 * ',compDrug.Name,'.aPDL1/',gamma,'_aPDL1) -  koff_PDL1_aPDL1*',comp.Name,'.PDL1_aPDL1']);
+    set (R, 'Notes'       , ['binding and unbinding of PDL1 to aPDL1 on ',Cname,' surface in synapse']);
+R = addreaction(model,[comp.Name,'.PDL1_aPDL1 + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PDL1_aPDL1_PDL1']);
+    set (R, 'ReactionRate', ['Chi_PDL1_aPDL1*kon_PDL1_aPDL1*(',comp.Name,'.PDL1 * ',comp.Name,'.PDL1_aPDL1) -  2*koff_PDL1_aPDL1*',comp.Name,'.PDL1_aPDL1_PDL1']);
+    set (R, 'Notes'       , ['binding and unbinding of PDL1 to PDL1-aPDL1 on ',Cname,' surface in synapse']);
 
-% Dynamics of CD28/CTLA4/CD80/CD86/ipi/atezo
+% Dynamics of CD28/CTLA4/CD80/CD86/aCTLA4/aPDL1
 % CD28-CD80
- R = addreaction(model,[comp.Name,'.CD28 + ',comp.Name,'.CD80 <-> ',comp.Name,'.CD28_CD80']);
+R = addreaction(model,[comp.Name,'.CD28 + ',comp.Name,'.CD80 <-> ',comp.Name,'.CD28_CD80']);
     set (R, 'ReactionRate', ['2*kon_CD28_CD80*(',comp.Name,'.CD28)*(',comp.Name,'.CD80)  -  koff_CD28_CD80*',comp.Name,'.CD28_CD80']);
     set (R, 'Notes'       , 'binding and unbinding of CD28 and CD80 in synapse');
- R = addreaction(model,[comp.Name,'.CD28_CD80 + ',comp.Name,'.CD28 <-> ',comp.Name,'.CD28_CD80_CD28']);
+R = addreaction(model,[comp.Name,'.CD28_CD80 + ',comp.Name,'.CD28 <-> ',comp.Name,'.CD28_CD80_CD28']);
     set (R, 'ReactionRate', ['kon_CD28_CD80*(',comp.Name,'.CD28)*(',comp.Name,'.CD28_CD80)  -  2*koff_CD28_CD80*',comp.Name,'.CD28_CD80_CD28']);
     set (R, 'Notes'       , 'binding and unbinding of CD28-CD80 and CD28 in synapse');
 % CD28-CD86
- R = addreaction(model,[comp.Name,'.CD28 + ',comp.Name,'.CD86 <-> ',comp.Name,'.CD28_CD86']);
+R = addreaction(model,[comp.Name,'.CD28 + ',comp.Name,'.CD86 <-> ',comp.Name,'.CD28_CD86']);
     set (R, 'ReactionRate', ['kon_CD28_CD86*(',comp.Name,'.CD28)*(',comp.Name,'.CD86)  -  koff_CD28_CD86*',comp.Name,'.CD28_CD86']);
     set (R, 'Notes'       , 'binding and unbinding of CD28 and CD86 in synapse');
 % CTLA4-CD80
- R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD80 <-> ',comp.Name,'.CD80_CTLA4']);
+R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD80 <-> ',comp.Name,'.CD80_CTLA4']);
     set (R, 'ReactionRate', ['4*kon_CTLA4_CD80*(',comp.Name,'.CTLA4)*(',comp.Name,'.CD80)  -  koff_CTLA4_CD80*',comp.Name,'.CD80_CTLA4']);
     set (R, 'Notes'       , 'binding and unbinding of CTLA4 and CD80 in synapse');
  R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD80_CTLA4 <-> ',comp.Name,'.CTLA4_CD80_CTLA4']);
@@ -326,34 +330,38 @@ R = addreaction(model,['null -> ' comp.Name,'.PDL2']);
     set (R, 'ReactionRate', ['kon_CTLA4_CD80*(',comp.Name,'.CTLA4)*(',comp.Name,'.CD80_CTLA4_CD80)  -  koff_CTLA4_CD80*',comp.Name,'.CD80_CTLA4_CD80_CTLA4']);
     set (R, 'Notes'       , 'binding and unbinding of CTLA4 and CD80-CTLA4-CD80 in synapse');
 % CTLA4-CD86
- R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD86 <-> ',comp.Name,'.CD86_CTLA4']);
+R = addreaction(model,[comp.Name,'.CTLA4 + ',comp.Name,'.CD86 <-> ',comp.Name,'.CD86_CTLA4']);
     set (R, 'ReactionRate', ['2*kon_CTLA4_CD86*(',comp.Name,'.CTLA4)*(',comp.Name,'.CD86)  -  koff_CTLA4_CD86*',comp.Name,'.CD86_CTLA4']);
     set (R, 'Notes'       , 'binding and unbinding of CTLA4 and CD86 in synapse');
- R = addreaction(model,[comp.Name,'.CD86_CTLA4 + ',comp.Name,'.CD86 <-> ',comp.Name,'.CD86_CTLA4_CD86']);
+R = addreaction(model,[comp.Name,'.CD86_CTLA4 + ',comp.Name,'.CD86 <-> ',comp.Name,'.CD86_CTLA4_CD86']);
     set (R, 'ReactionRate', ['kon_CTLA4_CD86*(',comp.Name,'.CD86_CTLA4)*(',comp.Name,'.CD86)  -  2*koff_CTLA4_CD86*',comp.Name,'.CD86_CTLA4_CD86']);
     set (R, 'Notes'       , 'binding and unbinding of CD86-CTLA4 and CD86 in synapse');
-% CTLA4-ipi
- R = addreaction(model,[comp.Name,'.CTLA4 <-> ',comp.Name,'.CTLA4_ipi']);
-    set (R, 'ReactionRate', ['4*kon_CTLA4_ipi*(',comp.Name,'.CTLA4 * ',compDrug.Name,'.ipi/',gamma,'_ipi) -  koff_CTLA4_ipi*',comp.Name,'.CTLA4_ipi']);
-    set (R, 'Notes'       , ['binding and unbinding of CTLA4 to Ipi on ',Tname,' surface in synapse']);
- R = addreaction(model,[comp.Name,'.CTLA4_ipi + ',comp.Name,'.CTLA4 <-> ',comp.Name,'.CTLA4_ipi_CTLA4']);
-    set (R, 'ReactionRate', ['Chi_CTLA4_ipi*kon_CTLA4_ipi*(',comp.Name,'.CTLA4 * ',comp.Name,'.CTLA4_ipi) -  2*koff_CTLA4_ipi*',comp.Name,'.CTLA4_ipi_CTLA4']);
-    set (R, 'Notes'       , ['binding and unbinding of CTLA4 to Ipi on ',Tname,' surface in synapse']);
-% TPDL1-CD80
- R = addreaction(model,[comp.Name,'.CD80 + ',comp.Name,'.TPDL1 <-> ',comp.Name,'.TPDL1_CD80']);
-    set (R, 'ReactionRate', ['2*kon_CD80_PDL1*(',comp.Name,'.CD80)*(',comp.Name,'.TPDL1)  -  koff_CD80_PDL1*',comp.Name,'.TPDL1_CD80']);
+% CTLA4-aCTLA4
+R = addreaction(model,[comp.Name,'.CTLA4 <-> ',comp.Name,'.CTLA4_aCTLA4']);
+    set (R, 'ReactionRate', ['4*kon_CTLA4_aCTLA4*(',comp.Name,'.CTLA4 * ',compDrug.Name,'.aCTLA4/',gamma,'_aCTLA4) -  koff_CTLA4_aCTLA4*',comp.Name,'.CTLA4_aCTLA4']);
+    set (R, 'Notes'       , ['binding and unbinding of CTLA4 to aCTLA4 on ',Tname,' surface in synapse']);
+ R = addreaction(model,[comp.Name,'.CTLA4_aCTLA4 + ',comp.Name,'.CTLA4 <-> ',comp.Name,'.CTLA4_aCTLA4_CTLA4']);
+    set (R, 'ReactionRate', ['Chi_CTLA4_aCTLA4*kon_CTLA4_aCTLA4*(',comp.Name,'.CTLA4 * ',comp.Name,'.CTLA4_aCTLA4) -  2*koff_CTLA4_aCTLA4*',comp.Name,'.CTLA4_aCTLA4_CTLA4']);
+    set (R, 'Notes'       , ['binding and unbinding of CTLA4 to aCTLA4 on ',Tname,' surface in synapse']);
+% cis PDL1-CD80-CD28
+ R = addreaction(model,[comp.Name,'.CD80 + ',comp.Name,'.PDL1 <-> ',comp.Name,'.PDL1_CD80']);
+    set (R, 'Stoichiometry', [-1 -2 2]);
+    set (R, 'ReactionRate', ['kon_CD80_PDL1*(',comp.Name,'.CD80)*(',comp.Name,'.PDL1)  -  koff_CD80_PDL1*',comp.Name,'.PDL1_CD80']);
     set (R, 'Notes'       , 'binding and unbinding of CD80 and PDL1 in synapse');
- R = addreaction(model,[comp.Name,'.TPDL1_CD80 + ',comp.Name,'.TPDL1 <-> ',comp.Name,'.TPDL1_CD80_TPDL1']);
-    set (R, 'ReactionRate', ['kon_CD80_PDL1*(',comp.Name,'.TPDL1_CD80)*(',comp.Name,'.TPDL1)  - 2*koff_CD80_PDL1*',comp.Name,'.TPDL1_CD80_TPDL1']);
-    set (R, 'Notes'       , 'binding and unbinding of PDL1-CD80 and PDL1 in synapse');
-% TPDL1-atezo
- R = addreaction(model,[comp.Name,'.TPDL1 <-> ',comp.Name,'.TPDL1_atezo']);
-    set (R, 'ReactionRate', ['2*kon_PDL1_atezo*(',comp.Name,'.TPDL1 * ',compDrug.Name,'.atezo/',gamma,'_atezo) -  koff_PDL1_atezo*',comp.Name,'.TPDL1_atezo']);
-    set (R, 'Notes'       , ['binding and unbinding of PDL1 to atezo on ',Cname,' surface in synapse']);
- R = addreaction(model,[comp.Name,'.TPDL1_atezo + ',comp.Name,'.TPDL1 <-> ',comp.Name,'.TPDL1_atezo_TPDL1']);
-    set (R, 'ReactionRate', ['Chi_PDL1_atezo*kon_PDL1_atezo*(',comp.Name,'.TPDL1 * ',comp.Name,'.TPDL1_atezo) -  2*koff_PDL1_atezo*',comp.Name,'.TPDL1_atezo_TPDL1']);
-    set (R, 'Notes'       , ['binding and unbinding of PDL1 to PDL1-atezo on ',Cname,' surface in synapse']);
+R = addreaction(model,[comp.Name,'.PDL1_CD80 + ',comp.Name,'.CD28 <-> ',comp.Name,'.PDL1_CD80_CD28']);
+    set (R, 'ReactionRate', ['kon_CD28_CD80*(',comp.Name,'.PDL1_CD80)*(',comp.Name,'.CD28)  - koff_CD28_CD80*',comp.Name,'.PDL1_CD80_CD28']);
+    set (R, 'Notes'       , 'binding and unbinding of PDL1-CD80 and CD28 in synapse');
+R = addreaction(model,[comp.Name,'.PDL1_CD80 + ',comp.Name,'.CTLA4 <-> ',comp.Name,'.PDL1_CD80_CTLA4']);
+    set (R, 'ReactionRate', ['kon_CTLA4_CD80*(',comp.Name,'.PDL1_CD80)*(',comp.Name,'.CTLA4)  - koff_CTLA4_CD80*',comp.Name,'.PDL1_CD80_CTLA4']);
+    set (R, 'Notes'       , 'binding and unbinding of PDL1-CD80 and CTLA4 in synapse');
+% TPDL1-aPDL1
+R = addreaction(model,[comp.Name,'.TPDL1 <-> ',comp.Name,'.TPDL1_aPDL1']);
+    set (R, 'ReactionRate', ['2*kon_PDL1_aPDL1*(',comp.Name,'.TPDL1 * ',compDrug.Name,'.aPDL1/',gamma,'_aPDL1) -  koff_PDL1_aPDL1*',comp.Name,'.TPDL1_aPDL1']);
+    set (R, 'Notes'       , ['binding and unbinding of PDL1 to aPDL1 on ',Cname,' surface in synapse']);
+R = addreaction(model,[comp.Name,'.TPDL1_aPDL1 + ',comp.Name,'.TPDL1 <-> ',comp.Name,'.TPDL1_aPDL1_TPDL1']);
+    set (R, 'ReactionRate', ['Chi_PDL1_aPDL1*kon_PDL1_aPDL1*(',comp.Name,'.TPDL1 * ',comp.Name,'.TPDL1_aPDL1) -  2*koff_PDL1_aPDL1*',comp.Name,'.TPDL1_aPDL1_TPDL1']);
+    set (R, 'Notes'       , ['binding and unbinding of PDL1 to PDL1-aPDL1 on ',Cname,' surface in synapse']);
 
 % Update PD1 Hill Function
 addrule(model,['H_PD1_',Cname,' = ((',comp.Name,'.PD1_PDL1+',comp.Name,'.PD1_PDL2)/PD1_50)^n_PD1/(((',comp.Name,'.PD1_PDL1+',comp.Name,'.PD1_PDL2)/PD1_50)^n_PD1 + 1)'],'repeatedAssignment');
-addrule(model,['H_CD28_',Cname,' = ((',comp.Name,'.CD28_CD80 + ',comp.Name,'.CD28_CD86 + 2*',comp.Name,'.CD28_CD80_CD28)/CD28_CD8X_50)^n_CD28_CD8X/(((',comp.Name,'.CD28_CD80 + ',comp.Name,'.CD28_CD86 + 2*',comp.Name,'.CD28_CD80_CD28)/CD28_CD8X_50)^n_CD28_CD8X + 1)'],'repeatedAssignment');
+addrule(model,['H_CD28_',Cname,' = ((',comp.Name,'.CD28_CD80 + ',comp.Name,'.CD28_CD86 + 2*',comp.Name,'.CD28_CD80_CD28 + ',comp.Name,'.PDL1_CD80_CD28)/CD28_CD8X_50)^n_CD28_CD8X/(((',comp.Name,'.CD28_CD80 + ',comp.Name,'.CD28_CD86 + 2*',comp.Name,'.CD28_CD80_CD28 + ',comp.Name,'.PDL1_CD80_CD28)/CD28_CD8X_50)^n_CD28_CD8X + 1)'],'repeatedAssignment');

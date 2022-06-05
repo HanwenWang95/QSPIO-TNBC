@@ -67,6 +67,62 @@ params.D_T_perc.Units       = 'dimensionless';
 params.D_T_perc.Type        = 'post';
 params.D_T_perc.ScreenName  = 'Percentage Change of Tumor Size';
 
+% Number of CD8 cells in the tumor
+params.names = [params.names; 'CD8_density'];
+params.CD8_density.UpperBound  = 1e9;
+params.CD8_density.LowerBound  = 1e5;
+params.CD8_density.Units       = 'cell/milliliter';
+params.CD8_density.Type        = 'pre';
+params.CD8_density.ScreenName  = 'CD8 Density in Tumor';
+
+% Number of CD4 cells in the tumor
+% params.names = [params.names; 'CD4_density'];
+% params.CD4_density.UpperBound  = 5e9;
+% params.CD4_density.LowerBound  = 1e5;
+% params.CD4_density.Units       = 'cell/milliliter';
+% params.CD4_density.Type        = 'pre';
+% params.CD4_density.ScreenName  = 'CD4 Density in Tumor';
+
+% Number of Treg cells in the tumor
+params.names = [params.names; 'Treg_density'];
+params.Treg_density.UpperBound  = 1e9;
+params.Treg_density.LowerBound  = 1e5;
+params.Treg_density.Units       = 'cell/milliliter';
+params.Treg_density.Type        = 'pre';
+params.Treg_density.ScreenName  = 'Treg Density in Tumor';
+
+% MDSC density
+params.names = [params.names; 'MDSC_density'];
+params.MDSC_density.UpperBound  = 1e7;
+params.MDSC_density.LowerBound  = 1e4;
+params.MDSC_density.Units      = 'cell/milliliter';
+params.MDSC_density.Type       = 'pre';
+params.MDSC_density.ScreenName = 'MDSC Density in Tumor';
+
+% CD8 to Treg ratio
+params.names = [params.names; 'CD8FoxP3ratio_T'];
+params.CD8FoxP3ratio_T.UpperBound  = 20;
+params.CD8FoxP3ratio_T.LowerBound  = 0.01;
+params.CD8FoxP3ratio_T.Units      = 'dimensionless';
+params.CD8FoxP3ratio_T.Type       = 'pre';
+params.CD8FoxP3ratio_T.ScreenName = 'CD8 to Treg Ratio in Tumor';
+
+% CD4 to Treg ratio
+params.names = [params.names; 'CD4FoxP3ratio_T'];
+params.CD4FoxP3ratio_T.UpperBound  = 20;
+params.CD4FoxP3ratio_T.LowerBound  = 1;
+params.CD4FoxP3ratio_T.Units      = 'dimensionless';
+params.CD4FoxP3ratio_T.Type       = 'pre';
+params.CD4FoxP3ratio_T.ScreenName = 'CD4 to Treg Ratio in Tumor';
+
+% Macrophage density
+params.names = [params.names; 'M_density'];
+params.M_density.UpperBound = 1e8;
+params.M_density.LowerBound = 1e5;
+params.M_density.Units      = 'cell/milliliter';
+params.M_density.Type       = 'pre';
+params.M_density.ScreenName = 'Macrophage density';
+
 % Number of CD8 T cells in the blood
 % params.names = [params.names; 'T1_C'];
 % params.T1_C.UpperBound  = 1e15;
@@ -117,107 +173,59 @@ params.D_T_perc.ScreenName  = 'Percentage Change of Tumor Size';
 % params.C1_T.Compartment = 'V_T';
 % params.C1_T.ScreenName  = 'Number of Cancer cells in Tumor';
 
-% Number of CD8 cells in the tumor
-params.names = [params.names; 'CD8_density'];
-params.CD8_density.UpperBound  = 1e9;
-params.CD8_density.LowerBound  = 1e5;
-params.CD8_density.Units       = 'cell/milliliter';
-params.CD8_density.Type        = 'pre';
-params.CD8_density.ScreenName  = 'CD8 Density in Tumor';
-
-% Number of Teff cells in the tumor
-% params.names = [params.names; 'Teff_density'];
-% params.Teff_density.UpperBound  = 1e9;
-% params.Teff_density.LowerBound  = 1e3;
-% params.Teff_density.Units       = 'cell/milliliter';
-% params.Teff_density.Type        = 'post';
-% params.Teff_density.ScreenName  = 'Teff Density in Tumor';
-
-% Number of Treg cells in the tumor
-params.names = [params.names; 'Treg_density'];
-params.Treg_density.UpperBound  = 1e9;
-params.Treg_density.LowerBound  = 1e5;
-params.Treg_density.Units       = 'cell/milliliter';
-params.Treg_density.Type        = 'pre';
-params.Treg_density.ScreenName  = 'Treg Density in Tumor';
-
-% MDSC density
-% params.names = [params.names; 'MDSC_density'];
-% params.MDSC_density.UpperBound  = 1e13;
-% params.MDSC_density.LowerBound  = 0;
-% params.MDSC_density.Units      = 'cell/milliliter';
-% params.MDSC_density.Type       = 'post';
-% params.MDSC_density.ScreenName = 'MDSC Density in Tumor';
-
-% CD8 to Treg ratio
-params.names = [params.names; 'CD8FoxP3ratio_T'];
-params.CD8FoxP3ratio_T.UpperBound  = 20;
-params.CD8FoxP3ratio_T.LowerBound  = 0.01;
-params.CD8FoxP3ratio_T.Units      = 'dimensionless';
-params.CD8FoxP3ratio_T.Type       = 'pre';
-params.CD8FoxP3ratio_T.ScreenName = 'CD8 to Treg Ratio in Tumor';
-
-% CD4 to Treg ratio
-params.names = [params.names; 'CD4FoxP3ratio_T'];
-params.CD4FoxP3ratio_T.UpperBound  = 20;
-params.CD4FoxP3ratio_T.LowerBound  = 1;
-params.CD4FoxP3ratio_T.Units      = 'dimensionless';
-params.CD4FoxP3ratio_T.Type       = 'pre';
-params.CD4FoxP3ratio_T.ScreenName = 'CD4 to Treg Ratio in Tumor';
-
 % T cell clonality
-%params.names = [params.names; 'clonality'];
-%params.clonality.UpperBound = 1;
-%params.clonality.LowerBound = 0;
-%params.clonality.Units      = 'dimensionless';
-%params.clonality.Type       = 'post';
-%params.clonality.ScreenName = 'CD8 T cell Clonality in Blood';
+% params.names = [params.names; 'clonality'];
+% params.clonality.UpperBound = 1;
+% params.clonality.LowerBound = 0;
+% params.clonality.Units      = 'dimensionless';
+% params.clonality.Type       = 'post';
+% params.clonality.ScreenName = 'CD8 T cell Clonality in Blood';
 
-params.names = [params.names; 'H_P1'];
-params.H_P1.UpperBound = 1;
-params.H_P1.LowerBound = 0;
-params.H_P1.Units      = 'dimensionless';
-params.H_P1.Type       = 'parameter';
-params.H_P1.ScreenName = 'TCR Receptor Occupancy for Teff (H\_P1)';
-
-params.names = [params.names; 'H_P0'];
-params.H_P0.UpperBound = 1;
-params.H_P0.LowerBound = 0;
-params.H_P0.Units      = 'dimensionless';
-params.H_P0.Type       = 'parameter';
-params.H_P0.ScreenName = 'TCR Receptor Occupancy for Treg (H\_P0)';
-
-params.names = [params.names; 'H_CD28_APC'];
-params.H_CD28_APC.UpperBound = 1;
-params.H_CD28_APC.LowerBound = 0;
-params.H_CD28_APC.Units      = 'dimensionless';
-params.H_CD28_APC.Type       = 'parameter';
-params.H_CD28_APC.ScreenName = 'T cell Costimulatory Signaling in LN (H\_CD28)';
-
-params.names = [params.names; 'H_PD1_C1'];
-params.H_PD1_C1.UpperBound = 1;
-params.H_PD1_C1.LowerBound = 0;
-params.H_PD1_C1.Units      = 'dimensionless';
-params.H_PD1_C1.Type       = 'parameter';
-params.H_PD1_C1.ScreenName = 'Teff Inhibition by PD1/PDL1 in Tumor (H\_PD1)';
-
-params.names = [params.names; 'H_MDSC_C1'];
-params.H_MDSC_C1.UpperBound = 1;
-params.H_MDSC_C1.LowerBound = 0;
-params.H_MDSC_C1.Units      = 'dimensionless';
-params.H_MDSC_C1.Type       = 'parameter';
-params.H_MDSC_C1.ScreenName = 'Teff Inhibition by MDSC in Tumor (H\_MDSC)';
-
-params.names = [params.names; 'H_APC'];
-params.H_APC.UpperBound = 1;
-params.H_APC.LowerBound = 0;
-params.H_APC.Units      = 'dimensionless';
-params.H_APC.Type       = 'parameter';
-params.H_APC.ScreenName = 'APC Engagement for Treg Activation in LN (H\_APC)';
-
-params.names = [params.names; 'H_mAPC'];
-params.H_mAPC.UpperBound = 1;
-params.H_mAPC.LowerBound = 0;
-params.H_mAPC.Units      = 'dimensionless';
-params.H_mAPC.Type       = 'parameter';
-params.H_mAPC.ScreenName = 'mAPC Engagement for Teff Activation in LN (H\_mAPC)';
+% params.names = [params.names; 'H_P1'];
+% params.H_P1.UpperBound = 1;
+% params.H_P1.LowerBound = 0;
+% params.H_P1.Units      = 'dimensionless';
+% params.H_P1.Type       = 'parameter';
+% params.H_P1.ScreenName = 'TCR Receptor Occupancy for Teff (H\_P1)';
+%
+% params.names = [params.names; 'H_P0'];
+% params.H_P0.UpperBound = 1;
+% params.H_P0.LowerBound = 0;
+% params.H_P0.Units      = 'dimensionless';
+% params.H_P0.Type       = 'parameter';
+% params.H_P0.ScreenName = 'TCR Receptor Occupancy for Treg (H\_P0)';
+%
+% params.names = [params.names; 'H_CD28_APC'];
+% params.H_CD28_APC.UpperBound = 1;
+% params.H_CD28_APC.LowerBound = 0;
+% params.H_CD28_APC.Units      = 'dimensionless';
+% params.H_CD28_APC.Type       = 'parameter';
+% params.H_CD28_APC.ScreenName = 'T cell Costimulatory Signaling in LN (H\_CD28)';
+%
+% params.names = [params.names; 'H_PD1_C1'];
+% params.H_PD1_C1.UpperBound = 1;
+% params.H_PD1_C1.LowerBound = 0;
+% params.H_PD1_C1.Units      = 'dimensionless';
+% params.H_PD1_C1.Type       = 'parameter';
+% params.H_PD1_C1.ScreenName = 'Teff Inhibition by PD1/PDL1 in Tumor (H\_PD1)';
+%
+% params.names = [params.names; 'H_MDSC_C1'];
+% params.H_MDSC_C1.UpperBound = 1;
+% params.H_MDSC_C1.LowerBound = 0;
+% params.H_MDSC_C1.Units      = 'dimensionless';
+% params.H_MDSC_C1.Type       = 'parameter';
+% params.H_MDSC_C1.ScreenName = 'Teff Inhibition by MDSC in Tumor (H\_MDSC)';
+%
+% params.names = [params.names; 'H_APC'];
+% params.H_APC.UpperBound = 1;
+% params.H_APC.LowerBound = 0;
+% params.H_APC.Units      = 'dimensionless';
+% params.H_APC.Type       = 'parameter';
+% params.H_APC.ScreenName = 'APC Engagement for Treg Activation in LN (H\_APC)';
+%
+% params.names = [params.names; 'H_mAPC'];
+% params.H_mAPC.UpperBound = 1;
+% params.H_mAPC.LowerBound = 0;
+% params.H_mAPC.Units      = 'dimensionless';
+% params.H_mAPC.Type       = 'parameter';
+% params.H_mAPC.ScreenName = 'mAPC Engagement for Teff Activation in LN (H\_mAPC)';
