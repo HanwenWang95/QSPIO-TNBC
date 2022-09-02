@@ -187,7 +187,7 @@ if (inostat)
 
     % Update Hill function for MDSC-mediated inhibition
     for i = 1:length(model_rules)
-        if ~isempty(strfind(model_rules(i).Rule, 'H_MDSC = ')) && isempty(strfind(model.reaction(i).reaction, 'H_inostat_ArgI'))
+        if ~isempty(strfind(model_rules(i).Rule, 'H_MDSC = ')) && isempty(strfind(model_rules(i).Rule, 'H_inostat_ArgI'))
             model_rules(i).Rule = insertAfter(model_rules(i).Rule, 'H_ArgI_Teff', '*(1-H_inostat_ArgI)');
         end
     end
