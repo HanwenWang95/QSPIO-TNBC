@@ -70,7 +70,7 @@ user_abs_tol = get(config.SolverOptions,'AbsoluteTolerance');
 user_rel_tol = get(config.SolverOptions,'RelativeTolerance');
 
 % Reset Output Times for IC Simulation (assumes time in days)
-set(config,'StopTime',5000);
+set(config,'StopTime',8000);
 set(config.SolverOptions,'OutputTimes',[]);
 set(config.SolverOptions,'MaxStep',1);
 

@@ -32,8 +32,11 @@ T_LN = addspecies(model.Compartment(4),'T',0,'InitialAmountUnits','cell');
 
 s = addspecies(model.Compartment(3),'TGFb',0,'InitialAmountUnits','nanomolarity');
     set(s,'Notes',['TGFb in the tumor comparment']);
+try
 s = addspecies(model.Compartment(3),'IFNg',0,'InitialAmountUnits','nanomolarity');
     set(s,'Notes',['IFNg in the tumor comparment']);
+catch
+end
 
 % Add Hill Functions for APC/mAPC
 H_APC = 'H_APCh';
@@ -56,8 +59,8 @@ Kc_rec = addparameter(model,'Kc_rec',params.Kc_rec.Value,'ValueUnits',params.Kc_
     set(Kc_rec,'Notes',['Half-Maximal cancer cell number for T cell recruitment ' params.Kc_rec.Notes]);
 TGFbase = addparameter(model,'TGFbase',params.TGFbase.Value,'ValueUnits',params.TGFbase.Units);
     set(TGFbase,'Notes',['Baseline TGFb level in breast tumor ' params.TGFbase.Notes]);
-k_IFNg_sec = addparameter(model,'k_IFNg_sec',params.k_IFNg_sec.Value,'ValueUnits',params.k_IFNg_sec.Units);
-    set(k_IFNg_sec,'Notes',['IFNg secretion rate by T helper cell ' params.k_IFNg_sec.Notes]);
+k_IFNg_Thsec = addparameter(model,'k_IFNg_Thsec',params.k_IFNg_Thsec.Value,'ValueUnits',params.k_IFNg_Thsec.Units);
+    set(k_IFNg_Thsec,'Notes',['IFNg secretion rate by T helper cell ' params.k_IFNg_Thsec.Notes]);
 k_IFNg_deg = addparameter(model,'k_IFNg_deg',params.k_IFNg_deg.Value,'ValueUnits',params.k_IFNg_deg.Units);
     set(k_IFNg_deg,'Notes',['IFNg degradation rate ' params.k_IFNg_deg.Notes]);
 IFNg_50_ind = addparameter(model,'IFNg_50_ind',params.IFNg_50_ind.Value,'ValueUnits',params.IFNg_50_ind.Units);
@@ -146,8 +149,8 @@ reaction = addreaction(model,'null -> V_T.TGFb');
 
 % IFNg Secretion by CD4 T helper Cells
 reaction = addreaction(model,'null -> V_T.IFNg');
-    set(reaction,'ReactionRate','k_IFNg_sec*V_T.T');
-    set(reaction,'Notes','IFNg secretion from T helper cells in tumor');
+    set(reaction,'ReactionRate','k_IFNg_Thsec*V_T.T');
+    set(reaction,'Notes','IFNg secretion from CD4 T cells in tumor');
 % IFNg Degradation
 reaction = addreaction(model,'V_T.IFNg -> null');
     set(reaction,'ReactionRate','k_IFNg_deg*V_T.IFNg');

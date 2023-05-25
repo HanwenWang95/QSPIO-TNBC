@@ -101,16 +101,24 @@ params.MDSC_density.ScreenName = 'MDSC Density in Tumor';
 
 % CD8 to Treg ratio
 params.names = [params.names; 'CD8FoxP3ratio_T'];
-params.CD8FoxP3ratio_T.UpperBound  = 20;
-params.CD8FoxP3ratio_T.LowerBound  = 0.01;
+params.CD8FoxP3ratio_T.UpperBound  = 1300;
+params.CD8FoxP3ratio_T.LowerBound  = 0.5;
 params.CD8FoxP3ratio_T.Units      = 'dimensionless';
 params.CD8FoxP3ratio_T.Type       = 'pre';
 params.CD8FoxP3ratio_T.ScreenName = 'CD8 to Treg Ratio in Tumor';
 
+% CD8 to CD4 ratio
+params.names = [params.names; 'CD8CD4ratio_T'];
+params.CD8CD4ratio_T.UpperBound  = 50;
+params.CD8CD4ratio_T.LowerBound  = 0.06;
+params.CD8CD4ratio_T.Units      = 'dimensionless';
+params.CD8CD4ratio_T.Type       = 'pre';
+params.CD8CD4ratio_T.ScreenName = 'CD8 to CD4 Ratio in Tumor';
+
 % CD4 to Treg ratio
 params.names = [params.names; 'CD4FoxP3ratio_T'];
-params.CD4FoxP3ratio_T.UpperBound  = 20;
-params.CD4FoxP3ratio_T.LowerBound  = 1;
+params.CD4FoxP3ratio_T.UpperBound  = 910;
+params.CD4FoxP3ratio_T.LowerBound  = 0.2;
 params.CD4FoxP3ratio_T.Units      = 'dimensionless';
 params.CD4FoxP3ratio_T.Type       = 'pre';
 params.CD4FoxP3ratio_T.ScreenName = 'CD4 to Treg Ratio in Tumor';

@@ -95,11 +95,11 @@ end
 
 % Add Parameters
 q_P = addparameter(model,'q_P',params.q_P.Value,'ValueUnits',params.q_P.Units);
-    set(q_P,'Notes',['Volumetric flow rate of ' species_name ' between central and peripheral compartment' params.q_P.Notes]);
+    set(q_P,'Notes',['Capillary filtration rate of ' species_name ' between central and peripheral compartment' params.q_P.Notes]);
 q_T = addparameter(model,'q_T',params.q_T.Value,'ValueUnits',params.q_T.Units);
-    set(q_T,'Notes',['Volumetric flow rate of ' species_name ' between central and tumor compartment' params.q_T.Notes]);
+    set(q_T,'Notes',['Capillary filtration rate of ' species_name ' between central and tumor compartment' params.q_T.Notes]);
 q_LN = addparameter(model,'q_LN',params.q_LN.Value,'ValueUnits',params.q_LN.Units);
-    set(q_LN,'Notes',['Volumetric flow rate of ' species_name ' between central and TDLN compartment' params.q_LN.Notes]);
+    set(q_LN,'Notes',['Capillary filtration rate of ' species_name ' between central and TDLN compartment' params.q_LN.Notes]);
 q_LD = addparameter(model,'q_LD',params.q_LD.Value,'ValueUnits',params.q_LD.Units);
     set(q_LD,'Notes',['Rate of lymphatic drainage of ' species_name ' from TDLN to central compartment' params.q_LD.Notes]);
 k_cl = addparameter(model,'k_cl',params.k_cl.Value,'ValueUnits',params.k_cl.Units);
@@ -128,16 +128,33 @@ reaction = addreaction(model,'V_C.A <-> V_LN.A');
     set(reaction,'Notes',[species_name ' diffusive transport to lymph node compartment']);
 % Convective Transport: Tumour to Lymph Node
 reaction = addreaction(model,'V_T.A -> V_LN.A');
-    set(reaction,'ReactionRate','q_LD*V_T.A/gamma_T');
+    set(reaction,'ReactionRate','q_LD*V_T*V_T.A/gamma_T');
     set(reaction,'Notes',[species_name ' convective transport from tumor to lymph node']);
 % Convective Transport: Lymph Node to Central
 reaction = addreaction(model,'V_LN.A -> V_C.A');
-    set(reaction,'ReactionRate','q_LD*V_LN.A/gamma_LN');
+    set(reaction,'ReactionRate','q_LD*V_T*V_LN.A/gamma_LN');
     set(reaction,'Notes',[species_name ' convective transport from lymph node to central']);
 % Clearence from Central
 reaction = addreaction(model,'V_C.A -> null');
     set(reaction,'ReactionRate','k_cl*V_C.A');
     set(reaction,'Notes','Drug clearance from central compartment');
+
+if (nargin==4 && dose_type == 'n')
+
+k_cln = addparameter(model,'k_cln',params.k_cln.Value,'ValueUnits',params.k_cln.Units);
+    set(k_cln,'Notes',['Non-linear clearance rate of ' species_name ' from central compartment' params.k_cln.Notes]);
+Kc = addparameter(model,'Kc',params.Kc.Value,'ValueUnits',params.Kc.Units);
+    set(Kc,'Notes',['Half-maximal concentration of ' species_name ' in central compartment for nonlinear clearance' params.Kc.Notes]);
+
+% Non-Linear Clearence from Central
+reaction = addreaction(model,'V_C.A -> null');
+    set(reaction,'ReactionRate','k_cln*V_C.A/(V_C.A + Kc)');
+    set(reaction,'Notes',['Nonlinear clearance of ' species_name ' from central compartment']);
+
+rename(k_cln,['k_cln_' species_name]);
+rename(Kc,['Kc_' species_name]);
+
+end
 
 % Rename Objects with 'species_name'
 rename(A_C,species_name);

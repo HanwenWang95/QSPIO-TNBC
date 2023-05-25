@@ -219,7 +219,7 @@ switch (name)
 
     case 'durvalumab'
         % Central to Peripheral
-        q_P.Value = 5.48e-06;
+        q_P.Value = 5.56e-6;
         q_P.Units = 'liter/second';
         q_P.Notes = '(Baverel 2018, PMID: 29243223)';
         % Central to Tumour
@@ -235,18 +235,26 @@ switch (name)
         q_LD.Units = '1/minute';
         q_LD.Notes = '(Zhu 1996, PMID: 8706023)';
         % Clearence
-        k_cl.Value = 0.335;
+        k_cl.Value = 0.33;
         k_cl.Units = 'liter/day';
         k_cl.Notes = '(Baverel 2018, PMID: 29243223)';
         % Volume Fractions
         gamma_C.Value = 0.7;
         gamma_C.Notes = '(Baverel 2018, PMID: 29243223)';
-        gamma_P.Value = 0.061;
+        gamma_P.Value = 0.057;
         gamma_P.Notes = '(Baverel 2018, PMID: 29243223)';
         gamma_T.Value = 0.522;
         gamma_T.Notes = '(Coughlin 2010, PMID: 20125040; Finley 2015, PMID: 26783500)';
         gamma_LN.Value = 0.2;
         gamma_LN.Notes = '(Wang 2019, PMID: 31218069)';
+        % Non-linear clearance rate Vmax
+        params_out.k_cln.Value = 5.6;
+        params_out.k_cln.Units = 'nanomole/day';
+        params_out.k_cln.Notes = '(fitted)';
+        % Drug conc. at .5*Vmax
+        params_out.Kc.Value = 1.69;
+        params_out.Kc.Units = 'nanomole/liter';
+        params_out.Kc.Notes = '(fitted)';
 
     case 'tremelimumab'
         % Central to Peripheral

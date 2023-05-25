@@ -80,6 +80,8 @@ for i = 1:n_PSA
     CD8FoxP3ratio_T = (T_T_total + T1exh_total)./T0_T_total;
     CD4FoxP3ratio_C = (nT0_C_total + T0_C_total)./T0_C_total;
     CD4FoxP3ratio_T = (T0_T_total + Th_T_total + Thexh_total)./T0_T_total;
+    CD8CD4ratio_C = (nT0_C_total + T0_C_total)./(nT0_C_total + T0_C_total);
+    CD8CD4ratio_T = (T0_T_total + Th_T_total + Thexh_total)./(T0_T_total + Th_T_total + Thexh_total);
     Teff_Treg_C = T_C_total./T0_C_total;
     Teff_Treg_T = T_T_total./T0_T_total;
 
@@ -99,7 +101,7 @@ for i = 1:n_PSA
     [~,CCL2,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.CCL2');
     [~,IL10,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.IL10');
     [~,IFNg,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.IFNg');
-    [~,TGF,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.TGF');
+    [~,TGFb,~] = selectbyname(simDataPSA(index(i)).simData, 'V_T.TGFb');
 
     % Add calculated densities and ratios to postprocess structure
     %simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'CD8FoxP3ratio_C'}];
@@ -110,6 +112,8 @@ for i = 1:n_PSA
     %simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , CD4FoxP3ratio_C];
     simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'CD4FoxP3ratio_T'}];
     simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , CD4FoxP3ratio_T];
+    simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'CD8CD4ratio_T'}];
+    simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , CD8CD4ratio_T];
 
     simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'Teff_Treg_C'}];
     simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , Teff_Treg_C];
@@ -137,7 +141,7 @@ for i = 1:n_PSA
     simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , IL10];
     simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'IFNg'}];
     simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , IFNg];
-    simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'TGF'}];
-    simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , TGF];
+    simDataPSAout(index(i)).simData.DataNames = [simDataPSAout(index(i)).simData.DataNames; {'TGFb'}];
+    simDataPSAout(index(i)).simData.Data      = [simDataPSAout(index(i)).simData.Data     , TGFb];
 
 end

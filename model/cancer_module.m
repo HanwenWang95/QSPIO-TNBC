@@ -17,8 +17,10 @@ function model = cancer_module(model,species_name,params,varargin)
 
 in = inputParser;
 addOptional(in,'initial_amount',1); % initial cancer cell number
+addOptional(in,'model_type','Logistic',@(s)ischar(s)); % tumor growth model type
 parse(in,varargin{:});
 init = in.Results.initial_amount;
+model_type = in.Results.model_type;
 
 first_call = true;
 % Add Species
@@ -32,12 +34,49 @@ k_C_growth = addparameter(model,'k_C_growth',params.k_C_growth.Value,'ValueUnits
 try % only add C_max and vaculature parameter/species once
 C_max = addparameter(model,'C_max',params.C_max.Value,'ValueUnits',params.C_max.Units,'ConstantValue',false);
     set(C_max,'Notes',['Cancer cell capacity ' params.C_max.Notes]);
+catch
+first_call = false;
+end
+% Death
+k_C_death = addparameter(model,'k_C_death',params.k_C_death.Value,'ValueUnits',params.k_C_death.Units,'ConstantValue',false);
+    set(k_C_death,'Notes',['Cancer cell death rate from innate immune cells ' params.k_C_death.Notes]);
+% Therapy
+param = addparameter(model,['k_' species_name '_therapy'],0,'ValueUnits','1/day','ConstantValue',false);
+    set(param,'Notes',['Rate of ' species_name ' killing by therapy (see Rules)']);
+addrule(model,['k_' species_name '_therapy = 0/day'],'repeatedAssignment');
+
+% Initial Tumour Diameter
+try % only add once
+    p = addparameter(model,'initial_tumour_diameter',params.initial_tumour_diameter.Value,'ValueUnits',params.initial_tumour_diameter.Units);
+        set(p,'Notes','Pre-treatment tumor diameter');
+catch
+end
+
+
+% Add Reactions
+% Growth
+if strcmp(model_type,'Gompertzian')
+reaction = addreaction(model,'null -> V_T.C');
+    set(reaction,'ReactionRate','k_C_growth*V_T.C*log(max(C_max/(C_total+cell), 1))');
+    set(reaction,'Notes','Cancer cell growth');
+else
+reaction = addreaction(model,'null -> V_T.C');
+    set(reaction,'ReactionRate','k_C_growth*V_T.C*(1-C_total/C_max)');
+    set(reaction,'Notes','Cancer cell growth');
+end
+% Death
+reaction = addreaction(model,'V_T.C -> V_T.C_x');
+    set(reaction,'ReactionRate','k_C_death*V_T.C');
+    set(reaction,'Notes','Cancer cell death');
+
+if (first_call) & strcmp(model_type,'Gompertzian')
+
 % Vasculature species
 s = addspecies(model.Compartment(3),'K',params.K0.Value,'InitialAmountUnits',params.K0.Units); % 2.4e8
     set(s,'Notes',['Maximal tumor capacity ' params.K0.Notes]);
 s = addspecies(model.Compartment(3),'c_vas',0,'InitialAmountUnits','picogram/milliliter');
     set(s,'Notes','Angiogenic factors ');
-% Vasculature parameter
+  % Vasculature parameter
 p = addparameter(model,'k_K_g',params.k_K_g.Value,'ValueUnits',params.k_K_g.Units,'ConstantValue',false); % 5.33
     set(p,'Notes',['Tumour vasculature growth rate ' params.k_K_g.Notes]);
 p = addparameter(model,'k_K_d',params.k_K_d.Value,'ValueUnits',params.k_K_d.Units,'ConstantValue',false); % 7.9e-3
@@ -50,35 +89,7 @@ p = addparameter(model,'c_vas_50',params.c_vas_50.Value,'ValueUnits',params.c_va
     set(p,'Notes',['Half-maximal conc. of angiogenic factor on tumor capacity growth ' params.c_vas_50.Notes]);
 
 addrule(model,'C_max = V_T.K','repeatedAssignment');
-catch
-first_call = false;
-end
-% Death
-k_C_death = addparameter(model,'k_C_death',params.k_C_death.Value,'ValueUnits',params.k_C_death.Units,'ConstantValue',false);
-    set(k_C_death,'Notes',['Cancer cell death rate from innate immune cells ' params.k_C_death.Notes]);
-% Therapy
-param = addparameter(model,['k_' species_name '_therapy'],0,'ValueUnits','1/day','ConstantValue',false);
-    set(param,'Notes',['Rate of ' species_name ' killing by therapy (see Rules)']);
 
-% Initial Tumour Diameter
-try % only add once
-    p = addparameter(model,'initial_tumour_diameter',params.initial_tumour_diameter.Value,'ValueUnits',params.initial_tumour_diameter.Units);
-        set(p,'Notes','Pre-treatment tumor diameter');
-catch
-end
-
-
-% Add Reactions
-% Growth
-reaction = addreaction(model,'null -> V_T.C');
-    set(reaction,'ReactionRate','k_C_growth*V_T.C*log(max(C_max/(C_total+cell), 1))');
-    set(reaction,'Notes','Cancer cell growth');
-% Death
-reaction = addreaction(model,'V_T.C -> V_T.C_x');
-    set(reaction,'ReactionRate','k_C_death*V_T.C');
-    set(reaction,'Notes','Cancer cell death');
-
-if (first_call)
 reaction = addreaction(model,'null -> V_T.c_vas');
     set(reaction,'ReactionRate','k_vas_Csec*C_total');
     set(reaction,'Notes','Secretion of angiogenic factors by cancer cells');

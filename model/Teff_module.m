@@ -124,6 +124,15 @@ try % only add once
         set(k_Treg,'Notes',['Rate of T cell death by Tregs ' params.k_Treg.Notes]);
 catch
 end
+
+try
+    p = addparameter(model,'k_IFNg_Tsec',params.k_IFNg_Tsec.Value,'ValueUnits',params.k_IFNg_Tsec.Units);
+        set(p,'Notes',['rate of IFNg secretion from CD8 T cells ' params.k_IFNg_Tsec.Notes]);
+    s = addspecies(model.Compartment(3),'IFNg',0,'InitialAmountUnits','nanomolarity');
+        set(s,'Notes',['IFNg in the tumor comparment']);
+catch
+end
+
 % Antigen Default Hill Function
 p = addparameter(model,['H_' antigen],1,'ValueUnits','dimensionless','ConstantValue',false);
     set(p,'Notes',['Hill function of tumor antigen ' antigen]);
@@ -257,6 +266,10 @@ end
 reaction = addreaction(model,'null -> V_LN.IL2');
     set(reaction,'ReactionRate','k_IL2_sec*V_LN.aT');
     set(reaction,'Notes','IL2 secretion from activated T cells');
+% IFNg Secretion by cytotoxic CD8 T Cells
+reaction = addreaction(model,'null -> V_T.IFNg');
+    set(reaction,'ReactionRate','k_IFNg_Tsec*V_T.T');
+    set(reaction,'Notes','IFNg secretion from CD8 T cells in tumor');
 
 % Add Rules
 if (first_call)

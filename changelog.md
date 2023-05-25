@@ -24,3 +24,11 @@
 - Added estimated distribution of cytokine secretion rates and macrophage/MDSC recruitment rates for virtual patient generation (PSA_param_in_TNBC.m)
 - Added postprocessing steps to calculate macrophage, MDSC, M1/M2 macrophage ratio, etc. (calculate_ratio.m, sprint_data.m)
 - Added T cell death upon antigen clearance (Teff_module.m, Treg_module.m, Th_module.m)
+
+## Modifications made since the published version in iScience 2022 (DOI: 10.1016/j.isci.2022.104702):
+
+- Added parameter files for NSCLC and scripts for virtual patient generation (new methodology) & clinical trial simulation of durvalumab in NSCLC.
+- Added a script for PK parameter fitting using compressed latent parameterization & updated durvalumab PK parameters & dosing schedule.
+- Updated a model assumption so that IFN-gamma is now secreted by both CD8 and CD4 T cells when activated. 
+- Modified nomenclature for some parameters & reorganized structure for some modules (to maintain relative independence & customizability of the modules, delete redundant model elements, and allow selection of Gompertzian/logistic growth dynamic in cancer_module.m).
+- Added a script for sensitivity analysis using Morris screening method to account for non-monotonicity of the model.

@@ -12,59 +12,29 @@ parse(in,varargin{:});
 time = in.Results.time;
 f_measure_wk = in.Results.freq;
 
+new_file = false;
 try
     load('VCT_data.mat')
-    if isfield(n_PSA, name)
-        disp('There is a pre-existing trial with the same code name.')
-
-        V_T = rmfield(V_T, name); nT1ln = rmfield(nT1ln, name);
-        nT0ln = rmfield(nT0ln, name); aT1ln = rmfield(aT1ln, name);
-        aT0ln = rmfield(aT0ln, name); aThln = rmfield(aThln, name);
-        T1ln = rmfield(T1ln, name); T0ln = rmfield(T0ln, name);
-        Thln = rmfield(Thln, name); T1p = rmfield(T1p, name);
-        T0p = rmfield(T0p, name); Thp = rmfield(Thp, name);
-        Teff = rmfield(Teff, name); Treg = rmfield(Treg, name);
-        MDSC = rmfield(MDSC, name); CD8 = rmfield(CD8, name);
-        D_T = rmfield(D_T, name); D_T_perc = rmfield(D_T_perc, name);
-        nCD8c = rmfield(nCD8c, name); nCD4c = rmfield(nCD4c, name);
-
-        CD8c = rmfield(CD8c, name); Tregc = rmfield(Tregc, name);
-        Thc = rmfield(Thc, name); Ag0 = rmfield(Ag0, name);
-        Ag1 = rmfield(Ag1, name); APC = rmfield(APC, name);
-        mAPC = rmfield(mAPC, name); T1exh = rmfield(T1exh, name);
-        Thexh = rmfield(Thexh, name); Th = rmfield(Th, name);
-        CD4 = rmfield(CD4, name); C1 = rmfield(C1, name);
-        C2 = rmfield(C2, name); n_PSA = rmfield(n_PSA, name);
-        index = rmfield(index, name); CR = rmfield(CR, name);
-        PR_CR = rmfield(PR_CR, name); PR = rmfield(PR, name);
-        SD = rmfield(SD, name); PD = rmfield(PD, name);
-        ORR = rmfield(ORR, name); R_status = rmfield(R_status, name);
-        dor = rmfield(dor, name); Cx = rmfield(Cx, name);
-
-        PDL1_tum = rmfield(PDL1_tum, name); PDL1_APC = rmfield(PDL1_APC, name);
-        PDL2_tum = rmfield(PDL2_tum, name); PDL2_APC = rmfield(PDL2_APC, name);
-
-        IL2 = rmfield(IL2, name); IL10 = rmfield(IL10, name);
-        IL12 = rmfield(IL12, name); IFN = rmfield(IFN, name);
-        TGFb = rmfield(TGFb, name); CCL2 = rmfield(CCL2, name);
-
-        M1 = rmfield(M1, name); M2 = rmfield(M2, name);
-        Mac = rmfield(Mac, name); M_ratio = rmfield(M_ratio, name);
-        H_PD1_M = rmfield(H_PD1_M, name); H_Mac_C = rmfield(H_Mac_C, name);
-        PD1_PDL1 = rmfield(PD1_PDL1, name); PD1_PDL2 = rmfield(PD1_PDL2, name);
-        H_PD1_C = rmfield(H_PD1_C, name);
-
-        params_in_ = rmfield(params_in_, name); params_out_ = rmfield(params_out_, name);
-
-        disp('Data from the pre-existing trial will be replaced.')
-        disp('---------------------------------------------')
-    else
-        disp('New trial data will be added to VCT_data.mat.')
-        disp('---------------------------------------------')
-    end
 catch
-    disp('No VCT_data.mat was found or a loading error occurred.')
+    disp('No VCT_data.mat was found')
     disp('A new VCT_data.mat will be generated.')
+    disp('---------------------------------------------')
+    new_file = true;
+end
+
+if ~(new_file)
+    temp = load('VCT_data.mat');
+    DataNames = fieldnames(temp);
+    for i = 1:length(DataNames)
+        if isfield(temp.(DataNames{i}), name)
+            species = eval(DataNames{i});
+            species = rmfield(species, name);
+            eval([DataNames{i} ' = species;'])
+        end
+    end
+    disp('New trial data will be added to VCT_data.mat.')
+    disp('Data from the pre-existing trial with the same name will be replaced.')
+    disp('---------------------------------------------')
 end
 
 n_PSA.(name) = length(params_out.iPatientPlaus);
@@ -93,7 +63,7 @@ for i = 1:n_PSA.(name)
     [~,temp16,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_LN.aT1');
     [~,temp17,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_LN.aT1');
     [~,temp18,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.C1');
-    [~,temp19,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.C2');
+    % [~,temp19,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.C2');
 
     [~,temp20,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_LN.aTh');
     [~,temp21,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_LN.T1');
@@ -123,7 +93,7 @@ for i = 1:n_PSA.(name)
     [~,temp42,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.IFNg');
     [~,temp43,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.TGFb');
     [~,temp44,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.CCL2');
-    [~,temp45,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.c_vas');
+    % [~,temp45,~] = selectbyname(simDataPSA(index.(name)(i)).simData, 'V_T.c_vas');
 
     V_T.(name)(i,:) = temp1;
 
@@ -144,7 +114,7 @@ for i = 1:n_PSA.(name)
     aT1ln.(name)(i,:) = temp16;
     aT0ln.(name)(i,:) = temp17;
     C1.(name)(i,:) = temp18;
-    C2.(name)(i,:) = temp19;
+    % C2.(name)(i,:) = temp19;
 
     aThln.(name)(i,:) = temp20;
     T1ln.(name)(i,:) = temp21;
@@ -176,6 +146,7 @@ for i = 1:n_PSA.(name)
     IFN.(name)(i,:) = temp42;
     TGFb.(name)(i,:) = temp43;
     CCL2.(name)(i,:) = temp44;
+    % VEGF.(name)(i,:) = temp45;
 
     param_Obs = 'Teff_density';
     k = find(strcmp(simDataPSApost(index.(name)(i)).simData.DataNames, param_Obs));
@@ -305,7 +276,7 @@ save(filename, 'V_T', 'nT1ln', 'nT0ln', 'aT1ln', 'aT0ln', 'aThln',...
     'Teff', 'Treg', 'MDSC', 'CD8', 'D_T', 'D_T_perc',...
     'nCD8c', 'nCD4c', 'CD8c', 'Tregc', 'Thc', 'Ag0',...
     'Ag1', 'APC', 'mAPC', 'T1exh', 'Thexh', 'Th',...
-    'CD4', 'C1', 'C2', 'n_PSA', 'index', 'CR', 'PR_CR',...
+    'CD4', 'C1', 'n_PSA', 'index', 'CR', 'PR_CR',...
     'PR', 'SD', 'PD', 'R_status', 'ORR', 'dor', 'PDL1_tum', 'PDL1_APC',...
     'PDL2_tum', 'PDL2_APC', 'M1', 'M2', 'Mac', 'M_ratio',...
     'H_PD1_M','H_Mac_C','Cx','IL2','IL10','IL12','IFN','TGFb','CCL2',...

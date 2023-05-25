@@ -34,6 +34,9 @@ addParameter(in,'nivolumab_schedule',[0,28,30]);
 % Atezolizumab
 addParameter(in,'atezolizumab_dose',15); % 15 mg/kg every three weeks
 addParameter(in,'atezolizumab_schedule',[0,21,30]);
+% Durvalumab
+addParameter(in,'durvalumab_dose',10); % 10 g/kg every two weeks
+addParameter(in,'durvalumab_schedule',[0,14,30]);
 % Ipilimumab
 addParameter(in,'ipilimumab_dose',1); % 1 mg/kg every three weeks
 addParameter(in,'ipilimumab_schedule',[0,21,30]);
@@ -64,6 +67,9 @@ schedule_nivo = in.Results.nivolumab_schedule;
 % Atezolizumab
 dose_atezo = in.Results.atezolizumab_dose;
 schedule_atezo = in.Results.atezolizumab_schedule;
+% Durvalumab
+dose_durva = in.Results.durvalumab_dose;
+schedule_durva = in.Results.durvalumab_schedule;
 % Ipilimumab
 dose_ipil = in.Results.ipilimumab_dose;
 schedule_ipil = in.Results.ipilimumab_schedule;
@@ -160,6 +166,15 @@ doseObj_atezo.TimeUnits = 'day';
 doseObj_atezo.RepeatCount = schedule_atezo(3);
 doseObj_atezo.Active = true;
 
+% Durvalumab
+MW_durva = 1.49E8; % milligrams per mole
+doseObj_durva = sbiodose('durva','Amount',patient_weight*dose_durva/MW_durva,'AmountUnits','mole','TargetName','V_C.aPDL1');
+doseObj_durva.StartTime = schedule_durva(1);
+doseObj_durva.Interval = schedule_durva(2);
+doseObj_durva.TimeUnits = 'day';
+doseObj_durva.RepeatCount = schedule_durva(3);
+doseObj_durva.Active = true;
+
 % aCD47
 MW_aCD47 = 7.8E7; % milligrams per mole
 doseObj_aCD47 = sbiodose('aCD47','Amount',patient_weight*dose_aCD47/MW_aCD47,'AmountUnits','mole','TargetName','V_C.aCD47');
@@ -199,6 +214,8 @@ for i = 1:N
             dose_schedule(i) = doseObj_pembro;
         case 'atezolizumab'
             dose_schedule(i) = doseObj_atezo;
+        case 'durvalumab'
+            dose_schedule(i) = doseObj_durva;
         case 'ipilimumab'
             dose_schedule(i) = doseObj_ipi;
         case 'tremelimumab'

@@ -2,7 +2,7 @@
 %
 % Output: params -- object containing parameters
 
-function params = parameters_TNBC
+function params = parameters_NSCLC
 
 % Define Cell Dimension
 params.cell.Value = 1;
@@ -15,7 +15,7 @@ params.N_avg.Notes = '(Avogadro 1811)';
 
 %% Compartment Volume Parameters
 % Central Compartment Volume
-params.V_C.Value = 5;
+params.V_C.Value = 6;
 params.V_C.Units = 'liter';
 params.V_C.Notes = '(estimated)';
 % Peripheral Compartment Volume
@@ -27,9 +27,9 @@ params.V_Tmin.Value = 1e-6;
 params.V_Tmin.Units = 'milliliter';
 params.V_Tmin.Notes = '(estimated)';
 % Number of Lymph Nodes
-params.nLNs.Value = 17;
+params.nLNs.Value = 21;
 params.nLNs.Units = 'dimensionless';
-params.nLNs.Notes = '(estimated)';
+params.nLNs.Notes = '(Jafarnejad 2019 PMID: 31236847)';
 % Lymph Node Diameter
 params.D_LN.Value = 5;
 params.D_LN.Units = 'millimeter';
@@ -41,9 +41,9 @@ params.V_LN.Notes = ['Volume of lumped tumor-draining lymph nodes calculated bas
 params.V_LN.Factors = ["nLNs", "D_LN"];
 params.V_LN.Equation = 'p(1)*4/3*pi*(p(2)/2)^3';
 % Cancer Cell Diameter
-params.D_cell.Value = 17;
+params.D_cell.Value = 16.9;
 params.D_cell.Units = 'micrometer';
-params.D_cell.Notes = '(Abramczyk 2015, PMID: 25730442)';
+params.D_cell.Notes = '(Jafarnejad 2019 PMID: 31236847)';
 % T Cell Diameter
 params.D_Tcell.Value = 6.94;
 params.D_Tcell.Units = 'micrometer';
@@ -65,27 +65,27 @@ params.k_cell_clear.Value = 0.1;
 params.k_cell_clear.Units = '1/day';
 params.k_cell_clear.Notes = '(estimated)';
 % Tumor Cell Volume Fraction
-params.Ve_T.Value = 0.37;
+params.Ve_T.Value = 0.75;
 params.Ve_T.Units = 'dimensionless';
-params.Ve_T.Notes = '(Finley 2012, PMID: 22547351)';
+params.Ve_T.Notes = '(Zhang 2010, PMID: 20713014)';
 
 %% Cancer Parameters
 % Growth Rate
-params.k_C_growth.Value = 0.0072;
+params.k_C_growth.Value = 0.007;
 params.k_C_growth.Units = '1/day';
-params.k_C_growth.Notes = '(Ryu 2014, PMID: 24895040; Desai 2006, PMID: 16489089)';
+params.k_C_growth.Notes = '(Usuda 1994, PMID: 7922975)';
 % Death Rate
 params.k_C_death.Value = 0.0001;
 params.k_C_death.Units = '1/day';
 params.k_C_death.Notes = '(Palsson 2013, PMID: 24074340)';
 % Maximal Tumor Capacity
-params.C_max.Value = 2.7e4;
+params.C_max.Value = 1.5e11; % 10cm (Logistic); 2.7e4 (Gompertzian)
 params.C_max.Units = 'cell';
-params.C_max.Notes = '(Desai 2006, PMID: 16489089)';
+params.C_max.Notes = 'estimated';
 % Initial Tumour Diameter
-params.initial_tumour_diameter.Value = 2.5; % 1 - 5 cm
+params.initial_tumour_diameter.Value = 3.7;
 params.initial_tumour_diameter.Units = 'centimeter';
-params.initial_tumour_diameter.Notes = '(varied)';
+params.initial_tumour_diameter.Notes = '(Rittmeyer 2017, PMID: 27979383; Laleh 2022, PMID: 35120124)';
 % Cancer Cell Density
 params.rho_cell.Value = 2.06e8; % 1.67e8 - 2.06e8
 params.rho_cell.Units = 'cell/milliliter';
@@ -93,13 +93,13 @@ params.rho_cell.Notes = '(Del Monte 2009, PMID: 19176997; Barnes 2016 PMID: 2633
 
 %% T Cell Parameters
 % Tumor-specific T cell clone number (TMB)
-params.n_clones_tum.Value = 63;
+params.n_clones_tum.Value = 92;
 params.n_clones_tum.Units = 'dimensionless';
-params.n_clones_tum.Notes = '(Morisaki 2021 PMID: 34193879; Narang 2019, PMID: 30832597)';
+params.n_clones_tum.Notes = '(Jafarnejad 2019 PMID: 31236847, Forde 2018, PMID: 30157404)';
 % Self-antigen-specific T cell clone number
-params.n_clones_slf.Value = 63;
+params.n_clones_slf.Value = 100;
 params.n_clones_slf.Units = 'dimensionless';
-params.n_clones_slf.Notes = '(estimated)';
+params.n_clones_slf.Notes = '(Jafarnejad 2019 PMID: 31236847)';
 % Maximum Rate of CD8+ T Cell Activation by mAPCs
 params.k_nCD8_act.Value = 23;
 params.k_nCD8_act.Units = '1/day';
@@ -141,9 +141,9 @@ params.gamma_P.Value = 0.014;
 params.gamma_P.Units = 'dimensionless';
 params.gamma_P.Notes = '(Finley 2012, PMID: 22547351)';
 % Tumour Vascular Volume Fractions
-params.gamma_T.Value = 0.02;
+params.gamma_T.Value = 0.05;
 params.gamma_T.Units = 'dimensionless';
-params.gamma_T.Notes = '(Finley 2012, PMID: 22547351; Stamatelos 2014, PMID: 24342178)';
+params.gamma_T.Notes = '(Armstrong 1982, PMID: 7074806; Synn 2019, PMID: 31248956; Hlatky 2002, PMID: 12072542)';
 % Activated CD8+ T Cell Transport C->P
 params.q_CD8_P_in.Value = [];
 params.q_CD8_P_in.Units = '1/minute';
@@ -231,7 +231,7 @@ params.N_IL2_CD8.Value = 11;
 params.N_IL2_CD8.Units = 'dimensionless';
 params.N_IL2_CD8.Notes = '(Marchingo 2014, PMID: 25430770)';
 % Additional Number of Activated CD4+ T Cell Generations Due to IL2
-params.N_IL2_CD4.Value = 8.5;
+params.N_IL2_CD4.Value = 8;
 params.N_IL2_CD4.Units = 'dimensionless';
 params.N_IL2_CD4.Notes = '(Marchingo 2014, PMID: 25430770)';
 
@@ -658,19 +658,19 @@ params.koff_PDL1_aPDL1.Factors = ["kon_PDL1_aPDL1","kd_PDL1_aPDL1"];
 params.koff_PDL1_aPDL1.Equation = 'p(1)*p(2)';
 
 % PD1 Expression on T Cells
-params.T8_PD1.Value = 3.1e3*20*.45;
+params.T8_PD1.Value = 3.1e3*20*.43;
 params.T8_PD1.Units = 'molecule';
 params.T8_PD1.Notes = '(Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483; Gatalica 2014, PMID: 25392179)';
 % PDL1 Expression on T Cells
-params.T8_PDL1.Value = 9.3e3*20*.45;
+params.T8_PDL1.Value = 9.3e3*20*.43;
 params.T8_PDL1.Units = 'molecule';
 params.T8_PDL1.Notes = '(Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483; Gatalica 2014, PMID: 25392179)';
 % Average Baseline PDL1 Expression on Tumor/Immune cells in tumor
-params.C_PDL1.Value = 8e4*20/6*.45;
+params.C_PDL1.Value = 8e4*20*.14; % 8e4*20/6
 params.C_PDL1.Units = 'molecule';
 params.C_PDL1.Notes = '(Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483; Shin 2017, PMID: 27903500; Gatalica 2014, PMID: 25392179)';
 % Average Baseline PDL1 Expression on mAPCs in TDLN
-params.APC_PDL1.Value = 8e4*20/6*.45;
+params.APC_PDL1.Value = 8e4*20*.14;
 params.APC_PDL1.Units = 'molecule';
 params.APC_PDL1.Notes = '(Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483; Shin 2017, PMID: 27903500; Gatalica 2014, PMID: 25392179)';
 % PD1/PDL1 Concentration for Half-Maximal T Cell Killing
@@ -912,9 +912,9 @@ params.Q_LD.Notes = '(Zhu 1996, PMID: 8706023)';
 
 %% MDSC Module Parameters
 % MDSC recruitment rate
-params.k_MDSC_rec.Value = 1.1e4;
+params.k_MDSC_rec.Value = 2e3;
 params.k_MDSC_rec.Units = 'cell/(milliliter*day)';
-params.k_MDSC_rec.Notes = '(Diaz-Montero 2009, PMID: 18446337; Huang 2006, PMID: 17257744)';
+params.k_MDSC_rec.Notes = '(Parra 2021, PMID: 33875760)';
 % rate of MDSC death
 params.k_MDSC_death.Value = 0.015;
 params.k_MDSC_death.Units = '1/day';
@@ -937,7 +937,7 @@ params.k_ArgI_deg.Value = 0.173;
 params.k_ArgI_deg.Units = '1/day';
 params.k_ArgI_deg.Notes = '(Schimke 1964, PMID: 14257612)';
 % rate of CCL2 secretion
-params.k_CCL2_sec.Value = 1.7e-12; % normal: 1.065e-11; TNBC: (14.2 +/- 6)*10^-11
+params.k_CCL2_sec.Value = 1.7e-12;
 params.k_CCL2_sec.Units = 'nanomole/cell/day';
 params.k_CCL2_sec.Notes = '(Huang 2007, PMID: 17257744; Dutta 2018, PMID: 29594759)';
 % rate of NO secretion
@@ -1093,15 +1093,15 @@ params.r_resist.Units = 'dimensionless';
 params.r_resist.Notes = '(Nemcova-Furstova 2016, PMID: 27664577)';
 
 % Initial Tumor Capacity
-params.K0.Value = 1.03e4;
+params.K0.Value = 625; % 2.7e4
 params.K0.Units = 'cell';
 params.K0.Notes = '(Desai 2006, PMID: 16489089)';
 % Tumour vasculature growth rate
-params.k_K_g.Value = 4.12;
+params.k_K_g.Value = 4.43;
 params.k_K_g.Units = '1/day';
 params.k_K_g.Notes = '(Desai 2006, PMID: 16489089)';
 % Tumour vasculature inhibition rate
-params.k_K_d.Value = 3.4e-3;
+params.k_K_d.Value = 1.9e-4; % 2.3e-3
 params.k_K_d.Units = '1/day';
 params.k_K_d.Notes = '(Desai 2006, PMID: 16489089; Hahnfeldt 1999, PMID: 10519381)';
 % Secretion rate of angiogenic factors induced by nab-paclitaxel
@@ -1113,7 +1113,7 @@ params.IC50_nabp_vas.Value = 5.2;
 params.IC50_nabp_vas.Units = 'nanomolarity';
 params.IC50_nabp_vas.Notes = '(Volk 2008, PMID: 18516298)';
 % Secretion rate of angiogenic factors by cancer cells
-params.k_vas_Csec.Value = 1.1e-4;
+params.k_vas_Csec.Value = 6e-5;
 params.k_vas_Csec.Units = 'picogram/cell/day';
 params.k_vas_Csec.Notes = '(Volk 2008, PMID: 18516298)';
 % Degradation rate of angiogenic factors
@@ -1121,7 +1121,7 @@ params.k_vas_deg.Value = 16.6;
 params.k_vas_deg.Units = '1/day';
 params.k_vas_deg.Notes = '(Finley 2011, PMID: 22104283)';
 % Half-maximal conc. of angiogenic factor on tumor capacity growth
-params.c_vas_50.Value = 1.07e3; 
+params.c_vas_50.Value = 938; % 839
 params.c_vas_50.Units = 'picogram/milliliter';
 params.c_vas_50.Notes = '(Desai 2006, PMID: 16489089)';
 % Inhibition rate of maximal tumor capacity by nab-paclitaxel
@@ -1163,9 +1163,9 @@ params.k_CTLA4_ADCC.Notes = 'Anti-CTLA4 ADCC (antibody-dependent cellular cytoto
 
 %% Macrophage Module
 % Macrophage recruitment rate
-params.k_Mac_rec.Value = 1.7e5;
+params.k_Mac_rec.Value = 2e5;
 params.k_Mac_rec.Units = 'cell/(milliliter*day)';
-params.k_Mac_rec.Notes = '(Yang 2018, PMID: 30026826)';
+params.k_Mac_rec.Notes = '(Welsh 2005, PMID: 16219934)';
 % Death rate
 params.k_Mac_death.Value = 0.02;
 params.k_Mac_death.Units = '1/day';
@@ -1211,7 +1211,7 @@ params.k_M2_pol.Value = 0.25;
 params.k_M2_pol.Units = '1/day';
 params.k_M2_pol.Notes = '(estimated assuming that polarization takes roughly 2-3 days)';
 % M2 to M1 polarization rate
-params.k_M1_pol.Value = 0.045;
+params.k_M1_pol.Value = 0.02;
 params.k_M1_pol.Units = '1/day';
 params.k_M1_pol.Notes = '(estimated based on the M1/M2 ratio)';
 % Half-maximal IL10 level for M1 to M2 polarization / maintaining Treg function / mAPC inhibition (*STAT6 related)
@@ -1287,7 +1287,7 @@ params.kon_CD47_SIRPa.Equation = 'p(1)/p(2)/p(3)';
 % Binding affinity of CD47-aCD47
 params.kd_CD47_aCD47.Value = 1; % 10-1000 nM PMID: 30133535
 params.kd_CD47_aCD47.Units = 'nanomolarity';
-params.kd_CD47_aCD47.Notes = '(Jalil 2020, PMID: 32421049)';
+params.kd_CD47_aCD47.Notes = '(Kauder 2018, PMID: 30133535)';
 % Dissociation rate of CD47-aCD47
 params.koff_CD47_aCD47.Value = 1/20; % 1e-4 - 1e-3 1/s
 params.koff_CD47_aCD47.Units = '1/minute';
@@ -1318,9 +1318,9 @@ params.n_SIRPa.Value = 2;
 params.n_SIRPa.Units = 'dimensionless';
 params.n_SIRPa.Notes = '(estimated)';
 % CD47 expression on cancer cell
-params.C_CD47.Value = 400;
+params.C_CD47.Value = 100;
 params.C_CD47.Units = 'molecule/micrometer^2';
-params.C_CD47.Notes = '(Morrissey 2020, PMID: 32768386)';
+params.C_CD47.Notes = '(Morrissey 2020, PMID: 32768386; Zhang 2019, PMID: 31829270)';
 % SIRPa expression on macrophage
 params.M_SIRPa.Value = 100;
 params.M_SIRPa.Units = 'molecule/micrometer^2';

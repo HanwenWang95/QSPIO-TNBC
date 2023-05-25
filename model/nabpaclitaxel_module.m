@@ -131,8 +131,6 @@ reaction = addreaction(model,'V_T.C1 -> V_T.C_x');
     set(reaction,'ReactionRate','k_C_nabp*V_T.C1*(V_T.NabP/(V_T.NabP+IC50_nabp))*min(C_total,Kc_nabp)/C_total'); % *(1-C_total/(C_total+Kc_nabp))
     set(reaction,'Notes','Cancer cell death by nab-paclitaxel ');
 
-addrule(model,'k_C1_therapy = k_C_nabp*(V_T.NabP/(V_T.NabP+IC50_nabp))*min(C_total,Kc_nabp)/C_total','repeatedAssignment');
-
 %% Resistance
 k_C_resist = addparameter(model,'k_C_resist',params.k_C_resist.Value,'ValueUnits',params.k_C_resist.Units,'ConstantValue',false);
     set(k_C_resist,'Notes',['Cancer resistance to nab-paclitaxel ' params.k_C_resist.Notes]);
@@ -146,7 +144,17 @@ reaction = addreaction(model,'V_T.C2 -> V_T.C_x');
     set(reaction,'ReactionRate','k_C_nabp*V_T.C2*(V_T.NabP/(V_T.NabP+IC50_nabp*r_resist))*min(C_total,Kc_nabp)/C_total');
     set(reaction,'Notes','Resistant cancer cell death by nab-paclitaxel ');
 
-addrule(model,'k_C2_therapy = k_C_nabp*(V_T.NabP/(V_T.NabP+IC50_nabp*r_resist))*min(C_total,Kc_nabp)/C_total','repeatedAssignment');
+% Get Model Rules for Updating
+model_rules = get(model,'Rules');
+
+% Update Cancer Killing by Nab-Paclitaxel
+for j = 1:length(model_rules)
+    if ~isempty(strfind(model_rules(j).Rule, 'k_C1_therapy')) && isempty(strfind(model_rules(j).Rule, 'k_C_nabp'))
+        model_rules(j).Rule = [model_rules(j).Rule ' + k_C_nabp*(V_T.NabP/(V_T.NabP+IC50_nabp))*min(C_total,Kc_nabp)/C_total'];
+    elseif ~isempty(strfind(model_rules(j).Rule, 'k_C2_therapy')) && isempty(strfind(model_rules(j).Rule, 'k_C_nabp'))
+        model_rules(j).Rule = [model_rules(j).Rule ' + k_C_nabp*(V_T.NabP/(V_T.NabP+IC50_nabp*r_resist))*min(C_total,Kc_nabp)/C_total'];
+    end
+end
 
 % set tumour growth rate of the resistant the same as the sensitive clone
 addrule(model,'k_C2_growth = k_C1_growth','repeatedAssignment');

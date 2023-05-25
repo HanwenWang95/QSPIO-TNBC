@@ -61,14 +61,8 @@ kon = addparameter(model,'kon_PD1_PDL1',params.kon_PD1_PDL1.Value,'ValueUnits',p
 catch
     first_call = false;
 end
+
 if first_call
-% Add Pharmacokinetics
-params_aPD1    = pk_parameters('pembrolizumab');
-params_aPDL1   = pk_parameters('atezolizumab');
-params_aCTLA4  = pk_parameters('tremelimumab');
-model = pk_module(model,'aPD1',params_aPD1);
-model = pk_module(model,'aPDL1',params_aPDL1);
-model = pk_module(model,'aCTLA4' ,params_aCTLA4);
 
 k_out_PDL1 = addparameter(model,'k_out_PDL1',params.k_out_PDL1.Value,'ValueUnits',params.k_out_PDL1.Units); % estimated by 5e4 PMID 29034543
     set(k_out_PDL1,'Notes',['Expression rate of PDL1 on tumor cells ' params.k_out_PDL1.Notes]);

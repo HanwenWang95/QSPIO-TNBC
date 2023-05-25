@@ -6,7 +6,7 @@
 %                      - CCL2--Monocyte Chemoattractant Protein-1 (CCL2)
 %                      - NO--Nitrite Oxide
 %         params
-%                      - k_MDSC_mig--MDSC recruitment rate by MCP-1
+%                      - k_MDSC_rec--MDSC recruitment rate by MCP-1
 %                      - k_MDSC_death--MDSC death rate
 %                      - k_CCL2_deg--Degradation rate of MCP-1
 %                      - k_NO_deg--Degradation rate of NO
@@ -78,8 +78,8 @@ catch
 end
 
 % Add Parameters
-k_MDSC_mig = addparameter(model,'k_MDSC_mig',params.k_MDSC_mig.Value,'ValueUnits',params.k_MDSC_mig.Units);
-    set(k_MDSC_mig,'Notes',['Rate of MDSC recruitment into the tumor ' params.k_MDSC_mig.Notes]);
+k_MDSC_rec = addparameter(model,'k_MDSC_rec',params.k_MDSC_rec.Value,'ValueUnits',params.k_MDSC_rec.Units);
+    set(k_MDSC_rec,'Notes',['Rate of MDSC recruitment into the tumor ' params.k_MDSC_rec.Notes]);
 k_MDSC_death = addparameter(model,'k_MDSC_death',params.k_MDSC_death.Value,'ValueUnits',params.k_MDSC_death.Units);
     set(k_MDSC_death,'Notes',['Rate of MDSC death ' params.k_MDSC_death.Notes]);
 
@@ -103,7 +103,7 @@ p = addparameter(model,'ArgI_50_Treg',params.ArgI_50_Treg.Value,'ValueUnits',par
 % Add Reactions
 % Recruitment of MDSC (Huang 2006, PMID: 17257744)
 reaction = addreaction(model,'null -> V_T.MDSC');
-    set(reaction,'ReactionRate','k_MDSC_mig*V_T*(V_T.CCL2/(V_T.CCL2 + CCL2_50))');
+    set(reaction,'ReactionRate','k_MDSC_rec*V_T*(V_T.CCL2/(V_T.CCL2 + CCL2_50))');
     set(reaction,'Notes','Recruitment of macrophage to tumor');
 % MDSC Death
 reaction = addreaction(model,'V_T.MDSC -> null');

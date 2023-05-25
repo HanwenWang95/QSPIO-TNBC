@@ -28,8 +28,8 @@ IL10  = addspecies(model.Compartment(3),'IL10',0,'InitialAmountUnits','nanomolar
     set(IL10,'Notes',['Concentration of IL-10 in tumor']);
 
 % Add Parameters
-k_Mac_mig = addparameter(model,'k_Mac_mig',params.k_Mac_mig.Value,'ValueUnits',params.k_Mac_mig.Units);
-    set(k_Mac_mig,'Notes',['Recruitment rate of macrophage into tumor compartment ',params.k_Mac_mig.Notes]);
+k_Mac_rec = addparameter(model,'k_Mac_rec',params.k_Mac_rec.Value,'ValueUnits',params.k_Mac_rec.Units);
+    set(k_Mac_rec,'Notes',['Recruitment rate of macrophage into tumor compartment ',params.k_Mac_rec.Notes]);
 k_Mac_death = addparameter(model,'k_Mac_death',params.k_Mac_death.Value,'ValueUnits',params.k_Mac_death.Units);
     set(k_Mac_death,'Notes',['Death rate of macrophages into tumor compartment ',params.k_Mac_death.Notes]);
 k_TGFb_Msec = addparameter(model,'k_TGFb_Msec',params.k_TGFb_Msec.Value,'ValueUnits',params.k_TGFb_Msec.Units);
@@ -88,10 +88,17 @@ catch
     first_call = false;
 end
 
+if ~isempty(sbioselect(model, 'Name', 'c_vas'))
+    % Secretion of angiogenic factor
+    reaction = addreaction(model,'null -> V_T.c_vas');
+        set(reaction,'ReactionRate','k_vas_Msec*V_T.Mac_M2');
+        set(reaction,'Notes','Secretion of angiogenic factor by macrophage in tumor');
+end
+
 % Add Reactions
 % Recruitment of M1 macrophage
 reaction = addreaction(model,'null -> V_T.Mac_M1');
-    set(reaction,'ReactionRate','k_Mac_mig*V_T*(V_T.CCL2/(V_T.CCL2 + CCL2_50))');
+    set(reaction,'ReactionRate','k_Mac_rec*V_T*(V_T.CCL2/(V_T.CCL2 + CCL2_50))');
     set(reaction,'Notes','Recruitment of pro-inflammatory M1 macrophage to tumor');
 % Macrophage death upon tumor eradication
 reaction = addreaction(model,'V_T.Mac_M1 -> null');
@@ -125,10 +132,7 @@ reaction = addreaction(model,'V_T.IL12 -> null');
 reaction = addreaction(model,'null -> V_T.TGFb');
     set(reaction,'ReactionRate','k_TGFb_Msec*V_T.Mac_M2');
     set(reaction,'Notes','Secretion of TGFb by macrophage in tumor');
-% Secretion of angiogenic factor
-reaction = addreaction(model,'null -> V_T.c_vas');
-    set(reaction,'ReactionRate','k_vas_Msec*V_T.Mac_M2');
-    set(reaction,'Notes','Secretion of angiogenic factor by macrophage in tumor');
+
 % Secretion of IL-10
 reaction = addreaction(model,'null -> V_T.IL10');
     set(reaction,'ReactionRate','k_IL10_sec*V_T.Mac_M2');
@@ -189,10 +193,36 @@ if (exist('cancer_types','var'))
 end
 
 % Update Treg-mediated Teff exhaustion and APC maturation
+idx = [];
 for i = 1:length(model.reaction)
     if strcmp(model.reaction(i).reaction, 'V_T.T1 -> V_T.T1_exh') && ~isempty(strfind(model.reaction(i).ReactionRate, 'k_Treg'))
         model.reaction(i).ReactionRate = [model.reaction(i).ReactionRate, '*H_IL10'];
     elseif strcmp(model.reaction(i).reaction, 'V_T.APC -> V_T.mAPC') && ~isempty(strfind(model.reaction(i).ReactionRate, 'c/(c+c50)'))
         model.reaction(i).ReactionRate = 'k_APC_mat*V_T.APC*H_IL12*(1-H_IL10)';
+    elseif strcmp(model.reaction(i).reaction, 'null -> V_T.c')
+        idx = [idx i];
     end
 end
+delete(model.reaction(idx))
+
+idx = [];
+for i = 1:length(model.parameters)
+    if strcmp(model.parameters(i).Name, 'k_c')
+        idx = [idx i];
+    elseif strcmp(model.parameters(i).Name, 'DAMPs')
+        idx = [idx i];
+    elseif strcmp(model.parameters(i).Name, 'c50')
+        idx = [idx i];
+    elseif strcmp(model.parameters(i).Name, 'c0')
+        idx = [idx i];
+    end
+end
+delete(model.parameters(idx))
+
+idx = [];
+for i = 1:length(model.species)
+    if strcmp(model.species(i).Name, 'c')
+        idx = [idx i];
+    end
+end
+delete(model.species(idx))
