@@ -173,17 +173,17 @@ params.k_K_g.ScreenName = 'Rate of tumor vasculature growth';
 
 %% Macrophages/MDSC Module
 % MDSC Recruitment
-params.names = [params.names; 'k_MDSC_mig'];
-params.k_MDSC_mig.Median = log(1.1e4);
-params.k_MDSC_mig.Sigma = 0.6;
-params.k_MDSC_mig.Sampling   = 'lognormal';
-params.k_MDSC_mig.ScreenName = 'Recruitment rate of MDSC ';
+params.names = [params.names; 'k_MDSC_rec'];
+params.k_MDSC_rec.Median = log(1.1e4);
+params.k_MDSC_rec.Sigma = 0.6;
+params.k_MDSC_rec.Sampling   = 'lognormal';
+params.k_MDSC_rec.ScreenName = 'Recruitment rate of MDSC ';
 % Macrophage Recruitment
-params.names = [params.names; 'k_Mac_mig'];
-params.k_Mac_mig.Median = log(1.7e5);
-params.k_Mac_mig.Sigma = 0.6;
-params.k_Mac_mig.Sampling   = 'lognormal';
-params.k_Mac_mig.ScreenName = 'Recruitment rate of macrophage ';
+params.names = [params.names; 'k_Mac_rec'];
+params.k_Mac_rec.Median = log(1.7e5);
+params.k_Mac_rec.Sigma = 0.6;
+params.k_Mac_rec.Sampling   = 'lognormal';
+params.k_Mac_rec.ScreenName = 'Recruitment rate of macrophage ';
 % CCL2 Secretion
 params.names = [params.names; 'k_CCL2_sec'];
 params.k_CCL2_sec.Median = log(1.7e-12);

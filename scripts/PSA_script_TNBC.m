@@ -70,7 +70,7 @@ n_PSA = 1300;
 % Set distributions of the selected parameters for random sampling
 params_in  = PSA_param_in_TNBC;
 % Set boundaries for model species (only include those added in the present model)
-params_out = PSA_param_out(model);
+params_out = PSA_param_out_TNBC(model);
 % Add selected model outputs to sensitivity analysis
 params_in  = PSA_param_obs(params_in);
 % Randomly generate parameter sets using Latin-Hypercube Sampling

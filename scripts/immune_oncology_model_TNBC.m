@@ -54,7 +54,7 @@ set(config.SolverOptions, 'AbsoluteToleranceScaling', false)
 %% Add Modules to the Model
 % Cancer Modules
 model = cancer_module(model,'C1',params_out,4.7e6,'Gompertzian'); % 4.7e6
-model = cancer_module(model,'C2',params_out,0); % chemotherapy-resistant clone
+model = cancer_module(model,'C2',params_out,0,'Gompertzian'); % chemotherapy-resistant clone
 % T cell Modules
 model = Treg_module(model,params_out);
 model = Teff_module(model,'1',params_out,{'C1','C2'});
@@ -67,10 +67,10 @@ antigen   = create_antigen({'C1','C2'},[5.4e-13 5.4e-13],'antigenID',1);
 model = antigen_module(model,'1',params_out,antigen);
 % PK Modules
 params_aPD1    = pk_parameters('pembrolizumab');
-params_aPDL1   = pk_parameters('durvalumab');
+params_aPDL1   = pk_parameters('atezolizumab');
 params_aCTLA4  = pk_parameters('tremelimumab');
 model = pk_module(model,'aPD1',params_aPD1);
-model = pk_module(model,'aPDL1',params_aPDL1,'n');
+model = pk_module(model,'aPDL1',params_aPDL1);
 model = pk_module(model,'aCTLA4' ,params_aCTLA4);
 % Checkpoint Modules
 model = checkpoint_module(model,params_out,'T','C1');
@@ -93,14 +93,15 @@ model = macrophage_module(model,params_out,{'C1','C2'},'aCD47',0); % PK module i
 
 %% Initialize and Run the Model (should run with realistic baseline parameters)
 % (should be commented out when conducting in silico virtual clinical trial)
+
 % tic
 % [model,success,simDataInit] = initial_conditions(model);
 % % [model,success] = initial_conditions(model);
 % toc
-%
+% 
 % % Generate a list of parameters and species for debug
 % modelComp = listModelComp(model);
-%
+% 
 % % Run Simulation
 % if (success)
 %     tic
