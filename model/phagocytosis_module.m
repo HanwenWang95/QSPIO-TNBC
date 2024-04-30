@@ -24,22 +24,15 @@ gamma = 'gamma_T';
 comp = addcompartment(model,'syn_M_C',params.A_syn.Value,'CapacityUnits',params.A_syn.Units);
     set(comp,'Notes',['synapse comparment between macrophage and cancer cell ', params.A_syn.Notes]);
 
-if (antiCD47)
-% Add kon Values
-kon = addparameter(model,'kd_CD47_aCD47',params.kd_CD47_aCD47.Value,'ValueUnits',params.kd_CD47_aCD47.Units);
-    set(kon,'Notes',['Kd of CD47-aCD47 binding ' params.kd_CD47_aCD47.Notes]);
-% Add koff Values
-koff = addparameter(model,'koff_CD47_aCD47',params.koff_CD47_aCD47.Value,'ValueUnits',params.koff_CD47_aCD47.Units);
-    set(koff,'Notes',['koff of CD47-aCD47 binding ' params.koff_CD47_aCD47.Notes]);
-% Bivalent anibody parameters
-chi = addparameter(model,'Chi_CD47_aCD47' ,params.Chi_CD47_aCD47.Value ,'ValueUnits',params.Chi_CD47_aCD47.Units);
-    set(chi,'Notes',['Antibody cross-arm binding efficiency that also includes the conversion of kon from 3D to 2D ' params.Chi_CD47_aCD47.Notes]);
+kdeg_CD47   = addparameter(model,'kdeg_CD47',params.kdeg_CD47.Value,'ValueUnits',params.kdeg_CD47.Units);
+    set(kdeg_CD47,'Notes',['Degradation rate of free CD47 on RBCs ' params.kdeg_CD47.Notes]);
 
+if (antiCD47)
 % Add Species
 x = addspecies(comp,'CD47_aCD47',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration CD47-aCD47 complex in synapse');
+    set(x,'Notes','concentration of CD47-aCD47 complex in synapse');
 x = addspecies(comp,'CD47_aCD47_CD47',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration CD47-aCD47-CD47 complex in synapse');
+    set(x,'Notes','concentration of CD47-aCD47-CD47 complex in synapse');
 
 % Pharmacokinetics of a CD47 Ab
 params_aCD47 = pk_parameters('aCD47');
@@ -73,12 +66,12 @@ p = addparameter(model,'M_SIRPa',params.M_SIRPa.Value,'ValueUnits',params.M_SIRP
     set(p,'Notes',['SIRPa expression on macrophages ' params.M_SIRPa.Notes]);
 
 % Add Species
-x = addspecies(comp,'CD47',600,'InitialAmountUnits','molecule/micrometer^2'); % https://doi.org/10.1101/752311
+x = addspecies(comp,'CD47',params.C_CD47.Value,'InitialAmountUnits',params.C_CD47.Units); % https://doi.org/10.1101/752311
     set(x,'Notes','concentration of CD47 on cancer cell in the synapse');
-x = addspecies(comp,'SIRPa',100,'InitialAmountUnits','molecule/micrometer^2'); % 16291597
+x = addspecies(comp,'SIRPa',params.M_SIRPa.Value,'InitialAmountUnits',params.M_SIRPa.Units); % 16291597
     set(x,'Notes','concentration of SIRPa on macrophage in the synapse');
 x = addspecies(comp,'CD47_SIRPa',0,'InitialAmountUnits','molecule/micrometer^2');
-    set(x,'Notes','concentration CD47-SIRPa complex in synapse');
+    set(x,'Notes','concentration of CD47-SIRPa complex in synapse');
 
 x = addspecies(comp,'PDL1_total',0,'InitialAmountUnits','molecule/micrometer^2');
     set(x,'Notes','concentration of bound and unbound PDL1 molecules ');
@@ -114,15 +107,15 @@ p = addparameter(model,'A_Mcell' ,params.A_Mcell.Value ,'ValueUnits',params.A_Mc
 Cname = 'C1';
 % Initial Conditions
 addrule(model,[comp.Name,'.PD1 = M_PD1_total /A_Mcell' ] ,'initialAssignment');
-addrule(model,[comp.Name,'.SIRPa = M_SIRPa'] ,'initialAssignment');
-
 addrule(model,[comp.Name,'.CD80 = ',Cname,'_CD80_total/A_cell'] ,'initialAssignment');
 addrule(model,[comp.Name,'.PDL1 = ',Cname,'_PDL1_base /A_cell'] ,'initialAssignment');
 addrule(model,[comp.Name,'.PDL2 = ',Cname,'_PDL1_base*r_PDL2',Cname,' /A_cell'] ,'initialAssignment');
 addrule(model,[comp.Name,'.PDL1_total = ',comp.Name,'.PDL1+',comp.Name,'.PD1_PDL1+',comp.Name,'.PDL1_aPDL1+2*',...
                                           comp.Name,'.PDL1_aPDL1_PDL1+',comp.Name,'.PDL1_CD80'] ,'repeatedAssignment');
 addrule(model,[comp.Name,'.PDL2_total = ',comp.Name,'.PD1_PDL2+',comp.Name,'.PDL2'] ,'repeatedAssignment');
-addrule(model,[comp.Name,'.CD47 = C_CD47'] ,'initialAssignment');
+
+addrule(model,[comp.Name,'.CD47 = C_CD47' ] ,'initialAssignment');
+addrule(model,[comp.Name,'.SIRPa = M_SIRPa' ] ,'initialAssignment');
 
 % PDL1 Secretion
 R = addreaction(model,['null -> ',comp.Name,'.PDL1']);
@@ -141,6 +134,12 @@ R = addreaction(model,['null -> ' comp.Name,'.PDL2']);
     set (R, 'Notes'       , 'Translocation of PDL2 between cell surface and cytoplasm');
 
 % Binding b/t CD47 and SIRPa in the synapse of cancell cell and macrophage in trans
+R = addreaction(model,['null -> ',comp.Name,'.CD47']);
+    set (R, 'ReactionRate', 'kdeg_CD47*A_syn*C_CD47');
+    set (R, 'Notes'       , 'Translocation of CD47 between cell surface and cytoplasm');
+R = addreaction(model,[comp.Name,'.CD47 -> null']);
+    set (R, 'ReactionRate', ['kdeg_CD47*',comp.Name,'.CD47']);
+    set (R, 'Notes'       , 'Internalization of CD47 on cancer cell');
 R = addreaction(model,[comp.Name,'.CD47 + ',comp.Name,'.SIRPa <-> ',comp.Name,'.CD47_SIRPa']);
     set (R, 'ReactionRate', ['kon_CD47_SIRPa*(',comp.Name,'.CD47)*(',comp.Name,'.SIRPa)  -  koff_CD47_SIRPa*',comp.Name,'.CD47_SIRPa']);
     set (R, 'Notes'       , 'binding and unbinding of CD47-SIRPa in synapse');
@@ -177,11 +176,17 @@ R = addreaction(model,[comp.Name,'.CD80m + ',comp.Name,'.PDL1 <-> ',comp.Name,'.
 if (antiCD47)
 % Binding b/t CD47 and aCD47 in the synapse of cancell cell and macrophage in trans
 R = addreaction(model,[comp.Name,'.CD47 <-> ',comp.Name,'.CD47_aCD47']);
-    set (R, 'ReactionRate', ['2*koff_CD47_aCD47/kd_CD47_aCD47*(',comp.Name,'.CD47 * ',compDrug.Name,'.aCD47/',gamma,'_aCD47) -  koff_CD47_aCD47*',comp.Name,'.CD47_aCD47']);
+    set (R, 'ReactionRate', ['2*kon_CD47_aCD47*(',comp.Name,'.CD47 * ',compDrug.Name,'.aCD47/',gamma,'_aCD47) -  koff_CD47_aCD47*',comp.Name,'.CD47_aCD47']);
     set (R, 'Notes'       , 'binding and unbinding of CD47 to aCD47 on cancer cell surface in synapse');
 R = addreaction(model,[comp.Name,'.CD47_aCD47 + ',comp.Name,'.CD47 <-> ',comp.Name,'.CD47_aCD47_CD47']);
-    set (R, 'ReactionRate', ['Chi_CD47_aCD47*koff_CD47_aCD47/kd_CD47_aCD47*(',comp.Name,'.CD47 * ',comp.Name,'.CD47_aCD47) -  2*koff_CD47_aCD47*',comp.Name,'.CD47_aCD47_CD47']);
+    set (R, 'ReactionRate', ['Chi_CD47_aCD47_3D*kon_CD47_aCD47/d_syn*(',comp.Name,'.CD47 * ',comp.Name,'.CD47_aCD47) -  2*koff_CD47_aCD47*',comp.Name,'.CD47_aCD47_CD47']);
     set (R, 'Notes'       , 'binding and unbinding of CD47 to CD47-aCD47 on cancer cell surface in synapse');
+R = addreaction(model,[comp.Name,'.CD47_aCD47 -> null']);
+    set (R,'ReactionRate',['kint_CD47*',comp.Name,'.CD47_aCD47']);
+    set (R,'Notes','Internalization of CD47-aCD47 on cancer cell ');
+R = addreaction(model,[comp.Name,'.CD47_aCD47_CD47 -> null']);
+    set (R,'ReactionRate',['kint_CD47*',comp.Name,'.CD47_aCD47_CD47']);
+    set (R,'Notes','Internalization of CD47-aCD47-CD47 on cancer cell ');
 end
 
 % Add the Hill function based on SIRPa occupancy

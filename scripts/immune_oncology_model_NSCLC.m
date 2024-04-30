@@ -82,12 +82,13 @@ model = checkpoint_module(model,params_out,'T','APC');
 model = Th_module(model,params_out);
 model = MDSC_module(model,params_out,{'C1'},'inostat',0,'drugName','entinostat');
 % model = nabpaclitaxel_module(model,params_out);
-model = macrophage_module(model,params_out,{'C1'},'aCD47',0); % PK module in development for aCD47
+model = macrophage_module(model,params_out,{'C1'},'aCD47',1); % PK module in development for aCD47
 
 %% Setup Dosing
-dose_schedule = [];
+% dose_schedule = [];
 % dose_schedule = schedule_dosing({'atezolizumab'});
 % dose_schedule = schedule_dosing({'nabPaclitaxel'});
+% dose_schedule = schedule_dosing({'aCD47'});
 
 % dbstop if warning
 % simData = sbiosimulate(model,[],[],dose_schedule);
@@ -106,10 +107,10 @@ dose_schedule = [];
 % [model,success,simDataInit] = initial_conditions(model);
 % % [model,success] = initial_conditions(model);
 % toc
-%
+% 
 % % Generate a list of parameters and species for debug
 % modelComp = listModelComp(model);
-%
+% 
 % % Run Simulation
 % if (success)
 %     tic

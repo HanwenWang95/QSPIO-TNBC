@@ -15,7 +15,7 @@ params.N_avg.Notes = '(Avogadro 1811)';
 
 %% Compartment Volume Parameters
 % Central Compartment Volume
-params.V_C.Value = 6;
+params.V_C.Value = 5;
 params.V_C.Units = 'liter';
 params.V_C.Notes = '(estimated)';
 % Peripheral Compartment Volume
@@ -1284,21 +1284,6 @@ params.kon_CD47_SIRPa.Notes = '(Hayes 2020, PMID: 31964705)';
 params.kon_CD47_SIRPa.Factors = ["koff_CD47_SIRPa","kd_CD47_SIRPa","d_syn"];
 params.kon_CD47_SIRPa.Equation = 'p(1)/p(2)/p(3)';
 
-% Binding affinity of CD47-aCD47
-params.kd_CD47_aCD47.Value = 1; % 10-1000 nM PMID: 30133535
-params.kd_CD47_aCD47.Units = 'nanomolarity';
-params.kd_CD47_aCD47.Notes = '(Kauder 2018, PMID: 30133535)';
-% Dissociation rate of CD47-aCD47
-params.koff_CD47_aCD47.Value = 1/20; % 1e-4 - 1e-3 1/s
-params.koff_CD47_aCD47.Units = '1/minute';
-params.koff_CD47_aCD47.Notes = '(Kauder 2018, PMID: 30133535)';
-% Association rate of CD47-aCD47
-params.kon_CD47_aCD47.Value = [];
-params.kon_CD47_aCD47.Units = '';
-params.kon_CD47_aCD47.Notes = '(Kauder 2018, PMID: 30133535)';
-params.kon_CD47_aCD47.Factors = ["koff_CD47_aCD47","kd_CD47_aCD47"];
-params.kon_CD47_aCD47.Equation = 'p(1)/p(2)';
-
 % CD47-aCD47 Chi (antibody cross-arm binding strength)
 params.Chi_CD47_aCD47_3D.Value = 100;
 params.Chi_CD47_aCD47_3D.Units = 'dimensionless';
@@ -1317,6 +1302,7 @@ params.SIRPa_50.Notes = '(Willingham 2012, PMID: 22451913)';
 params.n_SIRPa.Value = 2;
 params.n_SIRPa.Units = 'dimensionless';
 params.n_SIRPa.Notes = '(estimated)';
+
 % CD47 expression on cancer cell
 params.C_CD47.Value = 100;
 params.C_CD47.Units = 'molecule/micrometer^2';
@@ -1329,4 +1315,9 @@ params.M_SIRPa.Notes = '(Subramanian 2006, PMID: 16291597)';
 params.M_PD1.Value = 1.25e4;
 params.M_PD1.Units = 'molecule';
 params.M_PD1.Notes = 'estimated based on PD-1 expression on T cell (Cheng 2014, PMID: 23417675; Mkrtichyan 2012, PMID: 22837483) and adjusted to fit its inhibitory effect on phagocytosis (Gordon 2017, PMID: 28514441)';
+
+% CD47 internalization
+params.kdeg_CD47.Value = 0.125;
+params.kdeg_CD47.Units = '1/day';
+params.kdeg_CD47.Notes = '(fitted)';
   

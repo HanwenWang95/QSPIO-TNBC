@@ -164,7 +164,7 @@ end
 if first_Ccell_call
         set(p,'Notes',['baseline number of PDL1 molecules per ',Cname,' cell ' params.([Param_name,'_PDL1']).Notes]);
     p = addparameter(model,['r_PDL2',Cname],params.(['r_PDL2',Param_name]).Value,'ValueUnits',params.(['r_PDL2',Param_name]).Units,'ConstantValue',false);
-        set(p,'Notes',['PDL2/PDL1 molecule ratio on ', Cname,'cell ', params.(['r_PDL2',Param_name]).Notes]);
+        set(p,'Notes',['PDL2/PDL1 molecule ratio on ', Cname,' cell ', params.(['r_PDL2',Param_name]).Notes]);
 
     p = addparameter(model,[Cname,'_CD80_total'],params.([Param_name,'_CD80']).Value,'ValueUnits',params.([Param_name,'_CD80']).Units,'ConstantValue',false);
         set(p,'Notes',['number of CD80 molecules per ',Cname,' cell ' params.([Param_name,'_CD80']).Notes]);

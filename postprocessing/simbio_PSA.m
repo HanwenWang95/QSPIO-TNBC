@@ -10,7 +10,16 @@
 %                         status (1:patient,0:healthy,-1:simulation failed to converge)
 
 
-function [simDataPSA, params_out] = simbio_PSA(model,params_in,params_out,dose_schedule)
+function [simDataPSA, params_out] = simbio_PSA(model,params_in,params_out,dose_schedule,varargin)
+% Optional Inputs
+in = inputParser;
+addParameter(in,'par_therapy',{},@(x) iscell(x));
+addParameter(in,'val_therapy',[]);
+% Parse Inputs
+parse(in,varargin{:});
+par_therapy = in.Results.par_therapy;
+val_therapy = in.Results.val_therapy;
+
 config = getconfigset(model);
 time = get(config.SolverOptions,'OutputTimes');
 
@@ -33,7 +42,7 @@ for i = 1:n_PSA
     display(['Sample ',num2str(i),'/',num2str(n_PSA)]);
     % Set the new parameters
     if i > 1
-      delete(model_PSA)
+        delete(model_PSA)
     end
     model_PSA = copyobj(model);
     variantObj = addvariant(model_PSA, ['v',num2str(i,'%5.5i')]);
@@ -46,46 +55,59 @@ for i = 1:n_PSA
             disp(['Unable to identify parameter/compartment named ', params_in.names{j}, ' in the model'])
         end
     end
-
+    
     % Set Initial Conditions
     if (new_sim || isempty(params_out.ICs(i).Values))
-      [model_PSA,success,~] = initial_conditions(model_PSA,'Variant',variantObj);
-      params_out.patient(i) = double(success);
+        [model_PSA,success,~] = initial_conditions(model_PSA,'Variant',variantObj);
+        params_out.patient(i) = double(success);
     else
-      success = logical(params_out.patient(i));
-      model_PSA = set_ICs(model_PSA,params_out.ICs(i).Values);
+        success = logical(params_out.patient(i));
+        model_PSA = set_ICs(model_PSA,params_out.ICs(i).Values);
     end
-
+    
     % Run the model with drugs
     if (success)
-          if idx_nab ~= 0
-              for k = 1:length(idx_nab)
-                  dose_schedule(idx_nab(k)).Amount = dose*params_in.BSA.LHS(i);
-              end
-          end
-
-          try
-              simData = sbiosimulate(model_PSA,[],variantObj,dose_schedule);
-              % Remove simulations that reached the time limit
-              if size(simData.Data,1) < length(time)
-                  simData = [];
-                  params_out.patient(i) = -1;
-                  disp('Simulation takes longer than the preset time limit');
-              end
-          catch
-              disp('Integration tolerance not met');
-              simData = [];
-              params_out.patient(i) = -1;
-          end
-
+        if idx_nab ~= 0
+            for k = 1:length(idx_nab)
+                dose_schedule(idx_nab(k)).Amount = dose*params_in.BSA.LHS(i);
+            end
+        end
+        
+        if ~isempty(par_therapy)
+            for k = 1:length(par_therapy)
+                try
+                    rmcontent(variantObj, {'parameter', par_therapy{k}, 'Value', params_in.(par_therapy{k}).LHS(i)});
+                    addcontent(variantObj, {'parameter', par_therapy{k}, 'Value', params_in.(par_therapy{k}).LHS(i)*val_therapy(k)});
+                catch
+                    disp('baseline parameters were changed to simulate effect of the therapy')
+                    temp = sbioselect(model, 'Type', 'parameter', 'Name', par_therapy{k});
+                    addcontent(variantObj, {'parameter', par_therapy{k}, 'Value', temp.Value*val_therapy(k)});
+                end
+            end
+        end
+        
+        try
+            simData = sbiosimulate(model_PSA,[],variantObj,dose_schedule);
+            % Remove simulations that reached the time limit
+            if size(simData.Data,1) < length(time)
+                simData = [];
+                params_out.patient(i) = -1;
+                disp('Simulation takes longer than the preset time limit');
+            end
+        catch
+            disp('Integration tolerance not met');
+            simData = [];
+            params_out.patient(i) = -1;
+        end
+        
     else
         disp('Initial conditions not reached');
         simData = [];
     end
-
+    
     % save model output struture within an array of structures
     simDataPSA(i).simData = simData;
-
+    
     % save model ICs
     params_out.ICs(i).Values = get_ICs(simData);
 end

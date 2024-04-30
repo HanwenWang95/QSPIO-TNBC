@@ -158,6 +158,8 @@ parameter = addparameter(model,'A_cell' ,params.A_cell.Value ,'ValueUnits',param
     set(parameter,'Notes',['Surface area of the Cancer cell ' params.A_cell.Notes]);
 parameter = addparameter(model,'A_APC' ,params.A_APC.Value ,'ValueUnits',params.A_APC.Units);
     set(parameter,'Notes',['Surface area of the APC ' params.A_APC.Notes]);
+parameter = addparameter(model,'d_syn' ,params.d_syn.Value ,'ValueUnits',params.d_syn.Units);
+    set(parameter,'Notes',['The synapse gap distance (kd2D = kd3D*d_syn) ' params.d_syn.Notes]);
 end
 
 % Update Hill Function for Antigens

@@ -156,6 +156,87 @@ rename(Kc,['Kc_' species_name]);
 
 end
 
+if species_name == "aCD47"
+
+    % Add Endosomal Compartment
+    comp_endo = addcompartment(model,'V_endo',params.V_endo_tot.Value,'CapacityUnits',params.V_endo_tot.Units);
+        set(comp_endo,'Notes',['Endosomal compartment (endo) for aCD47 PK' params.V_endo_tot.Notes]);
+
+    % Add Species
+    A_endo = addspecies(comp_endo,'aCD47',0.0,'InitialAmountUnits','nanomolarity');
+        set(A_endo,'Notes',['Concentration of ' species_name ' in endosomal compartment ']);
+    CD47 = addspecies(comp_C,'CD47',0.0,'InitialAmountUnits','nanomolarity'); 
+        set(CD47,'Notes',['Concentration of CD47 on RBC in central compartment ']);
+    CD47_aCD47 = addspecies(comp_C,'CD47_aCD47',0.0,'InitialAmountUnits','nanomolarity');
+        set(CD47_aCD47,'Notes','Concentration of CD47-aCD47 complex in central compartment ');
+    CD47_aCD47_CD47 = addspecies(comp_C,'CD47_aCD47_CD47',0.0,'InitialAmountUnits','nanomolarity');
+        set(CD47_aCD47_CD47,'Notes','Concentration of CD47-aCD47-CD47 complex in central compartment ');
+    FcRn = addspecies(comp_endo,'FcRn',params.FcRn_tot.Value,'InitialAmountUnits',params.FcRn_tot.Units);
+        set(FcRn,'Notes',['Concentration of FcRn in endosomal compartment ' params.FcRn_tot.Notes]);
+    FcRn_aCD47 = addspecies(comp_endo,'FcRn_aCD47',0.0,'InitialAmountUnits','nanomolarity');
+        set(FcRn_aCD47,'Notes','Concentration of FcRn-aCD47 complex in endosomal compartment ');
+
+    % Add Parameters
+    RBC_CD47   = addparameter(model,'RBC_CD47',params.RBC_CD47.Value,'ValueUnits',params.RBC_CD47.Units);
+        set(RBC_CD47,'Notes',['CD47 expression on RBCs ' params.RBC_CD47.Notes]);
+    kint_CD47   = addparameter(model,'kint_CD47',params.kint_CD47.Value,'ValueUnits',params.kint_CD47.Units);
+        set(kint_CD47,'Notes',['Internalization rate of bound CD47 on RBCs ' params.kint_CD47.Notes]);
+
+    kint_aCD47 = addparameter(model,'kint_aCD47',params.kint_aCD47.Value,'ValueUnits',params.kint_aCD47.Units);
+        set(kint_aCD47,'Notes',['Internalization rate of anti-CD47 antibody by endothelial cells ' params.kint_aCD47.Notes]);
+    krec_aCD47 = addparameter(model,'krec_aCD47',params.krec_aCD47.Value,'ValueUnits',params.krec_aCD47.Units);
+        set(krec_aCD47,'Notes',['Recycling rate of anti-CD47 antibody from endothelial cell back into plasma ' params.krec_aCD47.Notes]);
+    koff_FcRn_aCD47 = addparameter(model,'koff_FcRn_aCD47',params.koff_FcRn_aCD47.Value,'ValueUnits',params.koff_FcRn_aCD47.Units);
+        set(koff_FcRn_aCD47,'Notes',['Dissociation rate of aCD47-FcRn complex' params.koff_FcRn_aCD47.Notes]);
+    kd_FcRn_aCD47   = addparameter(model,'kd_FcRn_aCD47',params.kd_FcRn_aCD47.Value,'ValueUnits',params.kd_FcRn_aCD47.Units);
+        set(kd_FcRn_aCD47,'Notes',['Binding affinity of anti-CD47 antibody to FcRn ' params.kd_FcRn_aCD47.Notes]);
+    kdeg_aCD47 = addparameter(model,'kdeg_aCD47',params.kdeg_aCD47.Value,'ValueUnits',params.kdeg_aCD47.Units);
+        set(kdeg_aCD47,'Notes',['Degradation rate of anti-CD47 antibody in the endosomal compartment ' params.kdeg_aCD47.Notes]);
+    kd_CD47_aCD47   = addparameter(model,'kd_CD47_aCD47',params.kd_CD47_aCD47.Value,'ValueUnits',params.kd_CD47_aCD47.Units);
+        set(kd_CD47_aCD47,'Notes',['Binding affinity of anti-CD47 antibody and CD47 ' params.kd_CD47_aCD47.Notes]);
+    kon_CD47_aCD47   = addparameter(model,'kon_CD47_aCD47',params.koff_CD47_aCD47.Value/(2*params.kd_CD47_aCD47.Value),'ValueUnits','1/minute/nanomolarity'); % KD = koff/(2*kon)
+        set(kon_CD47_aCD47,'Notes',['Association rate of anti-CD47 antibody and CD47 ']);
+    koff_CD47_aCD47   = addparameter(model,'koff_CD47_aCD47',params.koff_CD47_aCD47.Value,'ValueUnits',params.koff_CD47_aCD47.Units);
+        set(koff_CD47_aCD47,'Notes',['Dissociation rate of anti-CD47 antibody and CD47 ' params.koff_CD47_aCD47.Notes]);
+    Chi_CD47_aCD47_3D   = addparameter(model,'Chi_CD47_aCD47_3D',params.Chi_CD47_aCD47_3D.Value,'ValueUnits',params.Chi_CD47_aCD47_3D.Units);
+        set(Chi_CD47_aCD47_3D,'Notes',['aCD47 antibody cross-arm binding strength ' params.Chi_CD47_aCD47_3D.Notes]);
+
+    addrule(model,'V_C.CD47 = RBC_CD47/V_C','initialAssignment');
+
+    % Add Reactions
+    reaction = addreaction(model,'null -> V_C.CD47');
+        set(reaction,'ReactionRate','kdeg_CD47*RBC_CD47/gamma_C');
+        set(reaction,'Notes','Production of CD47 on red blood cell ');
+    reaction = addreaction(model,'V_C.CD47 -> null');
+        set(reaction,'ReactionRate','kdeg_CD47*V_C.CD47/gamma_C');
+        set(reaction,'Notes','Internalization of CD47 on red blood cell ');
+    reaction = addreaction(model,'V_C.CD47_aCD47 -> null');
+        set(reaction,'ReactionRate','kint_CD47*V_C.CD47_aCD47/gamma_C');
+        set(reaction,'Notes','Internalization of CD47-aCD47 on red blood cell ');
+    reaction = addreaction(model,'V_C.CD47_aCD47_CD47 -> null');
+        set(reaction,'ReactionRate','kint_CD47*V_C.CD47_aCD47_CD47/gamma_C');
+        set(reaction,'Notes','Internalization of CD47-aCD47-CD47 on red blood cell ');
+
+    reaction = addreaction(model,'V_C.A + V_C.CD47 <-> V_C.CD47_aCD47');
+        set(reaction,'ReactionRate','2*kon_CD47_aCD47*V_C.A/gamma_C*V_C.CD47/gamma_C - koff_CD47_aCD47*V_C.CD47_aCD47/gamma_C');
+        set(reaction,'Notes','Binding and unbinding of anti-CD47 antibody to CD47 on red blood cell ');
+    reaction = addreaction(model,'V_C.CD47_aCD47 + V_C.CD47 <-> V_C.CD47_aCD47_CD47');
+        set(reaction,'ReactionRate','Chi_CD47_aCD47_3D*kon_CD47_aCD47*V_C.CD47_aCD47/gamma_C*V_C.CD47/gamma_C - 2*koff_CD47_aCD47*V_C.CD47_aCD47_CD47/gamma_C');
+        set(reaction,'Notes','Binding and unbinding of CD47-aCD47 complex to CD47 on red blood cell ');
+    reaction = addreaction(model,'V_C.A -> V_endo.aCD47');
+        set(reaction,'ReactionRate','kint_aCD47*V_C.A/gamma_C');
+        set(reaction,'Notes','Internalization of anti-CD47 antibody by endothelial cells ');
+    reaction = addreaction(model,'V_endo.aCD47 + V_endo.FcRn <-> V_endo.FcRn_aCD47');
+        set(reaction,'ReactionRate','koff_FcRn_aCD47/kd_FcRn_aCD47*V_endo.aCD47*V_endo.FcRn - koff_FcRn_aCD47*V_endo.FcRn_aCD47');
+        set(reaction,'Notes','Binding and unbinding of anti-CD47 antibody to neonatal Fc receptor in the endosomal compartment ');
+    reaction = addreaction(model,'V_endo.FcRn_aCD47 -> V_C.A + V_endo.FcRn');
+        set(reaction,'ReactionRate','krec_aCD47*V_endo.FcRn_aCD47');
+        set(reaction,'Notes','Recycling of anti-CD47 antibody from endothelial cell back into plasma ');
+    reaction = addreaction(model,'V_endo.aCD47 -> null');
+        set(reaction,'ReactionRate','kdeg_aCD47*V_endo.aCD47');
+        set(reaction,'Notes','Degradation of anti-CD47 antibody in the endosomal compartment ');
+end
+
 % Rename Objects with 'species_name'
 rename(A_C,species_name);
 rename(A_P,species_name);

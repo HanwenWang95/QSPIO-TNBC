@@ -7,6 +7,7 @@
 %                 - ipilimumab
 %                 - pembrolizumab
 %                 - tremelimumab
+%                 - aCD47
 %
 % Output: params_out -- object containing model parameters
 %                       - q_P--rate of diffusive transport C<->P
@@ -287,7 +288,90 @@ switch (name)
         gamma_LN.Value = 0.2;
         gamma_LN.Notes = '(Wang 2019, PMID: 31218069)';
 
+    case 'aCD47'
+        % Central to Peripheral
+        q_P.Value = 2.36e-5;
+        q_P.Units = 'liter/second';
+        q_P.Notes = '(fitted)';
+        % Central to Tumour
+        q_T.Value = 1.51e-4;
+        q_T.Units = 'milliliter/second';
+        q_T.Notes = '(fitted)';
+        % Central to LN
+        q_LN.Value = 3.25e-6;
+        q_LN.Units = 'milliliter/second';
+        q_LN.Notes = '(Meijer 2017, PMID: 28510992)';
+        % Tumour to LN
+        q_LD.Value = 0.0015;
+        q_LD.Units = '1/minute';
+        q_LD.Notes = '(Zhu 1996, PMID: 8706023)';
+        % Clearence
+        k_cl.Value = 0.679;
+        k_cl.Units = 'liter/day';
+        k_cl.Notes = '(fitted)';
+        % Volume Fractions
+        gamma_C.Value = 0.58;
+        gamma_C.Notes = '(fitted)';
+        gamma_P.Value = 0.074;
+        gamma_P.Notes = '(fitted)';
+        gamma_T.Value = 0.2; % NSCLC
+        gamma_T.Notes = '(Wang 2023, PMID: 37291190)';
+        gamma_LN.Value = 0.2;
+        gamma_LN.Notes = '(Wang 2019, PMID: 31218069)';
+        % Bound CD47 internalization
+        params_out.kint_CD47.Value = 9.9;
+        params_out.kint_CD47.Units = '1/day';
+        params_out.kint_CD47.Notes = '(fitted)';
+        % Total volume of endosomal space
+        params_out.V_endo_tot.Value = 340;
+        params_out.V_endo_tot.Units = 'milliliter';
+        params_out.V_endo_tot.Notes = '(Kendrick 2017, PMID: 28367126)';
+        % Total CD47 concentration on RBC
+        params_out.RBC_CD47.Value = 1.474; 
+        params_out.RBC_CD47.Units = 'micromole';
+        params_out.RBC_CD47.Notes = '(fitted)';
+        % Total FcRn in endosomal space
+        params_out.FcRn_tot.Value = 41.2;
+        params_out.FcRn_tot.Units = 'micromolarity';
+        params_out.FcRn_tot.Notes = '(Kendrick 2017, PMID: 28367126)';
+        % Internalization
+        params_out.kint_aCD47.Value = 0.18;
+        params_out.kint_aCD47.Units = '1/day';
+        params_out.kint_aCD47.Notes = '(Kendrick 2017, PMID: 28367126)';
+        % Recycling
+        params_out.krec_aCD47.Value = 5;
+        params_out.krec_aCD47.Units = '1/day';
+        params_out.krec_aCD47.Notes = '(Kendrick 2017, PMID: 28367126)';
+        % Dissociation
+        params_out.koff_FcRn_aCD47.Value = 0.03;
+        params_out.koff_FcRn_aCD47.Units = '1/minute';
+        params_out.koff_FcRn_aCD47.Notes = '(Vaughn 1997, PMID: 9235980)';
+        % KD
+        params_out.kd_FcRn_aCD47.Value = 1000; % 580nM measured at 25°C 
+        params_out.kd_FcRn_aCD47.Units = 'nanomolarity';
+        params_out.kd_FcRn_aCD47.Notes = '(Abdiche 2015, PMID: 25658443; Kauder 2018, PMID: 30133535)';
+        % Degradation
+        params_out.kdeg_aCD47.Value = 3;
+        params_out.kdeg_aCD47.Units = '1/day';
+        params_out.kdeg_aCD47.Notes = '(Kendrick 2017, PMID: 28367126)';
+        % kd CD47-aCD47 
+        params_out.kd_CD47_aCD47.Value = 1;
+        params_out.kd_CD47_aCD47.Units = 'nanomolarity';
+        params_out.kd_CD47_aCD47.Notes = '(Kauder 2018, PMID: 30133535)';
+        % koff CD47-aCD47 
+        params_out.koff_CD47_aCD47.Value = 1.1e-3;
+        params_out.koff_CD47_aCD47.Units = '1/minute';
+        params_out.koff_CD47_aCD47.Notes = '(fitted)';
+        % kd CD47-aCD47 
+        params_out.kd_CD47_aCD47.Value = 1; % KD = koff/(2*kon)
+        params_out.kd_CD47_aCD47.Units = 'nanomolarity';
+        params_out.kd_CD47_aCD47.Notes = '(Kauder 2018, PMID: 30133535)';
+        % Cross-arm
+        params_out.Chi_CD47_aCD47_3D.Value = 100;
+        params_out.Chi_CD47_aCD47_3D.Units = 'dimensionless';
+        params_out.Chi_CD47_aCD47_3D.Notes = '(fixed)';
 end
+
 
 % Diffusive Transport: C<->P
 params_out.q_P = q_P;

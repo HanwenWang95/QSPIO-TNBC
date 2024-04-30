@@ -32,3 +32,9 @@
 - Updated a model assumption so that IFN-gamma is now secreted by both CD8 and CD4 T cells when activated. 
 - Modified nomenclature for some parameters & reorganized structure for some modules (to maintain relative independence & customizability of the modules, delete redundant model elements, and allow selection of Gompertzian/logistic growth dynamic in cancer_module.m).
 - Added a script for sensitivity analysis using Morris screening method to account for non-monotonicity of the model.
+
+## Modifications made since the published version in NPJ Precision Oncology (DOI: 10.1038/s41698-023-00405-9):
+
+- Added PK parameter for anti-CD47 antibodies.
+- Incoporated dynamics of anti-CD47 antibodies to PK module and phagocytosis module.
+- Modified simbio_PSA.m so that the parameter values can be changed at the beginning of in silico clinical to simulate treatment effect.

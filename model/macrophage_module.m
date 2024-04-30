@@ -34,8 +34,6 @@ k_Mac_death = addparameter(model,'k_Mac_death',params.k_Mac_death.Value,'ValueUn
     set(k_Mac_death,'Notes',['Death rate of macrophages into tumor compartment ',params.k_Mac_death.Notes]);
 k_TGFb_Msec = addparameter(model,'k_TGFb_Msec',params.k_TGFb_Msec.Value,'ValueUnits',params.k_TGFb_Msec.Units);
     set(k_TGFb_Msec,'Notes',['Secretion rate of TGFb by macrophage in tumor compartment ',params.k_TGFb_Msec.Notes]);
-k_vas_Msec = addparameter(model,'k_vas_Msec',params.k_vas_Msec.Value,'ValueUnits',params.k_vas_Msec.Units);
-    set(k_vas_Msec,'Notes',['Secretion rate of angiogenic factor by macrophage in tumor compartment ',params.k_vas_Msec.Notes]);
 k_IL12_sec = addparameter(model,'k_IL12_sec',params.k_IL12_sec.Value,'ValueUnits',params.k_IL12_sec.Units);
     set(k_IL12_sec,'Notes',['Secretion rate of IL-12 by mAPC in tumor compartment ' params.k_IL12_sec.Notes]);
 k_IL12_Msec = addparameter(model,'k_IL12_Msec',params.k_IL12_Msec.Value,'ValueUnits',params.k_IL12_Msec.Units);
@@ -89,6 +87,8 @@ catch
 end
 
 if ~isempty(sbioselect(model, 'Name', 'c_vas'))
+    k_vas_Msec = addparameter(model,'k_vas_Msec',params.k_vas_Msec.Value,'ValueUnits',params.k_vas_Msec.Units);
+        set(k_vas_Msec,'Notes',['Secretion rate of angiogenic factor by macrophage in tumor compartment ',params.k_vas_Msec.Notes]);
     % Secretion of angiogenic factor
     reaction = addreaction(model,'null -> V_T.c_vas');
         set(reaction,'ReactionRate','k_vas_Msec*V_T.Mac_M2');

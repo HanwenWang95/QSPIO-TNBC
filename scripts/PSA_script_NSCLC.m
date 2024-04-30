@@ -194,6 +194,7 @@ warning('off','all')
 sbioaccelerate(model, dose_schedule)
 tic
 [simDataPSA, params_out] = simbio_PSA(model,params_in,params_out,dose_schedule);
+% [simDataPSA, params_out] = simbio_PSA(model,params_in,params_out,dose_schedule,'par_therapy',{'k_MDSC_rec','k_Mac_rec'},'val_therapy',[0.5 0.5]);
 toc
 
 % Postprocess Data -> Calculate Clonality, Percentages and ...
